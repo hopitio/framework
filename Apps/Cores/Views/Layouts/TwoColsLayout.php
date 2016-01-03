@@ -109,7 +109,7 @@ class TwoColsLayout extends Layout
                 <script src="<?php echo url() ?>/themes/sb2/js/jquery.min.js"></script>
             </head>
 
-            <body>
+            <body ng-app="sb2">
 
                 <div id="wrapper">
 
@@ -174,7 +174,8 @@ class TwoColsLayout extends Layout
                 </div>
                 <!-- /#wrapper -->
 
-
+                <!--angular-->
+                <script src="<?php echo url() ?>/themes/sb2/js/angular.min.js"></script>
 
                 <!-- Bootstrap Core JavaScript -->
                 <script src="<?php echo url() ?>/themes/sb2/js/bootstrap.min.js"></script>
@@ -184,7 +185,7 @@ class TwoColsLayout extends Layout
 
                 <!-- Custom Theme JavaScript -->
                 <script src="<?php echo url() ?>/themes/sb2/js/sb-admin-2.js"></script>
-
+                <script src="<?php echo url() ?>/themes/sb2/js/custom.js"></script>
             </body>
 
         </html>
