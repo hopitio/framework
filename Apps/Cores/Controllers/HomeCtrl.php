@@ -9,7 +9,7 @@ class HomeCtrl extends CoresCtrl
 
     function index()
     {
-        $this->view->render('Home/index.phtml');
+        $this->twoColsLayout->render('Home/index.phtml');
     }
 
     function book()

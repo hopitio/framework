@@ -24,4 +24,14 @@ class View extends \Slim\View
         
     }
 
+    function render($template, $data = null)
+    {
+        $this->context->app->slim->response->setBody(parent::render($template));
+    }
+
+    function getOutput($template)
+    {
+        return parent::render($template);
+    }
+
 }

@@ -17,10 +17,6 @@ abstract class Controller
     /** @var \Libs\Session */
     protected $session;
 
-    /** @var View */
-    protected $view;
-    protected $viewData = array();
-
     function __construct(MvcContext $context)
     {
         $this->context = $context;
@@ -46,23 +42,6 @@ abstract class Controller
         $str = str_replace($arr_search, $arr_replace, $str);
 
         return $str;
-    }
-
-    protected function setView(View $view)
-    {
-        $this->view = $view;
-        return $this;
-    }
-
-    protected function setViewData($arr)
-    {
-        $this->view->setData($arr);
-        return $this;
-    }
-
-    protected function render($template)
-    {
-        $this->res->setBody($this->view->render($template));
     }
 
     protected function getCookie($name)

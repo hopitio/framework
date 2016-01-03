@@ -4,6 +4,7 @@ define('BASE_DIR', dirname(__DIR__));
 
 require_once BASE_DIR . '/Config.php';
 require_once BASE_DIR . '/Libs/Slim/Slim.php';
+require_once BASE_DIR . '/Libs/Fn.php';
 
 //autoload
 foreach (Config::autoload() as $path)
@@ -26,5 +27,5 @@ foreach (Config::autoload() as $path)
 }
 
 //khoi tao ung dung
-$application = new Libs\Bootstrap();
+$application = new \Libs\Bootstrap();
 

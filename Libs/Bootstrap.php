@@ -41,24 +41,20 @@ class Bootstrap
         //create slim instance
         \Slim\Slim::registerAutoloader();
         $this->slim = new \Slim\Slim(array(
-            'cookies.encrypt'     => true,
-            'cookies.lifetime'    => 20 * 365 * 24 * 60 . ' minutes',
-            'cookies.path'        => $this->rewriteBase,
-            'cookies.secure'      => false,
-            'cookies.secret_key'  => \Config::CRYPT_SECRECT,
-            'cookies.cipher'      => MCRYPT_RIJNDAEL_256,
-            'cookies.cipher_mode' => MCRYPT_MODE_CBC
+            'cookies.encrypt'    => true,
+            'cookies.lifetime'   => 20 * 365 * 24 * 60 . ' minutes',
+            'cookies.path'       => $this->rewriteBase,
+            'cookies.secure'     => false,
+            'cookies.secret_key' => \Config::CRYPT_SECRECT,
         ));
         //config session
         $this->slim->add(new \Slim\Middleware\SessionCookie(array(
-            'expires'     => 20 * 365 * 24 * 60 . ' minutes',
-            'path'        => $this->rewriteBase,
-            'domain'      => null,
-            'secure'      => false,
-            'name'        => 'slim_session',
-            'secret'      => \Config::CRYPT_SECRECT,
-            'cipher'      => MCRYPT_RIJNDAEL_256,
-            'cipher_mode' => MCRYPT_MODE_CBC
+            'expires' => 20 * 365 * 24 * 60 . ' minutes',
+            'path'    => $this->rewriteBase,
+            'domain'  => null,
+            'secure'  => false,
+            'name'    => 'slim_session',
+            'secret'  => \Config::CRYPT_SECRECT,
         )));
 
         //routing

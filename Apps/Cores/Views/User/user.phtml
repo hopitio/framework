@@ -1,0 +1,141 @@
+<?php
+
+namespace Apps\Cores\Views\Layouts;
+
+/* @var $this TwoColsLayout */
+$this->setTitle('Tài khoản')
+        ->setHeader('Tài khoản');
+?>
+
+<style>
+    .tbl-row{height: 40px;position: relative;}
+    .tbl-check{float:left;height: 40px;line-height: 40px;width: 30px;text-align: center;}
+    .tbl-type{float:left;height: 40px;box-sizing: border-box;width: 50px;text-align: center;padding-top: 5px;}
+    .tbl-text{position: absolute;left: 90px;right:0;height: 40px;}
+    .tbl-row .btn-group{position: absolute;right: 10px;top: 5px;display: none;}
+    .tbl-row:hover .btn-group{display: block;}
+    table .fa-folder-open{color: #fbc02d;}
+    table .fa-user{color: #ccc;}
+    .table .check{margin-top: 10px;}
+</style>
+
+<div class="alert alert-actions alert-success">
+    <div class="btn-group" role="group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-plus"></i> Thêm mới
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a href="#">Thêm tài khoản</a></li>
+            <li><a href="#">Thêm đơn vị</a></li>
+        </ul>
+    </div>
+    <button type="button" class="btn btn-default"><i class="fa fa-exchange"></i> Chuyển đơn vị</button>
+    <button type="button" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</button>
+</div>
+
+<div class="panel panel-info panel-filter">
+    <div class="panel-heading">
+        <button type="button" class="btn btn-default"><i class="fa fa-dashboard"></i></button>
+        <button type="button" class="btn btn-default active">Lục Nam</button>
+        <button type="button" class="btn btn-default">Yên Thế</button>
+        <div class="panel-actions">
+            <a href="javascript:;"><i class="fa fa-minus-square-o"></i></a>
+        </div>
+    </div>
+    <div class="panel-body">
+        <form >
+            <div class="row">
+                <div  class="col-xs-6">
+                    <input type="text" class="form-control" placeholder="Tìm tên"/>
+                </div>
+                <div class="col-xs-3">
+                    <select class="form-control">
+                        <option value="0">--Trạng thái--</option>
+                    </select>
+                </div>
+                <div class="col-xs-3">
+                    <input type="text" class="form-control" placeholder="Đơn vị"/>
+                </div>
+            </div>
+            <h4></h4>
+            <button type="button" class="btn btn-default">Lưu bộ lọc</button>
+            <button type="button" class="btn btn-default">Xóa bộ lọc</button>
+        </form>
+    </div>
+
+
+</div>
+
+
+<h4></h4>
+<ol class="breadcrumb">
+    <li><button class="btn btn-default btn-xs"><i class="fa fa-arrow-left"></i></button></li>
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Library</a></li>
+    <li class="active">Data</li>
+</ol>
+<table class="table table-bordered table-hover">
+    <tbody>
+        <tr>
+            <td>
+                <div class="tbl-row">
+                    <div class="tbl-check">
+                        <label class="check">
+                            <input type="checkbox" />
+                            <before></before>
+                            <after></after>
+                        </label>
+                    </div>
+                    <div class="tbl-type">
+                        <i class="fa fa-2x fa-folder-open"></i>
+                    </div>
+                    <div class="tbl-text">
+                        <a href="javascript:;">Thư mục</a><br>
+                        Tài khoản: 9 | Thư mục: 10
+                    </div>
+                    <div class="btn-group" role="group" aria-label="...">
+                        <button type="button" class="btn btn-outline btn-primary btn-sm">Sửa</button>
+                        <button type="button" class="btn btn-outline btn-danger btn-sm">Xóa</button>
+                    </div>
+                </div>
+            </td>
+
+        </tr>
+        <tr>
+            <td>
+                <div class="tbl-row">
+                    <div class="tbl-check">
+                        <label class="check">
+                            <input type="checkbox" />
+                            <before></before>
+                            <after></after>
+                        </label>
+                    </div>
+                    <div class="tbl-type">
+                        <i class="fa fa-2x fa-user"></i>
+                    </div>
+                    <div class="tbl-text">
+                        <a href="javascript:;">Nguyễn Văn A</a><br>
+                        Chuyên viên
+                    </div>
+                    <div class="btn-group" role="group" aria-label="...">
+                        <button type="button" class="btn btn-outline btn-primary btn-sm">Sửa</button>
+                        <button type="button" class="btn btn-outline btn-danger btn-sm">Xóa</button>
+                    </div>
+                </div>
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+<script>
+    $(function () {
+        $('.table').on('change', '[type=checkbox]', function () {
+            $(this).parents('tr:first').toggleClass('warning');
+        });
+    });
+</script>
+
