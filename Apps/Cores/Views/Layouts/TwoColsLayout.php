@@ -9,7 +9,6 @@ class TwoColsLayout extends Layout
 {
 
     protected $title;
-    protected $header;
     protected $brand = 'Brand';
 
     /** @var Menu */
@@ -34,12 +33,6 @@ class TwoColsLayout extends Layout
     function setBrand($brand)
     {
         $this->brand = $brand;
-        return $this;
-    }
-
-    function setHeader($header)
-    {
-        $this->header = $header;
         return $this;
     }
 
@@ -159,14 +152,6 @@ class TwoColsLayout extends Layout
                     </nav>
 
                     <div id="page-wrapper">
-                        <?php if ($this->header): ?>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <h1 class="page-header"><?php echo $this->header ?></h1>
-                                </div>
-                                <!-- /.col-lg-12 -->
-                            </div>
-                        <?php endif; ?>
                         <?php echo $content ?>
                     </div>
                     <!-- /#page-wrapper -->

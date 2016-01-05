@@ -153,3 +153,31 @@ before, after {
 }
 [ng-cloak]{display: none !important;}
 .btn{outline: none !important;}
+.page-header .actions{
+    float: right;
+    height: 30px;
+    margin-top: 5px;
+    font-weight: normal;
+    font-size: 14px;
+    color: #333;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+.page-header .actions > a,
+.page-header .actions .dropdown > a{
+    text-decoration: none;
+    display: inline-block;
+    box-sizing: border-box;
+    font-size: 25px;
+    height: 30px;
+    width: 30px;
+    border-radius: 5px;
+    line-height: 30px;
+    text-align: center;
+}
+.page-header .actions > a:hover,
+.page-header .actions .dropdown > a:hover,
+.page-header .actions .dropdown.open > a
+{
+    background: #eee;
+}
+label{font-weight: normal;}

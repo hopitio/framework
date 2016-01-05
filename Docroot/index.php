@@ -2,7 +2,7 @@
 
 define('BASE_DIR', dirname(__DIR__));
 
-require_once BASE_DIR . '/Config.php';
+require_once BASE_DIR . '/Config/enviroment.php';
 require_once BASE_DIR . '/Libs/Slim/Slim.php';
 require_once BASE_DIR . '/Libs/Fn.php';
 

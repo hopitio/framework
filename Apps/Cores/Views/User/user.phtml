@@ -3,8 +3,7 @@
 namespace Apps\Cores\Views\Layouts;
 
 /* @var $this TwoColsLayout */
-$this->setTitle('Tài khoản')
-        ->setHeader('Tài khoản');
+$this->setTitle('Tài khoản');
 ?>
 
 <style>
@@ -21,6 +20,26 @@ $this->setTitle('Tài khoản')
 </style>
 
 <angular ng-controller="userCtrl">
+    <div class="row">
+        <div class="col-xs-12">
+            <h1 class="page-header">
+                Tài khoản
+                <div class="actions">
+                    <div class="dropdown">
+                        <a href="javascript:;" id="dropdown-config" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" class="dropdown-toggle">
+                            <i class="fa fa-ellipsis-v"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-config">
+                            <li><a href="#">Cấu hình đơn vị</a></li>
+                            <li><a href="#">Cấu hình người sử dụng</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </h1>
+        </div>
+    </div>
+
+
     <div class="alert alert-actions alert-success">
         <div class="btn-group" role="group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -51,18 +70,25 @@ $this->setTitle('Tài khoản')
         <div class="panel-body" >
             <form >
                 <div class="row">
-                    <div  class="col-xs-6">
-                        <input type="text" class="form-control" placeholder="Tìm tên" ng-model="filter.search"/>
+                    <div  class="col-md-3">
+                        <label for="filter-name">Tìm tên</label>
+                        <input type="text" class="form-control"ng-model="filter.name" id="filter-name"/>
                     </div>
-                    <div class="col-xs-3">
-                        <select class="form-control" ng-model="filter.status">
-                            <option value="-1">--Trạng thái--</option>
+                    <div class="col-md-3">
+                        <label for="filter.title">Chức danh</label>
+                        <input type="text" class="form-control"  ng-model="filter.title" id="filter.title"/>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="filter-status">Trạng thái</label>
+                        <select class="form-control" ng-model="filter.status" id="filter-status">
+                            <option value="-1">Tất cả</option>
                             <option value="1">Hoạt động</option>
                             <option value="0">Không hoạt động</option>
                         </select>
                     </div>
-                    <div class="col-xs-3">
-                        <input type="text" class="form-control" placeholder="Đơn vị" value="{{filter.dep.depName}}"/>
+                    <div class="col-md-3">
+                        <label for="filter-dep">Đơn vị</label>
+                        <input type="text" class="form-control" value="{{filter.dep.depName}}" id="filter-dep"/>
                     </div>
                 </div>
                 <h4></h4>
@@ -151,7 +177,8 @@ $this->setTitle('Tài khoản')
         sb2.controller('userCtrl', ['$scope', '$apply', function ($scope, $apply) {
                 function defaultFilter() {
                     return {
-                        'search': '',
+                        'name': '',
+                        'title': '',
                         'status': '-1',
                         'label': 'Mặc định'
                     };
@@ -183,7 +210,7 @@ $this->setTitle('Tài khoản')
                 };
 
                 $scope.compareFilter = function (a, b) {
-                    return a.search == b.search && a.status == b.status;
+                    return a.name == b.name && a.status == b.status && a.title == b.title;
                 };
 
                 $scope.getActiveFilter = function () {
