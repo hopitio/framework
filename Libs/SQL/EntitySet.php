@@ -2,7 +2,7 @@
 
 namespace Libs\SQL;
 
-class EntitySet implements Iterator
+class EntitySet implements \Iterator
 {
 
     public $var = array();
@@ -33,6 +33,16 @@ class EntitySet implements Iterator
     {
         $var = next($this->var);
         return $var;
+    }
+
+    function end()
+    {
+        return end($this->var);
+    }
+
+    function count()
+    {
+        return count($this->var);
     }
 
     public function valid()

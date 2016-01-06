@@ -87,7 +87,7 @@ class TwoColsLayout extends Layout
 
                 <!-- Custom Fonts -->
                 <link href="<?php echo url() ?>/themes/sb2/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-                <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:400,300italic,300&subset=latin,vietnamese' rel='stylesheet' type='text/css'>
+                <link href='<?php echo url() ?>/themes/sb2/fonts/google/roboto.css' rel='stylesheet' type='text/css'>
 
                 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
                 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -100,9 +100,10 @@ class TwoColsLayout extends Layout
 
                 <!-- jQuery -->
                 <script src="<?php echo url() ?>/themes/sb2/js/jquery.min.js"></script>
+                <script src="<?php echo url('/admin/config.js') ?>"></script>
             </head>
 
-            <body ng-app="sb2">
+            <body>
 
                 <div id="wrapper">
 

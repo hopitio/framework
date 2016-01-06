@@ -17,4 +17,14 @@ class HomeCtrl extends CoresCtrl
         echo 'test';
     }
 
+    function configJS()
+    {
+        $config = json_encode(array(
+            'siteUrl' => url(),
+            'appName' => \Config::APP_NAME
+        ));
+
+        $this->res->setBody("var CONFIG = $config;");
+    }
+
 }

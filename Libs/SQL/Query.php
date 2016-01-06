@@ -5,7 +5,18 @@ namespace Libs\SQL;
 class Query
 {
 
-    static function make_instance()
+    protected $query;
+    public $select = array();
+    public $from;
+    public $join = array();
+    public $where = array();
+    public $orderBy;
+    public $limit;
+    public $offset;
+    public $groupBy;
+    public $having;
+
+    static function makeInstance()
     {
         return new static;
     }
@@ -19,11 +30,11 @@ class Query
     {
         if ($override)
         {
-            $this->_select = array($fields);
+            $this->select = array($fields);
         }
         else
         {
-            $this->_select[] = $fields;
+            $this->select[] = $fields;
         }
         return $this;
     }
@@ -34,7 +45,7 @@ class Query
      */
     function from($table)
     {
-        $this->_from = $table;
+        $this->from = $table;
         return $this;
     }
 
@@ -47,11 +58,11 @@ class Query
     {
         if ($key === null)
         {
-            $this->_join[] = "JOIN $table";
+            $this->join[] = "JOIN $table";
         }
         else
         {
-            $this->_join[$key] = $table;
+            $this->join[$key] = $table;
         }
         return $this;
     }
@@ -61,15 +72,15 @@ class Query
      * @param type $table
      * @param type $key
      */
-    function inner_join($table, $key = null)
+    function innerJoin($table, $key = null)
     {
         if ($key === null)
         {
-            $this->_join[] = "INNER JOIN $table";
+            $this->join[] = "INNER JOIN $table";
         }
         else
         {
-            $this->_join[$key] = "INNER JOIN $table";
+            $this->join[$key] = "INNER JOIN $table";
         }
         return $this;
     }
@@ -79,15 +90,15 @@ class Query
      * @param type $table
      * @param type $key
      */
-    function left_join($table, $key = null)
+    function leftJoin($table, $key = null)
     {
         if ($key === null)
         {
-            $this->_join[] = "LEFT JOIN $table";
+            $this->join[] = "LEFT JOIN $table";
         }
         else
         {
-            $this->_join[$key] = "LEFT JOIN $table";
+            $this->join[$key] = "LEFT JOIN $table";
         }
         return $this;
     }
@@ -97,15 +108,15 @@ class Query
      * @param type $table
      * @param type $key
      */
-    function full_join($table, $key = null)
+    function fullJoin($table, $key = null)
     {
         if ($key === null)
         {
-            $this->_join[] = "FULL JOIN $table";
+            $this->join[] = "FULL JOIN $table";
         }
         else
         {
-            $this->_join[$key] = "FULL JOIN $table";
+            $this->join[$key] = "FULL JOIN $table";
         }
         return $this;
     }
@@ -115,15 +126,15 @@ class Query
      * @param type $table
      * @param type $key
      */
-    function right_join($table, $key = null)
+    function rightJoin($table, $key = null)
     {
         if ($key === null)
         {
-            $this->_join[] = "RIGHT JOIN $table";
+            $this->join[] = "RIGHT JOIN $table";
         }
         else
         {
-            $this->_join[$key] = "RIGHT JOIN $table";
+            $this->join[$key] = "RIGHT JOIN $table";
         }
         return $this;
     }
@@ -131,24 +142,24 @@ class Query
     /**
      * 
      * @param type $statement
-     * @param type $_where_key
+     * @param type $where_key
      */
-    function where($statement, $_where_key = null)
+    function where($statement, $where_key = null)
     {
-        if ($_where_key OR $_where_key === 0 OR $_where_key === '0')
+        if ($where_key OR $where_key === 0 OR $where_key === '0')
         {
             if ($statement !== null && $statement !== false)
             {
-                $this->_where[$_where_key] = $statement;
+                $this->where[$where_key] = $statement;
             }
-            elseif (isset($this->_where[$_where_key]))
+            elseif (isset($this->where[$where_key]))
             {
-                unset($this->_where[$_where_key]);
+                unset($this->where[$where_key]);
             }
         }
         else
         {
-            $this->_where[] = $statement;
+            $this->where[] = $statement;
         }
         return $this;
     }
@@ -157,15 +168,15 @@ class Query
      * 
      * @param type $fields
      */
-    function order_by($fields)
+    function orderBy($fields)
     {
-        $this->_order_by = $this->escape_string($fields);
+        $this->order_by = $this->escapeString($fields);
         return $this;
     }
 
-    function group_by($field)
+    function groupBy($field)
     {
-        $this->_group_by = $this->escape_string($field);
+        $this->groupBy = $this->escapeString($field);
         return $this;
     }
 
@@ -176,8 +187,8 @@ class Query
      */
     function limit($limit, $offset = null)
     {
-        $this->_limit = (int) $limit;
-        $this->_offset = (int) $offset;
+        $this->limit = (int) $limit;
+        $this->offset = (int) $offset;
         return $this;
     }
 
@@ -187,7 +198,7 @@ class Query
      */
     function offset($offset)
     {
-        $this->_offset = (int) $offset;
+        $this->offset = (int) $offset;
         return $this;
     }
 
@@ -207,41 +218,41 @@ class Query
      */
     function __toString()
     {
-        $select = empty($this->_select) ? '*' : implode(',', $this->_select);
-        $sql = "SELECT $select FROM {$this->_from}";
-        if (!empty($this->_join))
+        $select = empty($this->select) ? '*' : implode(',', $this->select);
+        $sql = "SELECT $select FROM {$this->from}";
+        if (!empty($this->join))
         {
-            $sql .= "\n" . implode("\n", $this->_join);
+            $sql .= "\n" . implode("\n", $this->join);
         }
-        if (!empty($this->_where))
+        if (!empty($this->where))
         {
-            $sql .= "\nWHERE " . implode("\n AND ", $this->_where);
+            $sql .= "\nWHERE " . implode("\n AND ", $this->where);
         }
 
-        if (!empty($this->_group_by))
+        if (!empty($this->groupBy))
         {
-            $sql .= "\nGROUP BY {$this->_group_by}";
+            $sql .= "\nGROUP BY {$this->groupBy}";
         }
-        if (!empty($this->_having))
+        if (!empty($this->having))
         {
-            $sql .= "\nHAVING {$this->_having}";
+            $sql .= "\nHAVING {$this->having}";
         }
-        if (!empty($this->_order_by))
+        if (!empty($this->order_by))
         {
-            $sql .= "\nORDER BY {$this->_order_by}";
+            $sql .= "\nORDER BY {$this->order_by}";
         }
-        if (!empty($this->_limit))
+        if (!empty($this->limit))
         {
-            $sql .= "\nLIMIT {$this->_limit}";
-            if (!empty($this->_offset))
+            $sql .= "\nLIMIT {$this->limit}";
+            if (!empty($this->offset))
             {
-                $sql .= "\nOFFSET {$this->_offset}";
+                $sql .= "\nOFFSET {$this->offset}";
             }
         }
         return $sql;
     }
 
-    function escape_string($str)
+    function escapeString($str)
     {
         $arr_search = array('&', '<', '>', '"', "'", '/', "\\", "\\");
         $arr_replace = array();

@@ -2,6 +2,9 @@
 
 namespace Libs;
 
+use \Config;
+use Libs\SQL\DB;
+
 class Bootstrap
 {
 
@@ -61,6 +64,9 @@ class Bootstrap
         require_once BASE_DIR . '/routes.php';
         $this->appendRoute($routes);
 
+        //database
+        DB::config(Config::DB_TYPE, Config::DB_HOST, Config::DB_USER, Config::DB_PASS, Config::DB_NAME, $debug);
+
         //run slim application
         $this->slim->run();
     }
@@ -69,7 +75,7 @@ class Bootstrap
     {
         $bootstrap = $this;
 
-        foreach ($routes as $key => $item)
+        foreach ($routes as $item)
         {
             if (is_object($item))
             {
@@ -77,7 +83,7 @@ class Bootstrap
                 $context = $item;
                 $context->app = $this;
                 $context->rewriteBase = $this->rewriteBase;
-                $map = $this->slim->map($prefix . $key, function() use($bootstrap, $context)
+                $map = $this->slim->map($prefix . $item->path, function() use($bootstrap, $context)
                 {
                     $bootstrap->executeAction($context, func_get_args());
                 });
@@ -89,13 +95,13 @@ class Bootstrap
                 }
                 else
                 {
-                    $methods = array(strtoupper($context->method));
+                    $methods = explode(',', strtoupper($context->method));
                 }
                 call_user_func_array(array($map, 'via'), $methods);
             }
             else
             {
-                $this->appendRoute($item, $prefix . $key);
+                $this->appendRoute($item, $prefix . $item->path);
             }
         }
     }

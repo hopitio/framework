@@ -22,4 +22,10 @@ class UserMapper extends Mapper
         return 'cores_user';
     }
 
+    function filterParent($depPk)
+    {
+        $this->where('u.depFk=?', __FUNCTION__)->setParam($depPk, __FUNCTION__);
+        return $this;
+    }
+
 }

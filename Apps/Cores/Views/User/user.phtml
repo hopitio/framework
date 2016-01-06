@@ -2,7 +2,10 @@
 
 namespace Apps\Cores\Views\Layouts;
 
+use Apps\Cores\Models\DepartmentEntity;
+
 /* @var $this TwoColsLayout */
+/* @var $department DepartmentEntity */
 $this->setTitle('Tài khoản');
 ?>
 
@@ -16,106 +19,129 @@ $this->setTitle('Tài khoản');
     table .fa-folder-open{color: #fbc02d;}
     table .fa-user{color: #ccc;}
     .table .check{margin-top: 10px;}
-
+    .modal label{min-width: 150px;}
 </style>
 
-<angular ng-controller="userCtrl">
-    <div class="row">
-        <div class="col-xs-12">
-            <h1 class="page-header">
-                Tài khoản
-                <div class="actions">
-                    <div class="dropdown">
-                        <a href="javascript:;" id="dropdown-config" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" class="dropdown-toggle">
-                            <i class="fa fa-ellipsis-v"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-config">
-                            <li><a href="#">Cấu hình đơn vị</a></li>
-                            <li><a href="#">Cấu hình người sử dụng</a></li>
-                        </ul>
-                    </div>
+<div class="row">
+    <div class="col-xs-12">
+        <h1 class="page-header">
+            Tài khoản
+            <div class="actions">
+                <div class="dropdown">
+                    <a href="javascript:;" id="dropdown-config" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" class="dropdown-toggle">
+                        <i class="fa fa-ellipsis-v"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-config">
+                        <li><a href="#">Cấu hình đơn vị</a></li>
+                        <li><a href="#">Cấu hình người sử dụng</a></li>
+                    </ul>
                 </div>
-            </h1>
+            </div>
+        </h1>
+    </div>
+</div>
+
+
+<div class="alert alert-actions alert-success">
+    <div class="btn-group" role="group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-plus"></i> Thêm mới
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a href="#">Thêm tài khoản</a></li>
+            <li><a href="#">Thêm đơn vị</a></li>
+        </ul>
+    </div>
+    <button type="button" class="btn btn-default"><i class="fa fa-exchange"></i> Chuyển đơn vị</button>
+    <button type="button" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</button>
+</div>
+
+<form class="panel panel-info panel-filter">
+    <div class="panel-heading">
+        <button type="submit" class="btn btn-default" formmethod="post" name="filter" value="0">
+            Bộ lọc
+        </button>
+        <div class="panel-actions">
+            <a href="javascript:;" data-toggle="tooltip" data-placement="top" title="Phóng to/Thu nhỏ">
+                <i class="fa fa-minus-square-o"></i>
+            </a>
         </div>
     </div>
-
-
-    <div class="alert alert-actions alert-success">
-        <div class="btn-group" role="group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-plus"></i> Thêm mới
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a href="#">Thêm tài khoản</a></li>
-                <li><a href="#">Thêm đơn vị</a></li>
-            </ul>
-        </div>
-        <button type="button" class="btn btn-default"><i class="fa fa-exchange"></i> Chuyển đơn vị</button>
-        <button type="button" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</button>
-    </div>
-
-    <div class="panel panel-info panel-filter" ng-class="<?php echo "{minimize: !showFilter}" ?>" ng-cloak>
-        <div class="panel-heading">
-            <button type="button" class="btn btn-default" ng-repeat="item in filters" ng-click="setFilter(item)"
-                    ng-class="<?php echo "{active: compareFilter(item, filter)}" ?>">
-                {{item.label}}
-            </button>
-            <div class="panel-actions">
-                <a href="javascript:;" data-toggle="tooltip" data-placement="top" title="Phóng to/Thu nhỏ" ng-click="toggleFilter()">
-                    <i class="fa" ng-class="<?php echo "{'fa-plus-square-o': !showFilter, 'fa-minus-square-o': showFilter}" ?>"></i>
-                </a>
+    <div class="panel-body">
+        <div class="row">
+            <div  class="col-md-6">
+                <label for="filter-name">Tìm kiếm</label>
+                <input type="text" class="form-control"  id="filter-name" name="search" placeholder="tên, điện thoại, chức danh, tài khoản"/>
+            </div>
+            <div class="col-md-3">
+                <label for="filter-status">Trạng thái</label>
+                <select class="form-control" id="filter-status" name="status">
+                    <option value="0">Tất cả</option>
+                    <option value="active">Hoạt động</option>
+                    <option value="inactive">Không hoạt động</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="filter-dep">Đơn vị</label>
+                <input type="text" class="form-control"  id="filter-dep"/>
             </div>
         </div>
-        <div class="panel-body" >
-            <form >
-                <div class="row">
-                    <div  class="col-md-3">
-                        <label for="filter-name">Tìm tên</label>
-                        <input type="text" class="form-control"ng-model="filter.name" id="filter-name"/>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="filter.title">Chức danh</label>
-                        <input type="text" class="form-control"  ng-model="filter.title" id="filter.title"/>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="filter-status">Trạng thái</label>
-                        <select class="form-control" ng-model="filter.status" id="filter-status">
-                            <option value="-1">Tất cả</option>
-                            <option value="1">Hoạt động</option>
-                            <option value="0">Không hoạt động</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="filter-dep">Đơn vị</label>
-                        <input type="text" class="form-control" value="{{filter.dep.depName}}" id="filter-dep"/>
-                    </div>
-                </div>
-                <h4></h4>
-                <button type="button" class="btn btn-default" ng-click="saveFilter()" ng-disabled="getActiveFilter() != -1">Thêm bộ lọc</button>
-                <button type="button" class="btn btn-default" ng-click="removeFilter()" ng-disabled="getActiveFilter() == -1 || getActiveFilter() == 0">Xóa bộ lọc</button>
-            </form>
+        <h4></h4>
+
+        <div>
+            <div class="pull-left">
+                <button type="submit" class="btn btn-default" name="dep" value="<?php echo $department->pk ?>"><i class="fa fa-search"></i> Tìm kiếm</button>
+            </div>
+            <div class="pull-right">
+                <button type="submit" class="btn btn-default" formmethod="post" name="add-filter">Thêm bộ lọc</button>
+                <button type="submit" class="btn btn-default" formmethod="post" name="remove-filter" value="">Xóa bộ lọc</button>
+            </div>
+            <div class="clearfix"></div>
         </div>
-
-
     </div>
 
 
-    <h4></h4>
-    <ol class="breadcrumb">
-        <li><button class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Quay lại"><i class="fa fa-arrow-left"></i></button></li>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Library</a></li>
-        <li class="active">Data</li>
-    </ol>
-    <table class="table table-bordered table-hover">
-        <tbody>
+</form>
+
+
+<h4></h4>
+
+
+<ol class="breadcrumb">
+    <li>
+        <div class="btn-group">
+            <?php
+            $disabled = $department->pk == 0 ? 'disabled' : '';
+            $url = '?' . ($department->ancestors->end() ? $department->ancestors->end()->pk : '');
+            ?>
+            <a href="<?php echo $url ?>" <?php echo $disabled ?> class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Quay lại">
+                <i class="fa fa-arrow-left"></i>
+            </a>
+            <a href="?" <?php echo $disabled ?> class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Trở về gốc">
+                <i class="fa fa-home"></i>
+            </a>
+        </div>
+    </li>
+    <?php foreach ($department->ancestors as $ancestor): ?>
+        <li><a href="?dep=<?php echo $ancestor->pk ?>"><?php echo $ancestor->depName ?></a></li>
+    <?php endforeach; ?>
+    <li class="active"><?php echo $department->depName ?></li>
+</ol>
+<table class="table table-bordered table-hover">
+    <tbody>
+        <?php if (!$department->deps->count() && !$department->users->count()): ?>
+            <tr>
+                <td class="center"><Br>Chưa có thư mục và tài khoản trong đơn vị.<br>&nbsp;</td>
+            </tr>
+        <?php endif; ?>
+        <?php foreach ($department->deps as $childDep): ?>
             <tr>
                 <td>
                     <div class="tbl-row">
                         <div class="tbl-check">
                             <label class="check">
-                                <input type="checkbox" />
+                                <input type="checkbox" name="chk-deps[]" value="<?php echo $childDep->pk ?>"/>
                                 <before></before>
                                 <after></after>
                             </label>
@@ -124,23 +150,29 @@ $this->setTitle('Tài khoản');
                             <i class="fa fa-2x fa-folder-open"></i>
                         </div>
                         <div class="tbl-text">
-                            <a href="javascript:;">Thư mục</a><br>
-                            Tài khoản: 9 | Thư mục: 10
+                            <a href="?dep=<?php echo $childDep->pk ?>"><?php echo $childDep->depName ?></a><br>
+                            Đơn vị/Phòng ban
                         </div>
                         <div class="btn-group" role="group" aria-label="...">
-                            <button type="button" class="btn btn-outline btn-primary btn-sm">Sửa</button>
+                            <?php
+                            $p = $params;
+                            $p['edit'] = 'dep';
+                            $p['editId'] = $childDep->pk;
+                            ?>
+                            <a href="?<?php echo encodeForm($p) ?>" class="btn btn-outline btn-primary btn-sm">Sửa</a>
                             <button type="button" class="btn btn-outline btn-danger btn-sm">Xóa</button>
                         </div>
                     </div>
                 </td>
-
             </tr>
+        <?php endforeach; ?>
+        <?php foreach ($department->users as $user): ?>
             <tr>
                 <td>
                     <div class="tbl-row">
                         <div class="tbl-check">
                             <label class="check">
-                                <input type="checkbox" />
+                                <input type="checkbox" name="chk-users[]" value="<?php echo $user->pk ?>"/>
                                 <before></before>
                                 <after></after>
                             </label>
@@ -149,8 +181,8 @@ $this->setTitle('Tài khoản');
                             <i class="fa fa-2x fa-user"></i>
                         </div>
                         <div class="tbl-text">
-                            <a href="javascript:;">Nguyễn Văn A</a><br>
-                            Chuyên viên
+                            <a href="javascript:;"><?php echo $user->fullName ?></a><br>
+                            <?php echo $user->jobTitle ?>
                         </div>
                         <div class="btn-group" role="group" aria-label="...">
                             <button type="button" class="btn btn-outline btn-primary btn-sm">Sửa</button>
@@ -159,11 +191,65 @@ $this->setTitle('Tài khoản');
                     </div>
                 </td>
             </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
 
-
-        </tbody>
-    </table>
-</angular>
+<?php if (arrData($params, 'edit') == 'dep'): ?>
+    <form method="post">
+        <div id="modal-dep" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Đơn vị/Phòng ban</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table-form">
+                            <tr>
+                                <td><label>Trực thuộc:</label></td>
+                                <td ><input type="text" class="form-control"/></td>
+                            </tr>
+                            <tr>
+                                <td><label>Tên đơn vị:</label></td>
+                                <td><input type="text" class="form-control"/></td>
+                            </tr>
+                            <tr>
+                                <td><label>Mã đơn vị:</label></td>
+                                <td><input type="text" class="form-control"/></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <label class="check">
+                                        <input type="checkbox"/>
+                                        <before></before>
+                                        <after></after>
+                                        Trạng thái
+                                    </label>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <?php
+                        $p = $params;
+                        unset($p['edit']);
+                        unset($p['editId']);
+                        ?>
+                        <a href="?<?php echo encodeForm($p) ?>" class="btn btn-default">Đóng</a>
+                        <button type="button" class="btn btn-primary">Lưu thay đổi</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    </form>
+    <script>
+        $(function () {
+            $('#modal-dep').modal('show');
+        });
+    </script>
+<?php endif; ?>
 
 <script>
     $(function () {
@@ -172,80 +258,4 @@ $this->setTitle('Tài khoản');
         });
     });
 </script>
-<script>
-    $(function () {
-        sb2.controller('userCtrl', ['$scope', '$apply', function ($scope, $apply) {
-                function defaultFilter() {
-                    return {
-                        'name': '',
-                        'title': '',
-                        'status': '-1',
-                        'label': 'Mặc định'
-                    };
-                }
-                ;
-                $scope.showFilter = getCookie('showFilter', false);
-                $scope.filters = getCookie('filters', [defaultFilter()]);
-                $scope.filter = getCookie('filter', defaultFilter());
 
-                $scope.toggleFilter = function () {
-                    $scope.showFilter = !$scope.showFilter;
-                    setCookie('showFilter', $scope.showFilter);
-                };
-
-                $scope.$watchCollection('filters', function () {
-                    if (!$scope.filters)
-                        return;
-                    setCookie('filters', $scope.filters);
-                });
-
-                $scope.$watchCollection('filter', function () {
-                    if (!$scope.filter)
-                        return;
-                    setCookie('filter', $scope.filter);
-                });
-
-                $scope.setFilter = function (filter) {
-                    $scope.filter = $.extend({}, filter);
-                };
-
-                $scope.compareFilter = function (a, b) {
-                    return a.name == b.name && a.status == b.status && a.title == b.title;
-                };
-
-                $scope.getActiveFilter = function () {
-                    for (var i in $scope.filters) {
-                        var item = $scope.filters[i];
-                        if ($scope.compareFilter(item, $scope.filter)) {
-                            return i;
-                        }
-                    }
-                    return -1;
-                };
-
-                $scope.saveFilter = function () {
-                    var idx = $scope.getActiveFilter();
-                    var filter = $.extend({}, $scope.filter);
-                    delete filter['$$hashKey'];
-
-                    if (idx == -1) {
-                        filter.label = prompt('Đặt tên cho bộ lọc mới');
-                        if (filter.label)
-                            $scope.filters.push(filter);
-                    }
-                };
-
-                $scope.removeFilter = function () {
-                    var idx = $scope.getActiveFilter();
-                    if (idx == -1 || idx == 0)
-                        return;
-                    var filter = $scope.filters[idx];
-                    if (confirm('Xóa bộ lọc ' + filter.label + '?')) {
-                        $scope.filters.splice(idx, 1);
-                        $scope.setFilter(defaultFilter());
-                    }
-                };
-            }]);
-    });
-
-</script>

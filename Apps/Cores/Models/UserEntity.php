@@ -10,11 +10,12 @@ class UserEntity extends Entity
     public $pk;
     public $fullName;
     public $jobTitle;
-    public $depPk;
+    public $depFk;
     public $account;
     public $pass;
     public $email;
     public $phone;
     public $stt;
+    public $isAdmin;
 
 }

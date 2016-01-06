@@ -1,6 +1,7 @@
 <?php
 
 use Libs\Bootstrap;
+use Libs\SQL\EntitySet;
 
 function url($path = '', $params = array())
 {
@@ -26,4 +27,19 @@ function urlAbsolute($path = '', $params = array())
 function arrData($arr, $key, $default = null)
 {
     return isset($arr[$key]) ? $arr[$key] : $default;
+}
+
+/**
+ * Chuyển mảng về tham số get
+ * @param array $arr
+ * @return string
+ */
+function encodeForm($arr)
+{
+    $ret = '';
+    foreach ($arr as $k => $v)
+    {
+        $ret .= $ret ? "&{$k}={$v}" : "{$k}={$v}";
+    }
+    return $ret;
 }

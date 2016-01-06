@@ -177,6 +177,7 @@ class View
         } else {
             throw new \InvalidArgumentException('Cannot set View data with provided arguments. Usage: `View::setData( $key, $value );` or `View::setData([ key => value, ... ]);`');
         }
+        return $this;
     }
 
     /**

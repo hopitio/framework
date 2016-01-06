@@ -28,7 +28,7 @@ abstract class Mapper extends Query
 
     abstract function makeEntity($rawData);
 
-    function set_param($value, $key)
+    function setParam($value, $key)
     {
         $this->params[$key] = $value;
         return $this;
@@ -76,7 +76,7 @@ abstract class Mapper extends Query
         return $entity;
     }
 
-    protected function makeEntitySet($entities)
+    protected function makeEntitySet($entities = array())
     {
         return new EntitySet($entities);
     }
@@ -85,6 +85,7 @@ abstract class Mapper extends Query
     function getAll($callback = null)
     {
         $rows = $this->db->GetAll($this->__toString(), $this->params);
+        $rows = $rows ? $rows : array();
         $entities = array();
 
         foreach ($rows as $row)

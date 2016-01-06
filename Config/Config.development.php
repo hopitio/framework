@@ -10,7 +10,7 @@ class Config
      * <li>10 = bật debug trên tất cả</li>
      * </ul>
      */
-    const DEBUG_MODE = 1;
+    const DEBUG_MODE = 0;
 
     /** Ten phan mem */
     const APP_NAME = 'Framework';

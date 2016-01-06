@@ -1,7 +1,7 @@
 body{
     min-width: 770px;
 }
-.page-header{
+.page-header,.modal-title{
     font-family: 'Roboto Condensed', sans-serif;
     font-weight: 300;
 }
@@ -14,7 +14,7 @@ body{
     padding-top: 0;
     padding-bottom: 0;
 }
-.btn{
+.btn, .panel, .alert, .table, .breadcrumb{
     box-shadow: 0 2px 5px 0 rgba(0,0,0,0.1),0 1px 1px 0 rgba(0,0,0,0.08);
 }
 before, after {
@@ -32,7 +32,6 @@ before, after {
     display: inline-block;
     height: 21px;
     line-height: 21px;
-    font-size: 1rem;
     -webkit-user-select: none;
     -moz-user-select: none;
     -khtml-user-select: none;
@@ -154,13 +153,13 @@ before, after {
 [ng-cloak]{display: none !important;}
 .btn{outline: none !important;}
 .page-header .actions{
-    float: right;
     height: 30px;
     margin-top: 5px;
     font-weight: normal;
     font-size: 14px;
     color: #333;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    display: inline-block;
 }
 .page-header .actions > a,
 .page-header .actions .dropdown > a{
@@ -173,6 +172,7 @@ before, after {
     border-radius: 5px;
     line-height: 30px;
     text-align: center;
+    color: gray;
 }
 .page-header .actions > a:hover,
 .page-header .actions .dropdown > a:hover,
@@ -180,4 +180,22 @@ before, after {
 {
     background: #eee;
 }
-label{font-weight: normal;}
+label{font-weight: normal;display: block;}
+.page-header{
+    margin-top: 20px;
+}
+table.table-form{
+    width: 100%;
+}
+table.table-form tr td{
+    padding-bottom: 10px;
+}
+table.table-form tr:last-child td{
+    padding-bottom: 0;
+}
+table.table-form td:first-child{
+    min-width: 150px;
+}
+table.table-form td:last-child{
+    width: 100%;
+}
