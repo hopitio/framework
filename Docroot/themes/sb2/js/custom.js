@@ -54,3 +54,19 @@ sb2.factory('$apply', ['$rootScope', function ($rootScope) {
             });
         };
     }]);
+
+
+$(function () {
+    //check/uncheck all
+    $('.table thead').on('change', '[type=checkbox]', function () {
+        var checked = $(this).prop('checked');
+        $(this).parents('table:first').find('tbody [type=checkbox]').each(function () {
+            $(this).prop('checked', checked).trigger('change');
+        });
+    });
+    //check dòng thường trong table
+    $('.table tbody').on('change', '[type=checkbox]', function () {
+        var checked = $(this).prop('checked');
+        $(this).parents('tr:first').toggleClass('warning', checked);
+    });
+});

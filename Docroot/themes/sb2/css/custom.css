@@ -199,3 +199,44 @@ table.table-form td:first-child{
 table.table-form td:last-child{
     width: 100%;
 }
+table label.check{
+    vertical-align: middle;
+}
+table tfoot,
+table th{
+    color: gray;
+    font-weight: normal
+}
+table td > .fa,
+table th > .fa{
+    vertical-align: middle;
+}
+.table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>td, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>thead>tr>th{
+    border: none;
+    vertical-align: middle;
+}
+.table-bordered > thead > tr > td, .table-bordered > thead > tr > th,
+.table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th{
+    background: #eceff1;
+}
+.tbl-actions > a, .tbl-actions > .dropdown > a{
+    font-size: 1.5em;
+    color: gray;
+}
+.tbl-actions > a:hover{
+    color: #333;
+}
+span.dropdown{
+    display: inline-block;
+}
+.dropdown-menu.dropdown-menu-bottom{
+    top:initial;
+    bottom: 100%;
+}
+.dropdown.select ul,
+.dropdown.select li{
+    min-width: 0;
+}
+.dropdown.icons > ul > li > a{
+    position: relative;
+}

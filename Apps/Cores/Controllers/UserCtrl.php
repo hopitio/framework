@@ -28,6 +28,15 @@ class UserCtrl extends CoresCtrl
                 ->filterPk($depPk)
                 ->getEntity();
 
+        if ($this->req->get('edit') && $this->req->get('editId'))
+        {
+            $this->twoColsLayout->setData(array(
+                'editDep' => $this->depMapper
+                        ->filterPk($this->req->get('editId'))
+                        ->getEntity()
+            ));
+        }
+
         $this->twoColsLayout
                 ->setData(array(
                     'department' => $dep,

@@ -6,20 +6,18 @@ use Apps\Cores\Models\DepartmentEntity;
 
 /* @var $this TwoColsLayout */
 /* @var $department DepartmentEntity */
+/* @var $editDep DepartmentEntity */
 $this->setTitle('Tài khoản');
 ?>
 
 <style>
     .tbl-row{height: 40px;position: relative;}
-    .tbl-check{float:left;height: 40px;line-height: 40px;width: 30px;text-align: center;}
-    .tbl-type{float:left;height: 40px;box-sizing: border-box;width: 50px;text-align: center;padding-top: 5px;}
-    .tbl-text{position: absolute;left: 90px;right:0;height: 40px;}
-    .tbl-row .btn-group{position: absolute;right: 10px;top: 5px;display: none;}
-    .tbl-row:hover .btn-group{display: block;}
     table .fa-folder-open{color: #fbc02d;}
     table .fa-user{color: #ccc;}
-    .table .check{margin-top: 10px;}
     .modal label{min-width: 150px;}
+    .tbl-type .fa{font-size: 1.5em;}
+    table th{min-width: 50px;}
+    table th:last-child{width: 100%;}
 </style>
 
 <div class="row">
@@ -41,21 +39,26 @@ $this->setTitle('Tài khoản');
     </div>
 </div>
 
-
-<div class="alert alert-actions alert-success">
-    <div class="btn-group" role="group">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fa fa-plus"></i> Thêm mới
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-            <li><a href="#">Thêm tài khoản</a></li>
-            <li><a href="#">Thêm đơn vị</a></li>
-        </ul>
-    </div>
-    <button type="button" class="btn btn-default"><i class="fa fa-exchange"></i> Chuyển đơn vị</button>
-    <button type="button" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</button>
-</div>
+<ol class="breadcrumb">
+    <li>
+        <div class="btn-group">
+            <?php
+            $disabled = $department->pk == 0 ? 'disabled' : '';
+            $url = '?' . ($department->ancestors->end() ? $department->ancestors->end()->pk : '');
+            ?>
+            <a href="<?php echo $url ?>" <?php echo $disabled ?> class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Quay lại">
+                <i class="fa fa-arrow-left"></i>
+            </a>
+            <a href="?" <?php echo $disabled ?> class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Trở về gốc">
+                <i class="fa fa-home"></i>
+            </a>
+        </div>
+    </li>
+    <?php foreach ($department->ancestors as $ancestor): ?>
+        <li><a href="?dep=<?php echo $ancestor->pk ?>"><?php echo $ancestor->depName ?></a></li>
+    <?php endforeach; ?>
+    <li class="active"><?php echo $department->depName ?></li>
+</ol>
 
 <form class="panel panel-info panel-filter">
     <div class="panel-heading">
@@ -104,95 +107,149 @@ $this->setTitle('Tài khoản');
 
 </form>
 
-
 <h4></h4>
 
-
-<ol class="breadcrumb">
-    <li>
-        <div class="btn-group">
-            <?php
-            $disabled = $department->pk == 0 ? 'disabled' : '';
-            $url = '?' . ($department->ancestors->end() ? $department->ancestors->end()->pk : '');
-            ?>
-            <a href="<?php echo $url ?>" <?php echo $disabled ?> class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Quay lại">
-                <i class="fa fa-arrow-left"></i>
-            </a>
-            <a href="?" <?php echo $disabled ?> class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Trở về gốc">
-                <i class="fa fa-home"></i>
-            </a>
-        </div>
-    </li>
-    <?php foreach ($department->ancestors as $ancestor): ?>
-        <li><a href="?dep=<?php echo $ancestor->pk ?>"><?php echo $ancestor->depName ?></a></li>
-    <?php endforeach; ?>
-    <li class="active"><?php echo $department->depName ?></li>
-</ol>
-<table class="table table-bordered table-hover">
+<table class="table table-bordered table-striped table-hover">
+    <thead>
+        <tr>
+            <td colspan="4">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-plus"></i> Thêm mới
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Thêm tài khoản</a></li>
+                        <li><a href="#">Thêm đơn vị</a></li>
+                    </ul>
+                </div>
+                <button type="button" class="btn btn-default"><i class="fa fa-exchange"></i> Chuyển đơn vị</button>
+                <button type="button" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</button>
+            </td>
+        </tr>
+        <tr>
+            <th class="center">
+                <label class="check">
+                    <input type="checkbox" />
+                    <before></before>
+                    <after></after>
+                </label>
+            </th>
+            <th>Loại</th>
+            <th></th>
+            <th>Tên</th>
+        </tr>
+    </thead>
     <tbody>
         <?php if (!$department->deps->count() && !$department->users->count()): ?>
             <tr>
-                <td class="center"><Br>Chưa có thư mục và tài khoản trong đơn vị.<br>&nbsp;</td>
+                <td colspan="4" class="center"><Br>Chưa có thư mục và tài khoản trong đơn vị.<br>&nbsp;</td>
             </tr>
         <?php endif; ?>
+
         <?php foreach ($department->deps as $childDep): ?>
             <tr>
-                <td>
-                    <div class="tbl-row">
-                        <div class="tbl-check">
-                            <label class="check">
-                                <input type="checkbox" name="chk-deps[]" value="<?php echo $childDep->pk ?>"/>
-                                <before></before>
-                                <after></after>
-                            </label>
-                        </div>
-                        <div class="tbl-type">
-                            <i class="fa fa-2x fa-folder-open"></i>
-                        </div>
-                        <div class="tbl-text">
-                            <a href="?dep=<?php echo $childDep->pk ?>"><?php echo $childDep->depName ?></a><br>
-                            Đơn vị/Phòng ban
-                        </div>
-                        <div class="btn-group" role="group" aria-label="...">
+                <td class="center">
+                    <div class="tbl-check">
+                        <label class="check">
+                            <input type="checkbox" name="chk-deps[]" value="<?php echo $childDep->pk ?>"/>
+                            <before></before>
+                            <after></after>
+                        </label>
+                    </div>
+                </td>
+                <td class="tbl-type center">
+                    <i class="fa fa-folder-open"></i>
+                </td>
+                <td class="tbl-actions center">
+                    <div class="dropdown">
+                        <a href="javascript:;" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"></i></a>
+                        <ul class="dropdown-menu">
                             <?php
                             $p = $params;
                             $p['edit'] = 'dep';
                             $p['editId'] = $childDep->pk;
                             ?>
-                            <a href="?<?php echo encodeForm($p) ?>" class="btn btn-outline btn-primary btn-sm">Sửa</a>
-                            <button type="button" class="btn btn-outline btn-danger btn-sm">Xóa</button>
-                        </div>
+                            <li><a href="?<?php echo encodeForm($p) ?>">Sửa</a></li>
+                            <li><a href="javascript:;">Chuyển đơn vị</a></li>
+                            <li><a href="javascript:;">Xóa</a></li>
+                        </ul>
                     </div>
+                </td>
+                <td class="tbl-text">
+                    <a href="?dep=<?php echo $childDep->pk ?>"><?php echo $childDep->depName ?></a><br>
+                    Đơn vị/Phòng ban
                 </td>
             </tr>
         <?php endforeach; ?>
         <?php foreach ($department->users as $user): ?>
             <tr>
-                <td>
-                    <div class="tbl-row">
-                        <div class="tbl-check">
-                            <label class="check">
-                                <input type="checkbox" name="chk-users[]" value="<?php echo $user->pk ?>"/>
-                                <before></before>
-                                <after></after>
-                            </label>
-                        </div>
-                        <div class="tbl-type">
-                            <i class="fa fa-2x fa-user"></i>
-                        </div>
-                        <div class="tbl-text">
-                            <a href="javascript:;"><?php echo $user->fullName ?></a><br>
-                            <?php echo $user->jobTitle ?>
-                        </div>
-                        <div class="btn-group" role="group" aria-label="...">
-                            <button type="button" class="btn btn-outline btn-primary btn-sm">Sửa</button>
-                            <button type="button" class="btn btn-outline btn-danger btn-sm">Xóa</button>
-                        </div>
+                <td class="center">
+                    <div class="tbl-check">
+                        <label class="check">
+                            <input type="checkbox" name="chk-users[]" value="<?php echo $user->pk ?>"/>
+                            <before></before>
+                            <after></after>
+                        </label>
                     </div>
+                </td>
+                <td class="tbl-type center">
+                    <i class="fa fa-user"></i>
+                </td>
+                <td class="tbl-actions center">
+                    <div class="dropdown">
+                        <a href="javascript:;" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="javascript:;">Sửa</a></li>
+                            <li><a href="javascript:;">Xóa</a></li>
+                        </ul>
+                    </div>
+                </td>
+                <td class="tbl-text">
+                    <a href="javascript:;"><?php echo $user->fullName ?></a><br>
+                    <?php echo $user->jobTitle ?>
                 </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4">
+                <div class="pull-left">
+                    <span class="dropdown select">
+                        <button class="btn btn-default" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            20 <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-bottom">
+                            <li class="active"><a href="javascript:;">20</a></li>
+                            <li><a href="javascript:;">50</a></li>
+                            <li><a href="javascript:;">100</a></li>
+                            <li><a href="javascript:;">200</a></li>
+                        </ul>
+                    </span>
+                    bản ghi/trang
+                </div>
+                <div class="pull-right">
+
+                    Chuyển đến trang
+                    <span class="dropdown select">
+                        <button class="btn btn-default" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            1 <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right dropdown-menu-bottom">
+                            <li class="active"><a href="javascript:;">1</a></li>
+                            <li><a href="javascript:;">2</a></li>
+                            <li><a href="javascript:;">3</a></li>
+                            <li><a href="javascript:;">4</a></li>
+                            <li><a href="javascript:;">5</a></li>
+                            <li><a href="javascript:;">Nhập số</a></li>
+                        </ul>
+                    </span>
+                    tổng số 50 bản ghi
+                </div>
+            </td>
+        </tr>
+    </tfoot>
 </table>
 
 <?php if (arrData($params, 'edit') == 'dep'): ?>
@@ -207,25 +264,26 @@ $this->setTitle('Tài khoản');
                     <div class="modal-body">
                         <table class="table-form">
                             <tr>
-                                <td><label>Trực thuộc:</label></td>
-                                <td ><input type="text" class="form-control"/></td>
+                                <td><label for="editDep">Trực thuộc:</label></td>
+                                <td ><input type="text" class="form-control" name="editDep" id="editDep"/></td>
                             </tr>
                             <tr>
-                                <td><label>Tên đơn vị:</label></td>
-                                <td><input type="text" class="form-control"/></td>
+                                <td><label for="editDepName">Tên đơn vị:</label></td>
+                                <td><input type="text" class="form-control" name="editDepName" id="editDepName" value="<?php echo $editDep->depName ?>"/></td>
                             </tr>
                             <tr>
-                                <td><label>Mã đơn vị:</label></td>
-                                <td><input type="text" class="form-control"/></td>
+                                <td><label for="editDepCode">Mã đơn vị:</label></td>
+                                <td><input type="text" class="form-control" name="editDepCode" id="editDepCode" value="<?php echo $editDep->depCode ?>"/></td>
                             </tr>
                             <tr>
                                 <td>&nbsp;</td>
                                 <td>
-                                    <label class="check">
-                                        <input type="checkbox"/>
+                                    <?php $checked = $editDep->stt == 'active' ? 'checked' : '' ?>
+                                    <label class="check" >
+                                        <input type="checkbox" <?php echo $checked ?>/>
                                         <before></before>
                                         <after></after>
-                                        Trạng thái
+                                        &nbsp;Hoạt động 
                                     </label>
                                 </td>
                             </tr>
@@ -237,25 +295,32 @@ $this->setTitle('Tài khoản');
                         unset($p['edit']);
                         unset($p['editId']);
                         ?>
-                        <a href="?<?php echo encodeForm($p) ?>" class="btn btn-default">Đóng</a>
-                        <button type="button" class="btn btn-primary">Lưu thay đổi</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
     </form>
+    <?php
+    $p = $params;
+    unset($p['edit']);
+    unset($p['editId']);
+    ?>
+    <script>
+        var backUrl = <?php echo json_encode('?' . encodeForm($p)) ?>;
+    </script>
     <script>
         $(function () {
             $('#modal-dep').modal('show');
+            $('#modal-dep').on('hide.bs.modal', function () {
+                window.location = backUrl;
+            });
         });
     </script>
 <?php endif; ?>
 
 <script>
-    $(function () {
-        $('.table').on('change', '[type=checkbox]', function () {
-            $(this).parents('tr:first').toggleClass('warning');
-        });
-    });
+
 </script>
 
