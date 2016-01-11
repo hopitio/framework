@@ -12,7 +12,7 @@ abstract class Controller
     protected $req;
 
     /** @var \Slim\Http\Response */
-    protected $res;
+    protected $resp;
 
     /** @var \Libs\Session */
     protected $session;
@@ -21,7 +21,7 @@ abstract class Controller
     {
         $this->context = $context;
         $this->req = $context->app->slim->request;
-        $this->res = $context->app->slim->response;
+        $this->resp = $context->app->slim->response;
         $this->session = new \Slim\Helper\Set($_SESSION);
         $this->session = new Session();
 

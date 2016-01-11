@@ -14,7 +14,7 @@ body{
     padding-top: 0;
     padding-bottom: 0;
 }
-.btn, .panel, .alert, .table, .breadcrumb{
+.panel, .alert, .table, .breadcrumb{
     box-shadow: 0 2px 5px 0 rgba(0,0,0,0.1),0 1px 1px 0 rgba(0,0,0,0.08);
 }
 before, after {
@@ -213,6 +213,7 @@ table th > .fa{
 }
 .table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>td, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>thead>tr>th{
     border: none;
+    border-bottom: 1px solid transparent;
     vertical-align: middle;
 }
 .table-bordered > thead > tr > td, .table-bordered > thead > tr > th,
@@ -240,3 +241,12 @@ span.dropdown{
 .dropdown.icons > ul > li > a{
     position: relative;
 }
+assign{
+    display: none;
+}
+table .fa-dot-circle-o{font-size: 1.3em;}
+table .fa-dot-circle-o.active{color: #4caf50;}
+table .fa-dot-circle-o.inactive{color: gray;}
+table td:first-child, table th:first-child{border-left: 3px solid transparent !important;}
+table tr.stt-active td:first-child{border-left-color: #81c784 !important;;}
+table tr.stt-inactive td:first-child{border-left-color: #bdbdbd !important;;}

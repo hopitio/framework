@@ -7,22 +7,29 @@ class Json
 
     static function encode($val)
     {
-        if (is_object($val))
-        {
-            $val = json_decode(json_encode($val), true);
-        }
+
+        $val = json_decode(json_encode($val), true);
         if (is_array($val))
         {
-            array_walk_recursive($val, function(&$val)
-            {
-                if ($val instanceof EntitySet)
-                {
-                    $val = $val->var;
-                }
-            });
+            static::walk($val);
         }
 
         return json_encode($val);
+    }
+
+    protected static function walk(&$val)
+    {
+        if (is_array($val) && isset($val['var']))
+        {
+            $val = $val['var'];
+        }
+        foreach ($val as $k => &$v)
+        {
+            if (is_array($v))
+            {
+                static::walk($v);
+            }
+        }
     }
 
     static function decode($val)

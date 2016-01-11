@@ -9,7 +9,9 @@ class DepartmentMapper extends Mapper
 
     protected $loadUsers;
     protected $loadChildDeps;
+    protected $loadChildDepsRecusiveLy; //load cả cây
     protected $loadAncestors;
+    protected $not = array();
 
     protected function userMapper()
     {
@@ -19,7 +21,7 @@ class DepartmentMapper extends Mapper
     function __construct()
     {
         parent::__construct();
-        $this->orderBy('dep.pathSort');
+        $this->orderBy('dep.path');
     }
 
     public function makeEntity($rawData)
@@ -33,7 +35,7 @@ class DepartmentMapper extends Mapper
         }
         if ($this->loadChildDeps)
         {
-            $entity->deps = $this->loadChildDeps($entity->pk);
+            $entity->deps = $this->loadChildDeps($entity->pk, $this->loadChildDepsRecusiveLy);
         }
         if ($this->loadAncestors)
         {
@@ -75,9 +77,10 @@ class DepartmentMapper extends Mapper
     }
 
     /** Tự động load đơn vị trực thuộc */
-    function setLoadChildDeps($bool = true)
+    function setLoadChildDeps($bool = true, $rescusively = false)
     {
         $this->loadChildDeps = $bool;
+        $this->loadChildDepsRecusiveLy = $rescusively;
         return $this;
     }
 
@@ -106,11 +109,16 @@ class DepartmentMapper extends Mapper
     }
 
     /** @return EntitySet<DepartmentEntity> */
-    function loadChildDeps($depPk)
+    function loadChildDeps($depPk, $rescusively = false)
     {
+        $mapper = $this;
         return $this->makeInstance()
                         ->filterParent($depPk)
-                        ->getAll();
+                        ->filterNot($this->not)
+                        ->getAll(function($rawData, $entity) use($mapper, $rescusively)
+                        {
+                            $entity->deps = $mapper->loadChildDeps($entity->pk, $rescusively);
+                        });
     }
 
     /**
@@ -135,6 +143,53 @@ class DepartmentMapper extends Mapper
         {
             return $this->makeEntitySet();
         }
+    }
+
+    function filterNot($arr)
+    {
+        if (!is_array($arr))
+        {
+            $arr = array($arr);
+        }
+        $this->not = $arr;
+
+        $where = array();
+        foreach ($arr as &$id)
+        {
+            $id = (int) $id;
+            $where[] = "dep.pk <> $id";
+        }
+        $this->where("(" . implode(' AND ', $where) . ")", __FUNCTION__);
+
+        return $this;
+    }
+
+    function updateDep($depPk, $depFk, $code, $name, $stt)
+    {
+        $data = array(
+            'depFk'   => (int) $depFk,
+            'depCode' => $code,
+            'depName' => $name,
+            'stt'     => $stt ? 1 : 0
+        );
+
+        if ($depPk)
+        {
+            $this->db->update('cores_department', $data, 'pk=?', array($depPk));
+        }
+        else
+        {
+            $depPk = $this->db->insert('cores_department', $data);
+        }
+        //re-index path
+        $this->rebuildDepPath();
+
+        return $depPk;
+    }
+
+    protected function rebuildDepPath()
+    {
+        $this->rebuildPath('depFk', 'path', 'pk');
     }
 
 }

@@ -45,6 +45,20 @@ function compareObj(a, b) {
     return JSON.stringify(a) === JSON.stringify(b);
 }
 
+$(function () {
+    //check/uncheck all
+    $('.table thead').on('change', '[type=checkbox]', function () {
+        var checked = $(this).prop('checked');
+        $(this).parents('table:first').find('tbody [type=checkbox]').each(function () {
+            $(this).prop('checked', checked).trigger('change').triggerHandler('click');
+        });
+    });
+    //check dòng thường trong table
+    $('.table tbody').on('change', '[type=checkbox]', function () {
+        var checked = $(this).prop('checked');
+        $(this).parents('tr:first').toggleClass('warning', checked);
+    });
+});
 
 var sb2 = angular.module('sb2', []);
 sb2.factory('$apply', ['$rootScope', function ($rootScope) {
@@ -55,18 +69,13 @@ sb2.factory('$apply', ['$rootScope', function ($rootScope) {
         };
     }]);
 
-
-$(function () {
-    //check/uncheck all
-    $('.table thead').on('change', '[type=checkbox]', function () {
-        var checked = $(this).prop('checked');
-        $(this).parents('table:first').find('tbody [type=checkbox]').each(function () {
-            $(this).prop('checked', checked).trigger('change');
-        });
-    });
-    //check dòng thường trong table
-    $('.table tbody').on('change', '[type=checkbox]', function () {
-        var checked = $(this).prop('checked');
-        $(this).parents('tr:first').toggleClass('warning', checked);
-    });
+sb2.directive('ngDom', function ($apply) {
+    return {
+        scope: {'ngDom': '='},
+        link: function (scope, elem) {
+            $apply(function () {
+                scope.ngDom = elem[0];
+            });
+        }
+    };
 });

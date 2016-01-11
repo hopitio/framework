@@ -19,7 +19,7 @@ class DB
         static::$_instance = new static($type, $host, $user, $pass, $db, $debug);
     }
 
-    /** @return ADOConnection */
+    /** @return \ADOConnection */
     static function getInstance()
     {
         return static::$_instance;

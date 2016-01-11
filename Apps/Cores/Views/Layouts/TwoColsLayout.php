@@ -61,6 +61,11 @@ class TwoColsLayout extends Layout
         }
     }
 
+    public function themeUrl()
+    {
+        return url('/themes/sb2');
+    }
+
     protected function renderLayout($content)
     {
         ?>
@@ -77,17 +82,17 @@ class TwoColsLayout extends Layout
                 <title><?php echo $this->title ?></title>
 
                 <!-- Bootstrap Core CSS -->
-                <link href="<?php echo url() ?>/themes/sb2/css/bootstrap.min.css" rel="stylesheet">
+                <link href="<?php echo $this->themeUrl() ?>/css/bootstrap.min.css" rel="stylesheet">
 
                 <!-- MetisMenu CSS -->
-                <link href="<?php echo url() ?>/themes/sb2/plugins/metisMenu/metisMenu.min.css" rel="stylesheet">
+                <link href="<?php echo $this->themeUrl() ?>/plugins/metisMenu/metisMenu.min.css" rel="stylesheet">
 
                 <!-- Custom CSS -->
-                <link href="<?php echo url() ?>/themes/sb2/css/sb-admin-2.css" rel="stylesheet">
+                <link href="<?php echo $this->themeUrl() ?>/css/sb-admin-2.css" rel="stylesheet">
 
                 <!-- Custom Fonts -->
-                <link href="<?php echo url() ?>/themes/sb2/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-                <link href='<?php echo url() ?>/themes/sb2/fonts/google/roboto.css' rel='stylesheet' type='text/css'>
+                <link href="<?php echo $this->themeUrl() ?>/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+                <link href='<?php echo $this->themeUrl() ?>/fonts/google/roboto.css' rel='stylesheet' type='text/css'>
 
                 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
                 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -96,14 +101,21 @@ class TwoColsLayout extends Layout
                     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
                 <![endif]-->
 
-                <link href="<?php echo url() ?>/themes/sb2/css/custom.css" rel="stylesheet" type="text/css">
+                <link href="<?php echo $this->themeUrl() ?>/css/custom.css" rel="stylesheet" type="text/css">
+
+                <?php
+                foreach ($this->css as $css)
+                {
+                    echo "\n<link href='$css' rel='stylesheet' type='text/css'>";
+                }
+                ?>
 
                 <!-- jQuery -->
-                <script src="<?php echo url() ?>/themes/sb2/js/jquery.min.js"></script>
+                <script src="<?php echo $this->themeUrl() ?>/js/jquery.min.js"></script>
                 <script src="<?php echo url('/admin/config.js') ?>"></script>
             </head>
 
-            <body>
+            <body ng-app="sb2">
 
                 <div id="wrapper">
 
@@ -161,17 +173,23 @@ class TwoColsLayout extends Layout
                 <!-- /#wrapper -->
 
                 <!--angular-->
-                <script src="<?php echo url() ?>/themes/sb2/js/angular.min.js"></script>
+                <script src="<?php echo $this->themeUrl() ?>/js/angular.min.js"></script>
 
                 <!-- Bootstrap Core JavaScript -->
-                <script src="<?php echo url() ?>/themes/sb2/js/bootstrap.min.js"></script>
+                <script src="<?php echo $this->themeUrl() ?>/js/bootstrap.min.js"></script>
 
                 <!-- Metis Menu Plugin JavaScript -->
-                <script src="<?php echo url() ?>/themes/sb2/plugins/metisMenu/metisMenu.min.js"></script>
+                <script src="<?php echo $this->themeUrl() ?>/plugins/metisMenu/metisMenu.min.js"></script>
 
                 <!-- Custom Theme JavaScript -->
-                <script src="<?php echo url() ?>/themes/sb2/js/sb-admin-2.js"></script>
-                <script src="<?php echo url() ?>/themes/sb2/js/custom.js"></script>
+                <script src="<?php echo $this->themeUrl() ?>/js/sb-admin-2.js"></script>
+                <script src="<?php echo $this->themeUrl() ?>/js/custom.js"></script>
+                <?php
+                foreach ($this->js as $js)
+                {
+                    echo "\n<script src='$js'></script>";
+                }
+                ?>
             </body>
 
         </html>

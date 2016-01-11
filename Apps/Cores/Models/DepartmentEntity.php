@@ -11,10 +11,11 @@ class DepartmentEntity extends Entity
     public $depCode;
     public $depName;
     public $depFk;
-    public $sort;
-    public $pathSort;
     public $path;
     public $stt;
+
+    /** @var DepartmentEntity */
+    public $parent;
 
     /** @var UserEntity */
     public $users = array();
@@ -24,5 +25,11 @@ class DepartmentEntity extends Entity
 
     /** @var DepartmentEntity */
     public $ancestors = array();
+
+    function __construct($rawData = null)
+    {
+        parent::__construct($rawData);
+        $this->stt = (bool) $this->stt;
+    }
 
 }

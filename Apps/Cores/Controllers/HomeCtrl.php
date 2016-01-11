@@ -24,7 +24,7 @@ class HomeCtrl extends CoresCtrl
             'appName' => \Config::APP_NAME
         ));
 
-        $this->res->setBody("var CONFIG = $config;");
+        $this->resp->setBody("var CONFIG = $config;");
     }
 
 }

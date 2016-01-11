@@ -5,6 +5,7 @@ namespace Libs\SQL;
 abstract class Mapper extends Query
 {
 
+    /** @var \ADOConnection */
     protected $db;
     protected $params = array();
     protected $pageSize = 20;
@@ -116,6 +117,41 @@ abstract class Mapper extends Query
     function getAssoc()
     {
         return $this->db->GetAssoc($this->__toString(), $this->params);
+    }
+
+    function filterPk($id)
+    {
+        $this->where($this->tableAlias() . '.pk=?', __FUNCTION__)->setParam($id, __FUNCTION__);
+        return $this;
+    }
+
+    function rebuildPath($parentCol, $pathCol, $srcCol, $fromNode = 0)
+    {
+        $this->db->startTrans();
+
+        $table = $this->tableName();
+
+        $node = $this->db->GetRow("SELECT * FROM $table WHERE pk=?", array($fromNode));
+        $parentNode = $this->db->GetRow("SELECT * FROM $table WHERE pk=?", array(arrData($node, $parentCol)));
+        $childNodes = $this->db->GetAll("SELECT * FROM $table WHERE $parentCol=?", array($fromNode));
+
+        if (!empty($node))
+        {
+            $path = arrData($parentNode, $pathCol, '/');
+            $this->db->update(
+                    $table
+                    , array($pathCol => $path . $node[$srcCol] . '/')
+                    , 'pk=?'
+                    , array($node['pk'])
+            );
+        }
+
+        foreach ($childNodes as $node)
+        {
+            $this->rebuildPath($parentCol, $pathCol, $srcCol, $node['pk']);
+        }
+
+        $this->db->completeTrans();
     }
 
 }
