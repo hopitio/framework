@@ -250,3 +250,4 @@ table .fa-dot-circle-o.inactive{color: gray;}
 table td:first-child, table th:first-child{border-left: 3px solid transparent !important;}
 table tr.stt-active td:first-child{border-left-color: #81c784 !important;;}
 table tr.stt-inactive td:first-child{border-left-color: #bdbdbd !important;;}
+legend{font-family: 'Roboto Condensed', sans-serif;  }

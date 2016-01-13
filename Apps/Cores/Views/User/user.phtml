@@ -18,7 +18,6 @@ $this->setTitle('Tài khoản')
     .tbl-row{height: 40px;position: relative;}
     table .fa-folder-open{color: #fbc02d;}
     table .fa-user{color: #ccc;}
-    .modal label{min-width: 150px;}
     .tbl-type .fa{font-size: 1.5em;}
     table th{min-width: 50px;}
     table th:last-child{width: 100%;}
@@ -87,7 +86,7 @@ $this->setTitle('Tài khoản')
     </form>
 
     <h4></h4>
-    <table class="table table-bordered table-striped table-hover" ng-show="department">
+    <table class="table table-record table-bordered table-striped table-hover" ng-show="department">
         <thead>
             <tr>
                 <td colspan="4">
@@ -98,7 +97,7 @@ $this->setTitle('Tài khoản')
                         </button>
                         <ul class="dropdown-menu">
                             <li><a href="#">Thêm tài khoản</a></li>
-                            <li><a href="#">Thêm đơn vị</a></li>
+                            <li><a href="javascript:;" ng-click="editDep()">Thêm đơn vị</a></li>
                         </ul>
                     </div>
                     <button type="button" class="btn btn-default" ng-disabled="!anythingChecked()"><i class="fa fa-exchange"></i> Chuyển đơn vị</button>
@@ -174,7 +173,7 @@ $this->setTitle('Tài khoản')
                     </div>
                 </td>
                 <td class="tbl-text">
-                    <a href="javascript:;">{{user.fullName}}</a><br>
+                    <a href="javascript:;" ng-click="editUser(user)">{{user.fullName}}</a><br>
                     {{user.jobTitle}}
                 </td>
             </tr>
@@ -219,55 +218,10 @@ $this->setTitle('Tài khoản')
         </tfoot>
     </table>
 
-    <form method="post" ng-submit="submitDep()">
-        <div id="modal-dep" class="modal fade" tabindex="-1" role="dialog" ng-dom="modalDep">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Đơn vị/Phòng ban</h4>
-                    </div>
-                    <div class="modal-body">
-                        <table class="table-form">
-                            <tr>
-                                <td><label for="editDep">Trực thuộc:</label></td>
-                                <td>
-                                    <div class="parent-dep">
-                                        <input type="text" class="form-control" name="editDep" id="editDep" readonly placeholder="Chọn đơn vị"
-                                               value="{{editingDep.parentDep.depName}}" ng-click="pickEditDep()"/>
-                                        <span ng-if="editingDep.parentDep && editingDep.parentDep.pk" ng-click="clearParentDep()">&times;</span>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><label for="editDepName">Tên đơn vị:</label></td>
-                                <td><input type="text" class="form-control" name="editDepName" id="editDepName" ng-model="editingDep.depName"/></td>
-                            </tr>
-                            <tr>
-                                <td><label for="editDepCode">Mã đơn vị:</label></td>
-                                <td><input type="text" class="form-control" name="editDepCode" id="editDepCode" ng-model="editingDep.depCode"/></td>
-                            </tr>
-                            <tr>
-                                <td>&nbsp;</td>
-                                <td>
-                                    <label class="check">
-                                        <input type="checkbox" ng-model="editingDep.stt"/>
-                                        <before></before>
-                                        <after></after>
-                                        &nbsp;Hoạt động 
-                                    </label>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Hủy bỏ</button>
-                        <button type="submit" class="btn btn-primary">Ghi lại</button>
-                    </div>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
-    </form>
+    <!--department form-->
+    <?php require __DIR__ . '/editDep.phtml' ?>
+    <!--user form-->
+    <?php require __DIR__ . '/editUser.phtml' ?>
 
     <!--department picker-->
     <div ng-department-picker></div>

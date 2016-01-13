@@ -54,7 +54,7 @@ $(function () {
         });
     });
     //check dòng thường trong table
-    $('.table tbody').on('change', '[type=checkbox]', function () {
+    $('.table-record tbody').on('change', '[type=checkbox]', function () {
         var checked = $(this).prop('checked');
         $(this).parents('tr:first').toggleClass('warning', checked);
     });

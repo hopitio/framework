@@ -4,6 +4,7 @@ sb2.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
     $scope.department = null;
     $scope.ajax = {};
     $scope.editingDep;
+    $scope.editingUser;
     $scope.modalDep;
     $scope.checkedUsers = {};
     $scope.checkedDeps = {};
@@ -63,6 +64,7 @@ sb2.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
 
 
     $scope.editDep = function (dep) {
+        dep = dep || {'stt': true};
         $scope.editingDep = $.extend({}, dep);
         $scope.editingDep.parentDep = $scope.department;
         $($scope.modalDep).modal('show');
@@ -85,7 +87,6 @@ sb2.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
             'submit': function (dep) {
                 $apply(function () {
                     $scope.editingDep.parentDep = dep;
-                    $scope.editingDep.depFk = dep.pk;
                 });
             }
         });
@@ -96,11 +97,40 @@ sb2.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
         $scope.editingDep.depFk = null;
     };
 
+    $scope.$watchCollection('editingDep', function (newVal) {
+        if (!newVal)
+            return;
+        if (newVal.parentDep)
+            newVal.depFk = newVal.parentDep.pk;
+        newVal.pk = newVal.pk || 0;
+    });
+
     $scope.submitDep = function () {
         var url = CONFIG.siteUrl + '/rest/department/' + $scope.editingDep.pk;
         $http.put(url, $scope.editingDep).then(function () {
             $scope.getDep($scope.depPk);
             $($scope.modalDep).modal('hide');
+        });
+    };
+
+    $scope.editUser = function (user) {
+        user = $.extend({}, user) || {
+            'stt': true
+        };
+        $scope.editingUser = user;
+        $($scope.modalUser).modal('show');
+    };
+
+    $scope.togglePassword = function () {
+        if ($scope.editingUser.changePass) {
+            $scope.editingUser.changePass = false;
+            $scope.editingUser.newPass = null;
+            $scope.editingUser.rePass = null;
+        } else {
+            $scope.editingUser.changePass = true;
+        }
+        $timeout(function () {
+            $(window).trigger('resize');
         });
     };
 });

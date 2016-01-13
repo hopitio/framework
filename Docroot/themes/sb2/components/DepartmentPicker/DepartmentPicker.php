@@ -70,7 +70,7 @@ function ulTemplate($level, $maxDepth = 10)
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Hủy bỏ</button>
-                <button type="button" class="btn btn-primary" ng-disabled="!selected" ng-click="submit()">Chọn</button>
+                <button type="button" class="btn btn-primary" ng-disabled="!selected.pk" ng-click="submit()">Chọn</button>
             </div>
         </div>
     </div>

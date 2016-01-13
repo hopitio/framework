@@ -1,0 +1,233 @@
+<style>
+    #user-permission legend,
+    #user-group legend{margin-bottom: 0;}
+    #user-permission td,
+    #user-group td{padding-left: 20px;}
+</style>
+
+<form method="post" ng-submit="submitUser()" class="form-horizontal">
+    <div id="modal-user" class="modal fade" tabindex="-1" role="dialog" ng-dom="modalUser">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Người dùng</h4>
+                </div>
+                <div class="modal-body">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs nav-justified" role="tablist" onclick="setTimeout(function () {
+                                $(window).trigger('resize');
+                            }, 500)">
+                        <li role="presentation" class="active">
+                            <a href="#user-general" aria-controls="user-general" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Thông tin cơ bản</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#user-group" aria-controls="user-group" role="tab" data-toggle="tab"><i class="fa fa-folder"></i> Nhóm</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#user-permission" aria-controls="user-permission" role="tab" data-toggle="tab"><i class="fa fa-legal"></i> Phân quyền</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <h4></h4>
+                        <div id="user-general" role="tabpanel" class="tab-pane fade in active">
+                            <fieldset>
+                                <legend>Thông tin hành chính</legend>
+
+                                <div class="form-group">
+                                    <label class="control-label col-xs-3" for="user-dep">Thuộc đơn vị:</label>
+                                    <div class="col-xs-9">
+                                        <div class="parent-dep">
+                                            <input type="text" class="form-control" id="user-dep" readonly placeholder="Chọn đơn vị"
+                                                   value="{{editingUser.parentDep.depName}}" ng-click="pickUserDep()"/>
+                                            <span ng-if="editingUser.parentDep && editingUser.parentDep.pk" ng-click="clearUserDep()">&times;</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-xs-3" for="user-name">Họ và tên:</label>
+                                    <div class="col-xs-9">
+                                        <input type="text" id="user-name" class="form-control" ng-model="editingUser.fullName"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-xs-3" for="user-job">Chức vụ:</label>
+                                    <div class="col-xs-9">
+                                        <input type="text" id="user-job" class="form-control" ng-model="editingUser.jobTitle"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-xs-3" for="user-email">Email:</label>
+                                    <div class="col-xs-9">
+                                        <input type="text" id="user-email" class="form-control" ng-model="editingUser.email"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-xs-3" for="user-phone">Điện thoại:</label>
+                                    <div class="col-xs-9">
+                                        <input type="text" id="user-phone" class="form-control" ng-model="editingUser.phone"/>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <legend>Tài khoản</legend>
+                                <div class="form-group">
+                                    <label class="control-label col-xs-3" for="user-account">Đăng nhập:</label>
+                                    <div class="col-xs-9">
+                                        <input type="text" id="user-account" class="form-control" ng-model="editingUser.account"/>
+                                        <div ng-if="!editingUser.changePass">
+                                            <h4></h4>
+                                            <a href="javascript:;" ng-click="togglePassword()">Đổi mật khẩu</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-if="editingUser.changePass">
+                                    <div class="form-group">
+                                        <label class="control-label col-xs-3" for="user-new-pass">Mật khẩu mới:</label>
+                                        <div class="col-xs-9">
+                                            <input type="text" id="user-new-pass" class="form-control" ng-model="editingUser.newPass"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-xs-3" for="user-re-pass">Nhập lại mật khẩu:</label>
+                                        <div class="col-xs-9">
+                                            <input type="text" id="user-re-pass" class="form-control" ng-model="editingUser.rePass"/>
+                                            <h4></h4>
+                                            <a href="javascript:;" ng-click="togglePassword()">Hủy đổi mật khẩu</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div><!--tab-->
+                        <div id="user-group" role="tabpanel" class="tab-pane fade">
+                            <fieldset>
+                                <legend>Chọn nhóm</legend>
+                            </fieldset>
+                            <table class='table-bordered table table-striped table-hover'>
+                                <tr>
+                                    <td>
+                                        <label class="check">
+                                            <input type="checkbox" />
+                                            <before></before>
+                                            <after></after>&nbsp;
+                                            Nhóm 1
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label class="check">
+                                            <input type="checkbox" />
+                                            <before></before>
+                                            <after></after>&nbsp;
+                                            Nhóm 1
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label class="check">
+                                            <input type="checkbox" />
+                                            <before></before>
+                                            <after></after>&nbsp;
+                                            Nhóm 1
+                                        </label>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div id="user-permission" role="tabpanel" class="tab-pane fade">
+                            <fieldset>
+                                <legend>Hệ thống</legend>
+
+                                <table class='table-bordered table table-striped table-hover'>
+                                    <tr>
+                                        <td>
+                                            <label class="check">
+                                                <input type="checkbox" />
+                                                <before></before>
+                                                <after></after>&nbsp;
+                                                Nhóm 1
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label class="check">
+                                                <input type="checkbox" />
+                                                <before></before>
+                                                <after></after>&nbsp;
+                                                Nhóm 1
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label class="check">
+                                                <input type="checkbox" />
+                                                <before></before>
+                                                <after></after>&nbsp;
+                                                Nhóm 1
+                                            </label>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </fieldset>
+                            <fieldset>
+                                <legend>Tin bài</legend>
+
+                                <table class='table-bordered table table-striped table-hover'>
+                                    <tr>
+                                        <td>
+                                            <label class="check">
+                                                <input type="checkbox" />
+                                                <before></before>
+                                                <after></after>&nbsp;
+                                                Nhóm 1
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label class="check">
+                                                <input type="checkbox" />
+                                                <before></before>
+                                                <after></after>&nbsp;
+                                                Nhóm 1
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label class="check">
+                                                <input type="checkbox" />
+                                                <before></before>
+                                                <after></after>&nbsp;
+                                                Nhóm 1
+                                            </label>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class='pull-left'>
+                        <label class="check">
+                            <input type="checkbox" />
+                            <before></before>
+                            <after></after>&nbsp;
+                            Ghi và thêm mới
+                        </label>
+                    </div>
+                    <div class='pull-right'>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Hủy bỏ</button>
+                        <button type="submit" class="btn btn-primary">Ghi lại</button>
+                    </div>
+                    <div class='clearfix'></div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</form>
