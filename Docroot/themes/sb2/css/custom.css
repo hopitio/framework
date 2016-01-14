@@ -251,3 +251,6 @@ table td:first-child, table th:first-child{border-left: 3px solid transparent !i
 table tr.stt-active td:first-child{border-left-color: #81c784 !important;;}
 table tr.stt-inactive td:first-child{border-left-color: #bdbdbd !important;;}
 legend{font-family: 'Roboto Condensed', sans-serif;  }
+.form-group .check{line-height: 34px;}
+.form-group .check [type="checkbox"]:checked+before{top: 7px;}
+.form-group .check [type="checkbox"]+before+after{margin-top: 7px;}

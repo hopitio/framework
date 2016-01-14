@@ -32,6 +32,48 @@
                         <h4></h4>
                         <div id="user-general" role="tabpanel" class="tab-pane fade in active">
                             <fieldset>
+                                <legend>Tài khoản</legend>
+                                <div class="form-group">
+                                    <label class="control-label col-xs-3" for="user-account">Đăng nhập:</label>
+                                    <div class="col-xs-9">
+                                        <div style="display: flex">
+                                            <div style="flex: 1;">
+                                                <input type="text" id="user-account" class="form-control" ng-model="editingUser.account"/>
+                                            </div>
+                                            <div>
+                                                &nbsp;
+                                                <label class="check">
+                                                    <input type="checkbox" />
+                                                    <before></before>
+                                                    <after></after>&nbsp;
+                                                    Hoạt động
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div ng-if="!editingUser.changePass">
+                                            <h4></h4>
+                                            <a href="javascript:;" ng-click="togglePassword()">Đổi mật khẩu</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-if="editingUser.changePass">
+                                    <div class="form-group">
+                                        <label class="control-label col-xs-3" for="user-new-pass">Mật khẩu mới:</label>
+                                        <div class="col-xs-9">
+                                            <input type="text" id="user-new-pass" class="form-control" ng-model="editingUser.newPass"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-xs-3" for="user-re-pass">Nhập lại mật khẩu:</label>
+                                        <div class="col-xs-9">
+                                            <input type="text" id="user-re-pass" class="form-control" ng-model="editingUser.rePass"/>
+                                            <h4></h4>
+                                            <a href="javascript:;" ng-click="togglePassword()">Hủy đổi mật khẩu</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset>
                                 <legend>Thông tin hành chính</legend>
 
                                 <div class="form-group">
@@ -56,48 +98,8 @@
                                         <input type="text" id="user-job" class="form-control" ng-model="editingUser.jobTitle"/>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label class="control-label col-xs-3" for="user-email">Email:</label>
-                                    <div class="col-xs-9">
-                                        <input type="text" id="user-email" class="form-control" ng-model="editingUser.email"/>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-xs-3" for="user-phone">Điện thoại:</label>
-                                    <div class="col-xs-9">
-                                        <input type="text" id="user-phone" class="form-control" ng-model="editingUser.phone"/>
-                                    </div>
-                                </div>
                             </fieldset>
-                            <fieldset>
-                                <legend>Tài khoản</legend>
-                                <div class="form-group">
-                                    <label class="control-label col-xs-3" for="user-account">Đăng nhập:</label>
-                                    <div class="col-xs-9">
-                                        <input type="text" id="user-account" class="form-control" ng-model="editingUser.account"/>
-                                        <div ng-if="!editingUser.changePass">
-                                            <h4></h4>
-                                            <a href="javascript:;" ng-click="togglePassword()">Đổi mật khẩu</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div ng-if="editingUser.changePass">
-                                    <div class="form-group">
-                                        <label class="control-label col-xs-3" for="user-new-pass">Mật khẩu mới:</label>
-                                        <div class="col-xs-9">
-                                            <input type="text" id="user-new-pass" class="form-control" ng-model="editingUser.newPass"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-xs-3" for="user-re-pass">Nhập lại mật khẩu:</label>
-                                        <div class="col-xs-9">
-                                            <input type="text" id="user-re-pass" class="form-control" ng-model="editingUser.rePass"/>
-                                            <h4></h4>
-                                            <a href="javascript:;" ng-click="togglePassword()">Hủy đổi mật khẩu</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </fieldset>
+
                         </div><!--tab-->
                         <div id="user-group" role="tabpanel" class="tab-pane fade">
                             <fieldset>
@@ -213,19 +215,14 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <div class='pull-left'>
-                        <label class="check">
-                            <input type="checkbox" />
-                            <before></before>
-                            <after></after>&nbsp;
-                            Ghi và thêm mới
-                        </label>
-                    </div>
-                    <div class='pull-right'>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Hủy bỏ</button>
-                        <button type="submit" class="btn btn-primary">Ghi lại</button>
-                    </div>
-                    <div class='clearfix'></div>
+                    <label class="check">
+                        <input type="checkbox" />
+                        <before></before>
+                        <after></after>&nbsp;
+                        Ghi & thêm mới&nbsp;
+                    </label>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Hủy bỏ</button>
+                    <button type="submit" class="btn btn-primary">Ghi lại</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
