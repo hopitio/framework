@@ -6,7 +6,7 @@ abstract class Mapper extends Query
 {
 
     /** @var \ADOConnection */
-    protected $db;
+    public $db;
     protected $params = array();
     protected $pageSize = 20;
     protected $mapperSet;

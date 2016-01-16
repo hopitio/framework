@@ -183,6 +183,10 @@ class TwoColsLayout extends Layout
 
                 <!-- Custom Theme JavaScript -->
                 <script src="<?php echo $this->themeUrl() ?>/js/sb-admin-2.js"></script>
+
+                <!--validation-->
+                <script src="<?php echo $this->themeUrl() ?>/plugins/validation/html5-validation.js"></script>
+
                 <script src="<?php echo $this->themeUrl() ?>/js/custom.js"></script>
                 <?php
                 foreach ($this->js as $js)

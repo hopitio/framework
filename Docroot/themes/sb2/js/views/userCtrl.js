@@ -9,6 +9,9 @@ sb2.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
     $scope.checkedUsers = {};
     $scope.checkedDeps = {};
     $scope.departmentPicker;
+    $scope.groups;
+    $scope.permissions;
+    $scope.ajax = {};
 
     $(window).on('hashchange', function () {
         $apply(function () {
@@ -63,8 +66,9 @@ sb2.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
     };
 
 
-    $scope.editDep = function (dep) {
+    $scope.editDep = function (dep, insertAndOpen) {
         dep = dep || {'stt': true};
+        dep.insertAndOpen = insertAndOpen || false;
         $scope.editingDep = $.extend({}, dep);
         $scope.editingDep.parentDep = $scope.department;
         $($scope.modalDep).modal('show');
@@ -105,20 +109,54 @@ sb2.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
         newVal.pk = newVal.pk || 0;
     });
 
-    $scope.submitDep = function () {
+    $scope.submitDep = function ($event) {
+        if (!$event.target.checkValidity()) {
+            return;
+        }
         var url = CONFIG.siteUrl + '/rest/department/' + $scope.editingDep.pk;
         $http.put(url, $scope.editingDep).then(function () {
             $scope.getDep($scope.depPk);
             $($scope.modalDep).modal('hide');
+
+            if ($scope.editingDep.insertAndOpen)
+                $timeout(function () {
+                    $scope.editDep(null, true);
+                }, 500);
         });
     };
 
-    $scope.editUser = function (user) {
-        user = $.extend({}, user) || {
-            'stt': true
+    $scope.editUser = function (user, insertAndOpen) {
+        user = user ? $.extend({}, user) : {
+            'stt': true,
+            'changePass': true,
+            'groups': [],
+            'permissions' : []
         };
+        user.insertAndOpen = insertAndOpen || false;
+        user.parentDep = $scope.department;
         $scope.editingUser = user;
         $($scope.modalUser).modal('show');
+
+        $http.get(CONFIG.siteUrl + '/rest/group').then(function (resp) {
+            $scope.groups = resp.data;
+        });
+        $http.get(CONFIG.siteUrl + '/rest/basePermission').then(function (resp) {
+            $scope.permissions = [];
+            for (var i in resp.data) {
+                var group = {
+                    'name': i,
+                    'permissions': [],
+                    'show': true
+                };
+                for (var j in resp.data[i]) {
+                    group.permissions.push({
+                        'name': j,
+                        'value': resp.data[i][j]
+                    });
+                }
+                $scope.permissions.push(group);
+            }
+        });
     };
 
     $scope.togglePassword = function () {
@@ -133,5 +171,96 @@ sb2.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
             $(window).trigger('resize');
         });
     };
+
+    $scope.pickUserDep = function () {
+        $('[ng-department-picker]')[0].openModal({
+            'selected': $scope.editingUser.parentDep ? $scope.editingUser.parentDep.pk : null,
+            'submit': function (dep) {
+                $apply(function () {
+                    $scope.editingUser.parentDep = dep;
+                });
+            }
+        });
+    };
+    $scope.$watchCollection('editingUser', function (newVal) {
+        if (!newVal)
+            return;
+        newVal.depFk = newVal.parentDep ? newVal.parentDep.pk : 0;
+        newVal.pk = newVal.pk || 0;
+    });
+
+    $scope.clearUserDep = function () {
+        $scope.editingUser.parentDep = null;
+    };
+
+    $scope.submitUser = function ($event) {
+        if (!$event.target.checkValidity()) {
+            return;
+        }
+        if ($scope.editingUser.errcheckUniqueAccount) {
+            $scope.userAccDom.focus();
+            return;
+        }
+
+        var user = $scope.editingUser;
+        user.passError = null;
+        //check pass
+        if (user.changePass && user.newPass && user.newPass.length < 6) {
+            user.passError = 'Hãy nhập mật khẩu tối thiểu 6 ký tự.';
+            $scope.newPassDom.focus();
+            return;
+        }
+        if (user.changePass && user.newPass != user.rePass) {
+            user.passError = 'Mật khẩu nhập lại không khớp.';
+            $scope.rePassDom.focus();
+            return;
+        }
+
+
+    };
+
+    $scope.toggleGroup = function ($event) {
+        var target = $event.target;
+        if (target.checked && $scope.editingUser.groups.indexOf(target.value) == -1)
+            $scope.editingUser.groups.push(target.value);
+        else if (!target.checked) {
+            var idx = $scope.editingUser.groups.indexOf(target.value);
+            if (idx != -1)
+                $scope.editingUser.groups.splice(idx, 1);
+        }
+    };
+
+    $scope.togglePermission = function ($event) {
+        var target = $event.target;
+        if (target.checked && $scope.editingUser.permissions.indexOf(target.value) == -1)
+            $scope.editingUser.permissions.push(target.value);
+        else if (!target.checked) {
+            var idx = $scope.editingUser.permissions.indexOf(target.value);
+            if (idx != -1)
+                $scope.editingUser.permissions.splice(idx, 1);
+        }
+    };
+
+    $scope.$watch('editingUser.account', function (newVal) {
+        if (!newVal)
+            return;
+
+        var url = CONFIG.siteUrl + '/rest/user/checkUniqueAccount';
+        var data = {
+            'pk': $scope.editingUser.pk,
+            'account': $scope.editingUser.account
+        };
+
+        $scope.ajax.checkUniqueAccount = true;
+        $scope.editingUser.errcheckUniqueAccount = false;
+
+        $timeout(function () {
+            $http.post(url, data).then(function (res) {
+                $scope.ajax.checkUniqueAccount = false;
+                $scope.editingUser.errcheckUniqueAccount = !res.data;
+            });
+        }, 500);
+
+    });
 });
 

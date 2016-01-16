@@ -1,4 +1,4 @@
-<form method="post" ng-submit="submitDep()" class="form-horizontal">
+<form method="post" ng-submit="submitDep($event)" class="form-horizontal form-validate">
     <div id="modal-dep" class="modal fade" tabindex="-1" role="dialog" ng-dom="modalDep">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -18,15 +18,15 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="editDepName" class="control-label col-xs-3">Tên đơn vị:</label>
+                        <label for="editDepName" class="control-label col-xs-3">* Tên đơn vị:</label>
                         <div class="col-xs-9">
-                            <input type="text" class="form-control" name="editDepName" id="editDepName" ng-model="editingDep.depName"/>
+                            <input type="text" class="form-control" name="editDepName" id="editDepName" ng-model="editingDep.depName" required/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="editDepCode" class="control-label col-xs-3">Mã đơn vị:</label>
                         <div class="col-xs-9">
-                            <input type="text" class="form-control" name="editDepCode" id="editDepCode" ng-model="editingDep.depCode"/>
+                            <input type="text" class="form-control" name="editDepCode" id="editDepCode" ng-model="editingDep.depCode" required/>
                         </div>
                     </div>
                     <div class="form-group">
@@ -42,7 +42,7 @@
                 </div>
                 <div class="modal-footer">
                     <label class="check">
-                        <input type="checkbox" />
+                        <input type="checkbox" ng-model="editingDep.insertAndOpen"/>
                         <before></before>
                         <after></after>
                         &nbsp;Ghi & thêm mới&nbsp;

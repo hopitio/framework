@@ -8,6 +8,7 @@ class DepartmentMapper extends Mapper
 {
 
     protected $loadUsers;
+    protected $loadUsersCallback;
     protected $loadChildDeps;
     protected $loadChildDepsRecusiveLy; //load cả cây
     protected $loadAncestors;
@@ -31,7 +32,7 @@ class DepartmentMapper extends Mapper
 
         if ($this->loadUsers)
         {
-            $entity->users = $this->loadUsers($entity->pk);
+            $entity->users = $this->loadUsers($entity->pk, $this->loadUsersCallback);
         }
         if ($this->loadChildDeps)
         {
@@ -70,9 +71,10 @@ class DepartmentMapper extends Mapper
     /**
      * Tự động load user trực thuộc
      */
-    function setLoadUsers($bool = true)
+    function setLoadUsers($bool = true, $callback = null)
     {
         $this->loadUsers = $bool;
+        $this->loadUsersCallback = $callback;
         return $this;
     }
 
@@ -91,24 +93,15 @@ class DepartmentMapper extends Mapper
         return $this;
     }
 
-    /** Tự động load tất cả object liên quan */
-    function setLoad($loadAncestors = true, $loadChildDeps = true, $loadUsers = true)
-    {
-        $this->setLoadAncestors($loadAncestors)
-                ->setLoadChildDeps($loadChildDeps)
-                ->setLoadUsers($loadUsers);
-        return $this;
-    }
-
-    /** @return EntitySet<UserEntity> */
-    function loadUsers($depPk)
+    /** @return UserEntity */
+    function loadUsers($depPk, $callback = null)
     {
         return $this->userMapper()
                         ->filterParent($depPk)
-                        ->getAll();
+                        ->getAll($callback);
     }
 
-    /** @return EntitySet<DepartmentEntity> */
+    /** @return DepartmentEntity */
     function loadChildDeps($depPk, $rescusively = false)
     {
         $mapper = $this;
@@ -124,7 +117,7 @@ class DepartmentMapper extends Mapper
     /**
      * 
      * @param DepartmentEntity $dep
-     * @return EntitySet<DepartmentEntity> 
+     * @return DepartmentEntity 
      */
     function loadAncestors(DepartmentEntity $dep)
     {

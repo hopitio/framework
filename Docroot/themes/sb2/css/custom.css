@@ -249,8 +249,16 @@ table .fa-dot-circle-o.active{color: #4caf50;}
 table .fa-dot-circle-o.inactive{color: gray;}
 table td:first-child, table th:first-child{border-left: 3px solid transparent !important;}
 table tr.stt-active td:first-child{border-left-color: #81c784 !important;;}
+table thead tr th:first-child, table thead td:first-child, table tfoot td:first-child{border-left-color: #ECEFF1 !important;}
 table tr.stt-inactive td:first-child{border-left-color: #bdbdbd !important;;}
 legend{font-family: 'Roboto Condensed', sans-serif;  }
 .form-group .check{line-height: 34px;}
 .form-group .check [type="checkbox"]:checked+before{top: 7px;}
 .form-group .check [type="checkbox"]+before+after{margin-top: 7px;}
+.nav-tabs>li>a{border-top: 2px solid transparent !important;}
+.nav-tabs>li.active>a{border-top-color: #FE8F01 !important;}
+.form-validate input[type="text"].error, .form-validate textarea.error, .form-validate select.error{border-color: red;}
+.form-validate label.error{color: red;border-bottom: 0;margin-top: 5px;}
+.form-control[readonly]{background: white;}
+.help-block{margin-bottom: 0;}
+.help-block.error{color: red;}

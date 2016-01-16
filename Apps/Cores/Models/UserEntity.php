@@ -17,5 +17,13 @@ class UserEntity extends Entity
     public $phone;
     public $stt;
     public $isAdmin;
+    public $groups;
+    public $permission;
+
+    function __construct($rawData = null)
+    {
+        parent::__construct($rawData);
+        $this->stt = $this->stt ? true : false;
+    }
 
 }

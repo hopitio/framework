@@ -79,3 +79,7 @@ sb2.directive('ngDom', function ($apply) {
         }
     };
 });
+
+$('.form-validate').each(function () {
+    $(this).validate();
+});
