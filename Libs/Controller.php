@@ -17,6 +17,9 @@ abstract class Controller
     /** @var \Libs\Session */
     protected $session;
 
+    /** @var \Apps\Cores\Models\StorageMapper */
+    protected $storageMapper;
+
     function __construct(MvcContext $context)
     {
         $this->context = $context;
@@ -24,6 +27,7 @@ abstract class Controller
         $this->resp = $context->app->slim->response;
         $this->session = new \Slim\Helper\Set($_SESSION);
         $this->session = new Session();
+        $this->storageMapper = \Apps\Cores\Models\StorageMapper::makeInstance();
 
         $this->init();
     }

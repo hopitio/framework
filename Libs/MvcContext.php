@@ -12,6 +12,7 @@ class MvcContext
     public $controller;
     public $action;
     public $rewriteBase;
+    public $id;
 
     /**
      * @param type $path
@@ -25,6 +26,11 @@ class MvcContext
         $this->method = $method;
         $this->controller = $controller;
         $this->action = $action;
+    }
+
+    function getId($withMethod = true)
+    {
+        return $withMethod ? "{$method}:$controller/$action" : "$controller/$action";
     }
 
 }

@@ -12,6 +12,9 @@ sb2.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
     $scope.groups;
     $scope.permissions;
     $scope.ajax = {};
+    $scope.filters = null;
+    $scope.filter = null;
+    $scope.searchResult;
 
     $(window).on('hashchange', function () {
         $apply(function () {
@@ -37,6 +40,49 @@ sb2.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
             $scope.ajax.load = false;
         });
     };
+
+    $scope.deps = function () {
+        var dep = $scope.department || {};
+        return $scope.searchResult ? $scope.searchResult.departments : dep.deps;
+    };
+
+    $(window).on('hashchange', function () {
+        $apply(function () {
+            $scope.filter = $.extend({}, $scope.filters[0]);
+        });
+    });
+
+    $scope.users = function () {
+        var dep = $scope.department || {};
+        return $scope.searchResult ? $scope.searchResult.users : dep.users;
+    };
+
+    $scope.$watchCollection('filter', function (newVal) {
+        if (!newVal)
+            return;
+        if (!newVal.search && newVal.status == -1) {
+            $scope.searchResult = null;
+            return;
+        }
+
+        if ($scope.ajax.filter)
+            clearTimeout($scope.ajax.filter);
+        $scope.ajax.filter = setTimeout(function () {
+            var filter = {search: $scope.filter.search};
+            if ($scope.filter.status != -1)
+                filter.status = $scope.filter.status;
+            $.ajax({
+                'url': CONFIG.siteUrl + '/rest/user/search',
+                'data': filter,
+                'dataType': 'json'
+            }).done(function (resp) {
+                $apply(function () {
+                    $scope.searchResult = resp;
+                });
+            });
+        }, 1000);
+
+    });
 
     $scope.toggleFilter = function () {
         $scope.showFilter = !$scope.showFilter;
@@ -114,9 +160,11 @@ sb2.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
             return;
         }
         var url = CONFIG.siteUrl + '/rest/department/' + $scope.editingDep.pk;
+        $scope.ajax.submit = true;
         $http.put(url, $scope.editingDep).then(function () {
             $scope.getDep($scope.depPk);
             $($scope.modalDep).modal('hide');
+            $scope.ajax.submit = false;
 
             if ($scope.editingDep.insertAndOpen)
                 $timeout(function () {
@@ -130,7 +178,7 @@ sb2.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
             'stt': true,
             'changePass': true,
             'groups': [],
-            'permissions' : []
+            'permissions': []
         };
         user.insertAndOpen = insertAndOpen || false;
         user.parentDep = $scope.department;
@@ -216,7 +264,20 @@ sb2.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
             return;
         }
 
+        var url = CONFIG.siteUrl + '/rest/user/' + (user.pk ? user.pk : 0);
+        $scope.ajax.submit = true;
+        $http.put(url, user).then(function (resp) {
+            $($scope.modalUser).modal('hide');
+            $scope.getDep($scope.depPk);
+            $scope.ajax.submit = false;
 
+            if ($scope.editingUser.insertAndOpen) {
+                $timeout(function () {
+                    $scope.editUser(null, true);
+                }, 500);
+            }
+            $scope.editingUser = null;
+        });
     };
 
     $scope.toggleGroup = function ($event) {
@@ -241,8 +302,8 @@ sb2.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
         }
     };
 
-    $scope.$watch('editingUser.account', function (newVal) {
-        if (!newVal)
+    $scope.$watch('editingUser.account', function (newVal, oldVal) {
+        if (!newVal || !oldVal)
             return;
 
         var url = CONFIG.siteUrl + '/rest/user/checkUniqueAccount';
@@ -262,5 +323,104 @@ sb2.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
         }, 500);
 
     });
+
+    $scope.getCheckedUsers = function () {
+        var users = [];
+        for (var id in $scope.checkedUsers)
+            if ($scope.checkedUsers[id])
+                users.push(id);
+
+        return users;
+    };
+
+    $scope.getCheckedDeps = function () {
+        var deps = [];
+        for (var id in $scope.checkedDeps)
+            if ($scope.checkedDeps[id])
+                deps.push(id);
+
+        return deps;
+    };
+
+    $scope.delete = function () {
+        var msg = 'Những phòng ban, tài khoản trong đối tượng bị xóa sẽ chuyển về thư mục gốc, thực hiện?';
+
+        if (confirm(msg)) {
+            $http.delete(CONFIG.siteUrl + '/rest/user', {'data': $scope.getCheckedUsers()}).then(function () {
+                return $http.delete(CONFIG.siteUrl + '/rest/department', {'data': $scope.getCheckedDeps()});
+            }).then(function () {
+                $scope.getDep($scope.depPk);
+            });
+        }
+    };
+
+    $scope.move = function () {
+        $('[ng-department-picker]')[0].openModal({
+            'not': $scope.getCheckedDeps(),
+            'selected': $scope.depPk,
+            'submit': function (dep) {
+                if (dep.pk == $scope.depPk)
+                    return;
+                $http.put(CONFIG.siteUrl + '/rest/department/move', {'pks': $scope.getCheckedDeps(), 'dest': dep.pk})
+                        .then(function () {
+                            return $http.put(CONFIG.siteUrl + '/rest/user/move', {'pks': $scope.getCheckedUsers(), 'dest': dep.pk});
+                        })
+                        .then(function () {
+                            $scope.getDep($scope.depPk);
+                            $scope.checkedDeps = {};
+                            $scope.checkedUsers = {};
+                        });
+            }
+        });
+    };
+
+    $scope.deleteUser = function (user) {
+        $scope.checkedUsers = {};
+        $scope.checkedDeps = {};
+        $scope.checkedUsers[user.pk] = true;
+
+        $timeout(function () {
+            $scope.delete();
+        });
+
+    };
+
+    $scope.deleteDep = function (dep) {
+        $scope.checkedUsers = {};
+        $scope.checkedDeps = {};
+        $scope.checkedDeps[dep.pk] = true;
+
+        $timeout(function () {
+            $scope.delete();
+        });
+    };
+
+
+    $scope.copyUser = function (user) {
+        var u = $.extend({}, user);
+        $.extend(u, {
+            'pk': 0,
+            'isAdmin': 0,
+            'account': '',
+            'fullName': '',
+            'changePass': true
+        });
+        $scope.editUser(u);
+    };
+
+    $scope.getStorage = function () {
+        $.getJSON(CONFIG.siteUrl + '/rest/storage?id=' + PAGE_DATA.action, function (resp) {
+            $apply(function () {
+                resp = resp || {};
+                $scope.filters = resp.filters || [{
+                        '__label': 'Bộ lọc',
+                        'status': "-1"
+                    }];
+                $scope.filter = $.extend({}, $scope.filters[0]);
+            });
+
+        });
+    };
+    $scope.getStorage();
 });
 

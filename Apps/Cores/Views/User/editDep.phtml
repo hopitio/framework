@@ -41,14 +41,15 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <i class="fa fa-circle-o-notch fa-spin" ng-if="ajax.submit"></i>
                     <label class="check">
                         <input type="checkbox" ng-model="editingDep.insertAndOpen"/>
                         <before></before>
                         <after></after>
                         &nbsp;Ghi & thêm mới&nbsp;
                     </label>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Hủy bỏ</button>
-                    <button type="submit" class="btn btn-primary">Ghi lại</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="ajax.submit">Hủy bỏ</button>
+                    <button type="submit" class="btn btn-primary" ng-disabled="ajax.submit">Ghi lại</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->

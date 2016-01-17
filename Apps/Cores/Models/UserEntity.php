@@ -24,6 +24,7 @@ class UserEntity extends Entity
     {
         parent::__construct($rawData);
         $this->stt = $this->stt ? true : false;
+        $this->isAdmin = $this->isAdmin ? true : false;
     }
 
 }

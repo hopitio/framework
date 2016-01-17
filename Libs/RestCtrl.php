@@ -15,7 +15,12 @@ class RestCtrl extends Controller
 
     protected function restInput($key = null, $default = null)
     {
-        $json = json_decode($this->req->getBody(), true);
+        $body = $this->req->getBody();
+        if (!$body)
+        {
+            $body = file_get_contents('php://input');
+        }
+        $json = json_decode($body, true);
         return $key === null ? $json : arrData($json, $key, $default);
     }
 

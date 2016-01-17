@@ -97,6 +97,7 @@ class DepartmentMapper extends Mapper
     function loadUsers($depPk, $callback = null)
     {
         return $this->userMapper()
+                        ->filterDeleted(false)
                         ->filterParent($depPk)
                         ->getAll($callback);
     }
@@ -107,6 +108,7 @@ class DepartmentMapper extends Mapper
         $mapper = $this;
         return $this->makeInstance()
                         ->filterParent($depPk)
+                        ->filterDeleted(false)
                         ->filterNot($this->not)
                         ->getAll(function($rawData, $entity) use($mapper, $rescusively)
                         {
@@ -159,12 +161,17 @@ class DepartmentMapper extends Mapper
 
     function updateDep($depPk, $depFk, $code, $name, $stt)
     {
+        if (!$code || !$name)
+        {
+            return;
+        }
         $data = array(
             'depFk'   => (int) $depFk,
             'depCode' => $code,
             'depName' => $name,
             'stt'     => $stt ? 1 : 0
         );
+
 
         if ($depPk)
         {
@@ -183,6 +190,61 @@ class DepartmentMapper extends Mapper
     protected function rebuildDepPath()
     {
         $this->rebuildPath('depFk', 'path', 'pk');
+    }
+
+    function deleteDepartments($arrId)
+    {
+        if (!is_array($arrId))
+            return;
+        $this->db->StartTrans();
+        foreach ($arrId as $id)
+        {
+            $this->db->Execute("UPDATE cores_department SET deleted=1, depCode=CONCAT(depCode, ?) WHERE pk=?", array('|' . uniqid($id), $id));
+            //chuyển đơn vị, tk vè thư mục gốc
+            $this->db->update('cores_department', array('depFk' => 0), 'depFk=?', array($id));
+            $this->db->update('cores_user', array('depFk' => 0), 'depFk=?', array($id));
+        }
+        $this->rebuildDepPath();
+        $this->db->CompleteTrans();
+    }
+
+    function filterDeleted($bool)
+    {
+        $this->where('dep.deleted=?', __FUNCTION__)->setParam($bool ? 1 : 0, __FUNCTION__);
+        return $this;
+    }
+
+    function moveDepartments($arrId, $depFk)
+    {
+        if (!is_array($arrId))
+            return;
+        $this->db->StartTrans();
+
+        foreach ($arrId as $id)
+        {
+            $this->db->update('cores_department', array('depFk' => $depFk), 'pk=?', array($id));
+        }
+        $this->rebuildDepPath();
+        $this->db->CompleteTrans();
+    }
+
+    function filterSearch($search)
+    {
+        $this->where('(dep.depName LIKE ? OR dep.depCode LIKE ?)', __FUNCTION__)
+                ->setParams(array(
+                    __FUNCTION__ . 1 => "%$search%",
+                    __FUNCTION__ . 2 => "%$search%"
+        ));
+        return $this;
+    }
+
+    function filterStatus($bool)
+    {
+        if ($bool != -1)
+        {
+            $this->where('dep.stt=?', __FUNCTION__)->setParam($bool ? 1 : 0, __FUNCTION__);
+        }
+        return $this;
     }
 
 }

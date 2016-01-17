@@ -10,6 +10,7 @@ class TwoColsLayout extends Layout
 
     protected $title;
     protected $brand = 'Brand';
+    protected $companyWebsite;
 
     /** @var Menu */
     protected $sideMenu;
@@ -17,6 +18,7 @@ class TwoColsLayout extends Layout
     function init()
     {
         $this->title = \Config::APP_NAME;
+        $this->companyWebsite = \Config::COMPANY_WEBSITE;
         $this->sideMenu = new Menu(null, null, null, array(
             new Menu('user', '<i class="fa fa-user"></i> Tài khoản', url('/admin/user')),
             new Menu('group', '<i class="fa fa-folder-open"></i> Nhóm', url('/admin/group')),
@@ -166,9 +168,14 @@ class TwoColsLayout extends Layout
 
                     <div id="page-wrapper">
                         <?php echo $content ?>
+
+                        <footer>
+                            <a href="<?php echo $this->companyWebsite ?>"><?php echo $this->companyWebsite ?></a>
+                            &nbsp;|&nbsp;
+                            @Copyright 2015
+                        </footer>
                     </div>
                     <!-- /#page-wrapper -->
-
                 </div>
                 <!-- /#wrapper -->
 

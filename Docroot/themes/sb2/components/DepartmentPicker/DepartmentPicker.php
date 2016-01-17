@@ -10,7 +10,8 @@
     .modal-department-picker ul li.selected > span{color: white;}
     .modal-department-picker .modal-body > ul{padding: 0;}
     .modal-department-picker li.hover{background: #eee;}
-    .modal-department-picker ul > li > ul{max-height: 0;overflow: hidden;padding-left: 15px;}
+    .modal-department-picker ul{padding-left: 15px;}
+    .modal-department-picker ul > li > ul{max-height: 0;overflow: hidden;}
     .modal-department-picker ul > li.expand > ul{max-height: none;}
     .modal-department-picker .modal-dialog{width: 400px;}
     .modal-department-picker .modal-body{height: 300px;overflow-y: auto;}
@@ -56,21 +57,26 @@ function ulTemplate($level, $maxDepth = 10)
             </div>
             <div class="modal-body">
                 <ul>
-                    <li ng-repeat='lvl1 in tree.deps' ng-class="<?php echo "{expand: lvl1.expand, selected: lvl1.pk==selected.pk}" ?>" 
-                        ng-click="setSelected(lvl1, $event)" ng-dblclick="submit()">
-                        <i class='fa' ng-if="!lvl1.deps.length"></i>
-                        <i class='fa' ng-if="lvl1.deps.length" ng-click="toggleExpand(lvl1)"
-                           ng-class="<?php echo "{'fa-caret-right': !lvl1.expand, 'fa-caret-down': lvl1.expand}" ?>"></i>
-                        <span>
-                            <i class="fa" ng-class="<?php echo "{'fa-folder': !lvl1.expand, 'fa-folder-open': lvl1.expand}" ?>"></i> {{lvl1.depName}}
-                        </span>
-                        <?php ulTemplate(2) ?>
+                    <li class="expand" ng-click="setSelected(root, $event)" ng-dblclick="submit()" ng-class="<?php echo "{selected: root.pk==selected.pk}" ?>">
+                        <i class="fa fa-caret-down"></i>&nbsp;<span>{{root.depName}}</span>
                     </li>
+                    <ul>
+                        <li ng-repeat='lvl1 in tree.deps' ng-class="<?php echo "{expand: lvl1.expand, selected: lvl1.pk==selected.pk}" ?>" 
+                            ng-click="setSelected(lvl1, $event)" ng-dblclick="submit()">
+                            <i class='fa' ng-if="!lvl1.deps.length"></i>
+                            <i class='fa' ng-if="lvl1.deps.length" ng-click="toggleExpand(lvl1)"
+                               ng-class="<?php echo "{'fa-caret-right': !lvl1.expand, 'fa-caret-down': lvl1.expand}" ?>"></i>
+                            <span>
+                                <i class="fa" ng-class="<?php echo "{'fa-folder': !lvl1.expand, 'fa-folder-open': lvl1.expand}" ?>"></i> {{lvl1.depName}}
+                            </span>
+                            <?php ulTemplate(2) ?>
+                        </li>
+                    </ul>
                 </ul>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Hủy bỏ</button>
-                <button type="button" class="btn btn-primary" ng-disabled="!selected.pk" ng-click="submit()">Chọn</button>
+                <button type="button" class="btn btn-primary" ng-disabled="!selected" ng-click="submit()">Chọn</button>
             </div>
         </div>
     </div>

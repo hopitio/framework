@@ -22,6 +22,9 @@ class Config
     const DB_USER = 'root';
     const DB_PASS = 'root';
 
+    /** Thong tin cong ty */
+    const COMPANY_WEBSITE = 'www.tamviettech.vn';
+
     /**
      * Các class trong thư mục sau tự động load
      */

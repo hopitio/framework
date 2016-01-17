@@ -53,15 +53,55 @@ class UserMapper extends Mapper
 
     function updateUser($id, $data)
     {
-        $account = arrData($data, 'account');
-        $fullName = arrData($data, 'fullName');
-        $depFk = arrData($data, 'depFk');
-        $jobTitle = arrData($data, 'jobTitle');
+        $update['account'] = arrData($data, 'account');
+        $update['fullName'] = arrData($data, 'fullName');
+        $update['depFk'] = (int) arrData($data, 'depFk');
+        $update['jobTitle'] = arrData($data, 'jobTitle');
+        $update['stt'] = arrData($data, 'stt') ? 1 : 0;
+
+        if (!$update['account'] || !$update['fullName'])
+        {
+            return;
+        }
+        if (!$id && !$update['newPass'])
+        {
+            return;
+        }
+
+        if (arrData($data, 'changePass'))
+        {
+            $update['pass'] = md5(arrData($data, 'newPass'));
+        }
 
         $groups = arrData($data, 'groups', array());
         $permissions = arrData($data, 'permissions', array());
-        
-        
+
+        $this->db->StartTrans();
+        if ($id)
+        {
+            $this->db->update('cores_user', $update, 'pk=?', array($id));
+        }
+        else
+        {
+            $id = $this->db->insert('cores_user', $update);
+        }
+
+        //group
+        $this->db->delete('cores_group_user', 'userFk=?', array($id));
+        foreach ($groups as $groupFk)
+        {
+            $this->db->insert('cores_group_user', array('userFk' => $id, 'groupFk' => $groupFk));
+        }
+
+        //permissions
+        $this->db->delete('cores_user_permission', 'userFk=?', array($id));
+        foreach ($permissions as $pem)
+        {
+            $this->db->insert('cores_user_permission', array('userFk' => $id, 'permission' => $pem));
+        }
+
+        $this->db->CompleteTrans();
+        return $id;
     }
 
     function checkUniqueAccount($userPk, $account)
@@ -80,6 +120,56 @@ class UserMapper extends Mapper
         }
 
         return false;
+    }
+
+    function deleteUsers($arrId)
+    {
+        if (!is_array($arrId))
+            return;
+        foreach ($arrId as $id)
+        {
+            if ($id == 1)
+                continue;
+            $this->db->Execute("UPDATE cores_user SET deleted=1, account=CONCAT(account, ?) WHERE pk=?", array('|' . uniqid($id), $id));
+        }
+    }
+
+    function filterDeleted($bool)
+    {
+        $this->where('u.deleted=?', __FUNCTION__)->setParam($bool ? 1 : 0, __FUNCTION__);
+        return $this;
+    }
+
+    function moveUsers($arrId, $depFk)
+    {
+        if (!is_array($arrId))
+            return;
+        foreach ($arrId as $id)
+        {
+            $this->db->update('cores_user', array('depFk' => $depFk), 'pk=?', array($id));
+        }
+    }
+
+    function filterStatus($bool)
+    {
+        if ($bool != -1)
+        {
+            $this->where('u.stt=?', __FUNCTION__)->setParam($bool ? 1 : 0, __FUNCTION__);
+        }
+        return $this;
+    }
+
+    function filterSearch($search)
+    {
+        $this->where('(u.fullName LIKE ? OR u.jobTitle LIKE ? OR u.account LIKE ? OR u.email LIKE ? OR u.phone LIKE ?)', __FUNCTION__);
+        $this->setParams(array(
+            __FUNCTION__ . 1 => "%$search%",
+            __FUNCTION__ . 2 => "%$search%",
+            __FUNCTION__ . 3 => "%$search%",
+            __FUNCTION__ . 4 => "%$search%",
+            __FUNCTION__ . 5 => "%$search%"
+        ));
+        return $this;
     }
 
 }

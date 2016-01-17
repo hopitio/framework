@@ -5,8 +5,9 @@
         <div class="col-xs-9">
             <div style="display: flex">
                 <div style="flex: 1;">
-                    <input type="text" id="user-account" class="form-control" ng-model="editingUser.account" required ng-dom="userAccDom"/>
-                    <div class="help-block" ng-if="!ajax.checkUniqueAccount && !editingUser.errcheckUniqueAccount">
+                    <input type="text" id="user-account" class="form-control" ng-model="editingUser.account" 
+                           required minlength="3" ng-dom="userAccDom"/>
+                    <div class="help-block" ng-if="!ajax.checkUniqueAccount && !editingUser.errcheckUniqueAccount" >
                         Tên tài khoản viết không dấu, không được trùng.
                     </div>
                     <div class="help-block" ng-if="ajax.checkUniqueAccount">
@@ -18,8 +19,8 @@
                 </div>
                 <div>
                     &nbsp;
-                    <label class="check">
-                        <input type="checkbox" ng-model="editingUser.stt"/>
+                    <label class="check" ng-if="!editingUser.isAdmin">
+                        <input type="checkbox" ng-model="editingUser.stt" />
                         <before></before>
                         <after></after>&nbsp;
                         Hoạt động
@@ -35,9 +36,10 @@
     </div>
     <div ng-show="editingUser.changePass">
         <div class="form-group">
-            <label class="control-label col-xs-3" for="user-new-pass">Mật khẩu mới:</label>
+            <label class="control-label col-xs-3" for="user-new-pass"><span ng-if="!editingUser.pk">* </span>Mật khẩu mới:</label>
             <div class="col-xs-9">
-                <input type="password" id="user-new-pass" class="form-control" ng-model="editingUser.newPass" ng-dom="newPassDom"/>
+                <input type="password" id="user-new-pass" class="form-control" ng-model="editingUser.newPass" 
+                       ng-dom="newPassDom" ng-required="!editingUser.pk"/>
             </div>
         </div>
         <div class="form-group">
@@ -46,7 +48,7 @@
                 <input type="password" id="user-re-pass" class="form-control" ng-model="editingUser.rePass" ng-dom="rePassDom"/>
                 <div class="help-block">
                     <div class="pull-left">
-                        <a href="javascript:;" ng-click="togglePassword()">Hủy đổi mật khẩu</a>&nbsp;
+                        <a href="javascript:;" ng-click="togglePassword()" ng-if="editingUser.pk">Hủy đổi mật khẩu</a>&nbsp;
                     </div>
                     <div class="pull-right">
                         <span ng-if="editingUser.passError">{{editingUser.passError}}</span>

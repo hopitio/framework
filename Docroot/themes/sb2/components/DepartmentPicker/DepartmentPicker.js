@@ -5,6 +5,10 @@ sb2.directive('ngDepartmentPicker', function ($apply, $timeout) {
         scope.onCancel;
         scope.tree;
         scope.selected;
+        scope.root = {
+            pk: 0,
+            depName: '[Thư mục gốc]'
+        };
 
         elem.openModal = function (options) {
             scope.onSubmit = options.submit || new Function();

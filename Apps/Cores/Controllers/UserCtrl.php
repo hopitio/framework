@@ -20,7 +20,12 @@ class UserCtrl extends CoresCtrl
 
     function index()
     {
-        $this->twoColsLayout->render('User/user.phtml');
+
+        $this->twoColsLayout
+                ->setData(array(
+                    'action' => __METHOD__
+                ))
+                ->render('User/user.phtml');
     }
 
 }

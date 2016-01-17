@@ -53,6 +53,31 @@ class UserCtrl extends RestCtrl
         $this->resp->setBody(Json::encode($dep));
     }
 
+    function search()
+    {
+        $search = $this->req->get('search');
+        $stt = $this->req->get('status', -1);
+
+        $deps = $this->depMapper
+                ->makeInstance()
+                ->filterStatus($stt)
+                ->filterSearch($search)
+                ->getAll();
+        
+        $users = $this->userMapper
+                ->makeInstance()
+                ->filterStatus($stt)
+                ->filterSearch($search)
+                ->getAll();
+        
+        
+
+        $this->resp->setBody(Json::encode(array(
+                    'departments' => $deps,
+                    'users'       => $users
+        )));
+    }
+
     function updateDepartment($depPk)
     {
         $code = $this->restInput('depCode');
@@ -94,6 +119,53 @@ class UserCtrl extends RestCtrl
     {
         $data = $this->restInput();
         $id = $this->userMapper->updateUser($id, $data);
+
+        $this->resp->setBody(Json::encode(array(
+                    'status'   => true,
+                    'resource' => url('/rest/user/' . $id)
+        )));
+    }
+
+    function deleteUsers()
+    {
+        $users = $this->restInput();
+        $this->userMapper->deleteUsers($users);
+
+        $this->resp->setBody(Json::encode(array(
+                    'status' => true
+        )));
+    }
+
+    function deleteDepartments()
+    {
+        $deps = $this->restInput();
+        $this->depMapper->deleteDepartments($deps);
+
+        $this->resp->setBody(Json::encode(array(
+                    'status' => true
+        )));
+    }
+
+    function moveUsers()
+    {
+        $users = $this->restInput('pks');
+        $dest = $this->restInput('dest');
+
+        $this->userMapper->moveUsers($users, $dest);
+        $this->resp->setBody(Json::encode(array(
+                    'status' => true
+        )));
+    }
+
+    function moveDepartments()
+    {
+        $deps = $this->restInput('pks');
+        $dest = $this->restInput('dest');
+
+        $this->depMapper->moveDepartments($deps, $dest);
+        $this->resp->setBody(Json::encode(array(
+                    'status' => true
+        )));
     }
 
 }

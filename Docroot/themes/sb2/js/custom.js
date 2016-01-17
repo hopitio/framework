@@ -50,7 +50,8 @@ $(function () {
     $('.table thead').on('change', '[type=checkbox]', function () {
         var checked = $(this).prop('checked');
         $(this).parents('table:first').find('tbody [type=checkbox]').each(function () {
-            $(this).prop('checked', checked).trigger('change').triggerHandler('click');
+            if (this.disabled == false && this.readOnly == false)
+                $(this).prop('checked', checked).trigger('change').triggerHandler('click');
         });
     });
     //check dòng thường trong table
