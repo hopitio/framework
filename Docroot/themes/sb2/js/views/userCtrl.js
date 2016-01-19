@@ -12,8 +12,6 @@ sb2.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
     $scope.groups;
     $scope.permissions;
     $scope.ajax = {};
-    $scope.filters = null;
-    $scope.filter = null;
     $scope.searchResult;
 
     $(window).on('hashchange', function () {
@@ -46,43 +44,10 @@ sb2.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
         return $scope.searchResult ? $scope.searchResult.departments : dep.deps;
     };
 
-    $(window).on('hashchange', function () {
-        $apply(function () {
-            $scope.filter = $.extend({}, $scope.filters[0]);
-        });
-    });
-
     $scope.users = function () {
         var dep = $scope.department || {};
         return $scope.searchResult ? $scope.searchResult.users : dep.users;
     };
-
-    $scope.$watchCollection('filter', function (newVal) {
-        if (!newVal)
-            return;
-        if (!newVal.search && newVal.status == -1) {
-            $scope.searchResult = null;
-            return;
-        }
-
-        if ($scope.ajax.filter)
-            clearTimeout($scope.ajax.filter);
-        $scope.ajax.filter = setTimeout(function () {
-            var filter = {search: $scope.filter.search};
-            if ($scope.filter.status != -1)
-                filter.status = $scope.filter.status;
-            $.ajax({
-                'url': CONFIG.siteUrl + '/rest/user/search',
-                'data': filter,
-                'dataType': 'json'
-            }).done(function (resp) {
-                $apply(function () {
-                    $scope.searchResult = resp;
-                });
-            });
-        }, 1000);
-
-    });
 
     $scope.toggleFilter = function () {
         $scope.showFilter = !$scope.showFilter;
@@ -95,11 +60,28 @@ sb2.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
         setCookie('showFilter', newVal);
     });
 
+    $scope.$watchCollection('filter', function (newVal) {
+        if (!newVal)
+            return;
+        if (newVal.search) {
+            if ($scope.ajax.search)
+                $scope.ajax.search.abort();
+            $scope.ajax.search = $.ajax({
+                'url': CONFIG.siteUrl + '/rest/user/search',
+                'data': $scope.filter
+            }).done(function (resp) {
+                $apply(function () {
+                    $scope.searchResult = resp;
+                });
+            });
+        } else {
+            $scope.searchResult = null;
+        }
+    });
+
     $scope.$watch('depPk', function (newVal) {
         if (typeof newVal === 'undefined')
             return;
-
-
     });
 
     $scope.goUp = function () {
@@ -185,7 +167,7 @@ sb2.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
         $scope.editingUser = user;
         $($scope.modalUser).modal('show');
 
-        $http.get(CONFIG.siteUrl + '/rest/group').then(function (resp) {
+        $http.get(CONFIG.siteUrl + '/rest/group?status=1').then(function (resp) {
             $scope.groups = resp.data;
         });
         $http.get(CONFIG.siteUrl + '/rest/basePermission').then(function (resp) {
@@ -407,20 +389,5 @@ sb2.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
         });
         $scope.editUser(u);
     };
-
-    $scope.getStorage = function () {
-        $.getJSON(CONFIG.siteUrl + '/rest/storage?id=' + PAGE_DATA.action, function (resp) {
-            $apply(function () {
-                resp = resp || {};
-                $scope.filters = resp.filters || [{
-                        '__label': 'Bộ lọc',
-                        'status': "-1"
-                    }];
-                $scope.filter = $.extend({}, $scope.filters[0]);
-            });
-
-        });
-    };
-    $scope.getStorage();
 });
 

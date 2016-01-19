@@ -49,12 +49,9 @@ $this->setTitle('Tài khoản')
         </li>
         <li class="active">{{department.depName}}</li>
     </ol>
-    {{filters}}<hr>{{filter}}
     <form class="panel panel-info panel-filter" ng-class="<?php echo "{'minimize': !showFilter}" ?>">
         <div class="panel-heading">
-            <button type="submit" class="btn btn-default" formmethod="post" name="filter" value="0">
-                Bộ lọc
-            </button>
+            Bộ lọc
             <div class="panel-actions">
                 <a href="javascript:;" data-toggle="tooltip" data-placement="top" title="Phóng to/Thu nhỏ" ng-click="toggleFilter()">
                     <i class="fa" ng-class="<?php echo "{'fa-minus-square-o': showFilter, 'fa-plus-square-o': !showFilter}" ?>"></i>
@@ -67,19 +64,8 @@ $this->setTitle('Tài khoản')
                     <label for="filter-name">Tìm kiếm</label>
                     <input type="text" class="form-control"  id="filter-name" name="search" placeholder="đơn vị, người dùng" ng-model="filter.search"/>
                 </div>
-                <div class="col-md-3">
-                    <label for="filter-status">Trạng thái</label>
-                    <select class="form-control" id="filter-status" name="status" ng-model="filter.status">
-                        <option value="-1">Tất cả</option>
-                        <option value="1">Hoạt động</option>
-                        <option value="0">Không hoạt động</option>
-                    </select>
-                </div>
             </div>
             <h4></h4>
-
-            <button type="submit" class="btn btn-default" formmethod="post" name="add-filter">Thêm bộ lọc</button>
-            <button type="submit" class="btn btn-default" formmethod="post" name="remove-filter" value="">Xóa bộ lọc</button>
         </div>
 
 

@@ -1,0 +1,146 @@
+<?php
+/* @var $this \Apps\Cores\Views\Layouts\TwoColsLayout */
+$this->addJs($this->themeUrl() . '/js/views/groupCtrl.js');
+?>
+
+<style>
+    #modalEdit .modal-body{padding: 0;}
+    #modalEdit .tab-content{padding: 15px;}
+</style>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h1 class="page-header">Nhóm</h1>
+    </div>
+</div>
+
+<angular ng-cloak ng-controller="groupCtrl">
+    <table class="table table-bordered table-striped table-hover table-record">
+        <thead>
+            <tr>
+                <td colspan="5">
+                    <button class="btn btn-default" ng-click="edit()"><i class="fa fa-plus"></i> Thêm mới</button>
+                    <button class="btn btn-default" ng-click="delete()"><i class="fa fa-trash"></i> Xóa</button>
+                </td>
+            </tr>
+            <tr>
+                <th style="min-width: 50px;" class="center">
+                    <label class="check">
+                        <input type="checkbox" />
+                        <before></before>
+                        <after></after>
+                    </label>
+                </th>
+                <th style="min-width: 50px;" class="center">&nbsp;</th>
+                <th style="min-width: 150px;">Mã nhóm</th>
+                <th style="width: 100%;">Tên nhóm</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="group in groups" ng-class="<?php echo "{'stt-active': group.stt, 'stt-inactive': !group.stt}" ?>">
+                <td class="center">
+                    <label class="check">
+                        <input type="checkbox"  ng-model="checked[group.pk]"/>
+                        <before></before>
+                        <after></after>
+                    </label>
+                </td>
+                <td class="tbl-actions center">
+                    <div class="dropdown">
+                        <a href="javascript:;" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="javascript:;" ng-click="edit(group)">Sửa</a></li>
+                            <li><a href="javascript:;" ng-click="delete(group)">Xóa</a></li>
+                        </ul>
+                    </div>
+                </td>
+                <td>Mã xxx</td>
+                <td><a href="javascript:;" ng-click="edit(group)">sadsad</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <form class="form-horizontal form-validate">
+        <!-- Modal -->
+        <div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-dom="modalEdit">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Nhóm</h4>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs nav-justified" role="tablist">
+                            <li role="presentation" class="active"><a href="#tab1" aria-controls="home" role="tab" data-toggle="tab">Thông tin nhóm</a></li>
+                            <li role="presentation"><a href="#tab2" aria-controls="profile" role="tab" data-toggle="tab">Thành viên (10)</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="tab1">
+                                <div class="form-group">
+                                    <label class="control-label col-xs-4" for="txt-code">* Mã nhóm:</label>
+                                    <div class="col-xs-8">
+                                        <input type="text" id="txt-code" ng-model="editing.groupCode" required class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-xs-4" for="txt-name">* Tên nhóm:</label>
+                                    <div class="col-xs-8">
+                                        <input type="text" id="txt-name" ng-model="editing.groupName" required class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-xs-8 col-xs-offset-4">
+                                        <label class="check">
+                                            <input type="checkbox"  ng-model="editing.stt"/>
+                                            <before></before>
+                                            <after></after>
+                                            &nbsp;Hoạt động
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="tab2">
+                                <input type="text" class="form-control" style="width: 300px" placeholder="tìm kiếm">
+                                <h4></h4>
+                                <table class="table table-bordered table-hover table-striped table-record">
+                                    <thead>
+                                        <tr>
+                                            <td colspan="2">
+                                                <button class="btn btn-default"><i class="fa fa-plus"></i> Thêm thành viên</button>
+                                                <button class="btn btn-default"><i class="fa fa-remove"></i> Loại khỏi nhóm</button>
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="stt-active">
+                                            <td class="center" style="min-width: 50px;">
+                                                <label class="check">
+                                                    <input type="checkbox" id="chk"/>
+                                                    <before></before>
+                                                    <after></after>
+                                                </label>
+                                            </td>
+                                            <td style="width: 100%;">
+                                                <label for="chk">
+                                                    <strong>Nguyễn Văn A</strong>
+                                                    <br>
+                                                    Chuyên viên | Phòng hành chính
+                                                </label>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Hủy bỏ</button>
+                        <button type="button" class="btn btn-primary">Ghi lại</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</angular>

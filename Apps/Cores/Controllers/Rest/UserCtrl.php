@@ -63,14 +63,14 @@ class UserCtrl extends RestCtrl
                 ->filterStatus($stt)
                 ->filterSearch($search)
                 ->getAll();
-        
+
         $users = $this->userMapper
                 ->makeInstance()
                 ->filterStatus($stt)
                 ->filterSearch($search)
                 ->getAll();
-        
-        
+
+
 
         $this->resp->setBody(Json::encode(array(
                     'departments' => $deps,
@@ -94,8 +94,9 @@ class UserCtrl extends RestCtrl
 
     function getGroups()
     {
+        $stt = $this->req->get('status', -1);
         $groups = $this->groupMapper->makeInstance()
-                ->filterStatus(true)
+                ->filterStatus($stt)
                 ->getAll();
 
         $this->resp->setBody(Json::encode($groups));

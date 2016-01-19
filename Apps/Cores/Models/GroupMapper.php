@@ -30,7 +30,10 @@ class GroupMapper extends Mapper
 
     function filterStatus($bool)
     {
-        $this->where('gp.stt=?', __FUNCTION__)->setParam($bool ? 1 : 0, __FUNCTION__);
+        if ($bool != -1)
+        {
+            $this->where('gp.stt=?', __FUNCTION__)->setParam($bool ? 1 : 0, __FUNCTION__);
+        }
         return $this;
     }
 
