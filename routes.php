@@ -18,6 +18,7 @@ $routes[] = new MvcContext('/rest/department/:id', 'PUT', "Apps\\Cores\\Controll
 $routes[] = new MvcContext('/rest/department', 'DELETE', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'deleteDepartments');
 
 $routes[] = new MvcContext('/rest/group', 'GET', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'getGroups');
+$routes[] = new MvcContext('/rest/group/:id/user', 'GET', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'getGroupUsers');
 
 $routes[] = new MvcContext('/rest/basePermission', 'GET', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'getBasePermissions');
 

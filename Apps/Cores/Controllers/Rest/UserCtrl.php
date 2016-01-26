@@ -102,6 +102,25 @@ class UserCtrl extends RestCtrl
         $this->resp->setBody(Json::encode($groups));
     }
 
+    function getGroupUsers($groupPk)
+    {
+        $users = $this->userMapper
+                ->makeInstance()
+                ->select('dep.depName', false)
+                ->filterDeleted(false)
+                ->innerJoin('cores_group_user gu ON u.pk=gu.userFk AND gu.groupFk=' . intval($groupPk))
+                ->leftJoin('cores_department dep ON u.depFk=dep.pk')
+                ->getAll(function($rawData, $entity)
+        {
+            if (!$entity->depName)
+            {
+                $entity->depName = '[Thư mục gốc]';
+            }
+        });
+
+        $this->resp->setBody(Json::encode($users));
+    }
+
     function getBasePermissions()
     {
         $this->resp->setBody(Json::encode(Permission::getAll()));

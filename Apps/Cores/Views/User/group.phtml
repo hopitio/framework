@@ -54,8 +54,8 @@ $this->addJs($this->themeUrl() . '/js/views/groupCtrl.js');
                         </ul>
                     </div>
                 </td>
-                <td>Mã xxx</td>
-                <td><a href="javascript:;" ng-click="edit(group)">sadsad</a></td>
+                <td>{{group.groupCode}}</td>
+                <td><a href="javascript:;" ng-click="edit(group)">{{group.groupName}}</a></td>
             </tr>
         </tbody>
     </table>
@@ -73,7 +73,7 @@ $this->addJs($this->themeUrl() . '/js/views/groupCtrl.js');
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs nav-justified" role="tablist">
                             <li role="presentation" class="active"><a href="#tab1" aria-controls="home" role="tab" data-toggle="tab">Thông tin nhóm</a></li>
-                            <li role="presentation"><a href="#tab2" aria-controls="profile" role="tab" data-toggle="tab">Thành viên (10)</a></li>
+                            <li role="presentation"><a href="#tab2" aria-controls="profile" role="tab" data-toggle="tab">Thành viên <span ng-if="editing.users">({{editing.users.length}})</span></a></li>
                         </ul>
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="tab1">
@@ -108,24 +108,24 @@ $this->addJs($this->themeUrl() . '/js/views/groupCtrl.js');
                                         <tr>
                                             <td colspan="2">
                                                 <button class="btn btn-default"><i class="fa fa-plus"></i> Thêm thành viên</button>
-                                                <button class="btn btn-default"><i class="fa fa-remove"></i> Loại khỏi nhóm</button>
+                                                <button class="btn btn-default" ng-disabled="!getCheckedUsers().length"><i class="fa fa-remove"></i> Loại khỏi nhóm</button>
                                             </td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="stt-active">
+                                        <tr ng-repeat="user in editing.users" ng-class="<?php echo "{'stt-active': user.stt == 1, 'stt-inactive': user.stt != 1}" ?>" >
                                             <td class="center" style="min-width: 50px;">
                                                 <label class="check">
-                                                    <input type="checkbox" id="chk"/>
+                                                    <input type="checkbox" id="chk" ng-model="editing.checked[user.pk]"/>
                                                     <before></before>
                                                     <after></after>
                                                 </label>
                                             </td>
                                             <td style="width: 100%;">
                                                 <label for="chk">
-                                                    <strong>Nguyễn Văn A</strong>
+                                                    <strong>{{user.fullName}}</strong>
                                                     <br>
-                                                    Chuyên viên | Phòng hành chính
+                                                    {{user.jobTitle}} | {{user.depName}}
                                                 </label>
                                             </td>
                                         </tr>
