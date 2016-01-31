@@ -55,5 +55,28 @@ sb2.controller('groupCtrl', function ($scope, $timeout, $apply) {
             $($scope.modalEdit).modal('show');
         });
     };
+
+    $scope.pickUser = function () {
+        var notUser = [];
+        for (var i in $scope.editing.users)
+            notUser.push($scope.editing.users[i].pk);
+
+        $('[ng-user-picker]')[0].openModal({
+            notGroup: [$scope.editing.pk],
+            notUser: notUser,
+            submit: function (users) {
+                $apply(function () {
+                    $scope.editing.users = $scope.editing.users.concat(users);
+                    console.log($scope.editing.users);
+                });
+            }});
+    };
+
+    $scope.removeUser = function () {
+        for (var i in $scope.editing.users)
+            if ($scope.editing.checked[$scope.editing.users[i].pk])
+                $scope.editing.users.splice(i, 1);
+        $scope.editing.checked = {};
+    };
 });
 

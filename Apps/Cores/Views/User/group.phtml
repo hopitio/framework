@@ -1,6 +1,9 @@
 <?php
 /* @var $this \Apps\Cores\Views\Layouts\TwoColsLayout */
-$this->addJs($this->themeUrl() . '/js/views/groupCtrl.js');
+$this->addJs(array(
+    $this->themeUrl() . '/js/views/groupCtrl.js',
+    $this->themeUrl() . '/components/UserPicker/UserPicker.js'
+));
 ?>
 
 <style>
@@ -107,26 +110,25 @@ $this->addJs($this->themeUrl() . '/js/views/groupCtrl.js');
                                     <thead>
                                         <tr>
                                             <td colspan="2">
-                                                <button class="btn btn-default"><i class="fa fa-plus"></i> Thêm thành viên</button>
-                                                <button class="btn btn-default" ng-disabled="!getCheckedUsers().length"><i class="fa fa-remove"></i> Loại khỏi nhóm</button>
+                                                <button class="btn btn-default" ng-click="pickUser()"><i class="fa fa-plus"></i> Thêm thành viên</button>
+                                                <button class="btn btn-default" ng-click="removeUser()" ng-disabled="!getCheckedUsers().length"><i class="fa fa-remove"></i> Loại khỏi nhóm</button>
                                             </td>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <tr ng-if="editing.users && !editing.users.length">
+                                            <td colspan="2" class="center">Chưa có thành viên.</td>
+                                        </tr>
                                         <tr ng-repeat="user in editing.users" ng-class="<?php echo "{'stt-active': user.stt == 1, 'stt-inactive': user.stt != 1}" ?>" >
                                             <td class="center" style="min-width: 50px;">
                                                 <label class="check">
-                                                    <input type="checkbox" id="chk" ng-model="editing.checked[user.pk]"/>
+                                                    <input type="checkbox" id="chk-{{$index}}" ng-model="editing.checked[user.pk]"/>
                                                     <before></before>
                                                     <after></after>
                                                 </label>
                                             </td>
                                             <td style="width: 100%;">
-                                                <label for="chk">
-                                                    <strong>{{user.fullName}}</strong>
-                                                    <br>
-                                                    {{user.jobTitle}} | {{user.depName}}
-                                                </label>
+                                                <label for="chk-{{$index}}">{{user.fullName}}</label>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -143,4 +145,6 @@ $this->addJs($this->themeUrl() . '/js/views/groupCtrl.js');
             </div>
         </div>
     </form>
+
+    <div ng-user-picker></div>
 </angular>
