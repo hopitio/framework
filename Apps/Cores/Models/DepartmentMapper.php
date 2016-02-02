@@ -23,6 +23,7 @@ class DepartmentMapper extends Mapper
     {
         parent::__construct();
         $this->orderBy('dep.path');
+        $this->filterDeleted(false);
     }
 
     public function makeEntity($rawData)

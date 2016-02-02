@@ -40,7 +40,7 @@ $this->addJs(array(
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="group in groups" ng-class="<?php echo "{'stt-active': group.stt, 'stt-inactive': !group.stt}" ?>">
+            <tr ng-repeat="group in groups" ng-class="<?php echo "{'stt-active': group.stt==1, 'stt-inactive': group.stt!=1}" ?>">
                 <td class="center">
                     <label class="check">
                         <input type="checkbox"  ng-model="checked[group.pk]"/>
@@ -75,11 +75,11 @@ $this->addJs(array(
                     <div class="modal-body">
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs nav-justified" role="tablist">
-                            <li role="presentation" class="active"><a href="#tab1" aria-controls="home" role="tab" data-toggle="tab">Thông tin nhóm</a></li>
-                            <li role="presentation"><a href="#tab2" aria-controls="profile" role="tab" data-toggle="tab">Thành viên <span ng-if="editing.users">({{editing.users.length}})</span></a></li>
+                            <li role="presentation" ng-class="<?php echo "{active: tab==0}" ?>" ng-click="setTab(0)"><a href="javascript:;">Thông tin nhóm</a></li>
+                            <li role="presentation" ng-class="<?php echo "{active: tab==1}" ?>" ng-click="setTab(1)"><a href="javascript:;">Thành viên <span ng-if="editing.users">({{editing.users.length}})</span></a></li>
                         </ul>
                         <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane active" id="tab1">
+                            <div role="tabpanel" class="tab-pane "  ng-class="<?php echo "{active: tab==0}" ?>">
                                 <div class="form-group">
                                     <label class="control-label col-xs-4" for="txt-code">* Mã nhóm:</label>
                                     <div class="col-xs-8">
@@ -103,7 +103,7 @@ $this->addJs(array(
                                     </div>
                                 </div>
                             </div>
-                            <div role="tabpanel" class="tab-pane" id="tab2">
+                            <div role="tabpanel" class="tab-pane" ng-class="<?php echo "{active: tab==1}" ?>">
                                 <input type="text" class="form-control" style="width: 300px" placeholder="tìm kiếm">
                                 <h4></h4>
                                 <table class="table table-bordered table-hover table-striped table-record">
@@ -139,7 +139,7 @@ $this->addJs(array(
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Hủy bỏ</button>
-                        <button type="button" class="btn btn-primary">Ghi lại</button>
+                        <button type="button" class="btn btn-primary" ng-click="save()" ng-disabled="ajax.save">Ghi lại</button>
                     </div>
                 </div>
             </div>

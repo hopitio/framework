@@ -45,4 +45,32 @@ class GroupMapper extends Mapper
                         ->getAll();
     }
 
+    function updateGroup($pk, $data)
+    {
+        $update['groupCode'] = arrData($data, 'groupCode');
+        $update['groupName'] = arrData($data, 'groupName');
+        $update['stt'] = arrData($data, 'stt') ? 1 : 0;
+
+        if (!$update['groupCode'] || !$update['groupName'])
+        {
+            return false;
+        }
+
+        $pk = $this->replace($pk, $update);
+
+        if ($pk)
+        {
+            $this->db->delete('cores_group_user', 'groupFk=?', array($pk));
+            foreach (arrData($data, 'users') as $user)
+            {
+                $this->db->insert('cores_group_user', array(
+                    'userFk'  => $user,
+                    'groupFk' => $pk
+                ));
+            }
+        }
+
+        return $pk;
+    }
+
 }

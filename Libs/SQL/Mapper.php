@@ -154,4 +154,23 @@ abstract class Mapper extends Query
         $this->db->completeTrans();
     }
 
+    /**
+     * pk = 0 insert; pk <> 0 update
+     * @param type $pk
+     * @param type $updateDate
+     * @return int pk
+     */
+    function replace($pk, $updateDate)
+    {
+        if ($pk)
+        {
+            $this->db->update($this->tableName(), $updateDate, 'pk=?', array($pk));
+        }
+        else
+        {
+            $pk = $this->db->insert($this->tableName(), $updateDate);
+        }
+        return $pk;
+    }
+
 }

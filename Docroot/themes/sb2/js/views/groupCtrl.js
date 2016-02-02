@@ -1,9 +1,10 @@
-sb2.controller('groupCtrl', function ($scope, $timeout, $apply) {
+sb2.controller('groupCtrl', function ($scope, $timeout, $apply, $http) {
     $scope.groups = [];
     $scope.ajax = {};
     $scope.checked = {};
     $scope.modalEdit;
     $scope.editing;
+    $scope.tab = 0;
 
     $scope.getChecked = function () {
         var checked = [];
@@ -11,6 +12,10 @@ sb2.controller('groupCtrl', function ($scope, $timeout, $apply) {
             if ($scope.checked[i])
                 checked.push(i);
         return checked;
+    };
+
+    $scope.setTab = function (idx) {
+        $scope.tab = idx;
     };
 
     $scope.getGroups = function () {
@@ -38,9 +43,11 @@ sb2.controller('groupCtrl', function ($scope, $timeout, $apply) {
     };
 
     $scope.edit = function (group) {
-        group = group || {'stt': true};
+        group = group || {'pk': 0, 'stt': true};
         $scope.editing = $.extend({}, group);
         $scope.editing.checked = {};
+        $scope.ajax = {};
+        $scope.tab = 0;
 
         $.ajax({
             'url': CONFIG.siteUrl + '/rest/group/' + group.pk + '/user',
@@ -77,6 +84,21 @@ sb2.controller('groupCtrl', function ($scope, $timeout, $apply) {
             if ($scope.editing.checked[$scope.editing.users[i].pk])
                 $scope.editing.users.splice(i, 1);
         $scope.editing.checked = {};
+    };
+
+    $scope.save = function () {
+        var group = $.extend({}, $scope.editing);
+        group.users = [];
+        for (var i in $scope.editing.users)
+            group.users.push($scope.editing.users[i].pk);
+
+        $scope.ajax.save = true;
+
+        $http.put(CONFIG.siteUrl + '/rest/group/' + group.pk, group).then(function () {
+            $scope.ajax.save = null;
+            $($scope.modalEdit).modal('hide');
+            $scope.getGroups();
+        });
     };
 });
 

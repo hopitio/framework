@@ -61,12 +61,14 @@ class UserCtrl extends RestCtrl
         $deps = $this->depMapper
                 ->makeInstance()
                 ->filterStatus($stt)
+                ->filterDeleted(false)
                 ->filterSearch($search)
                 ->getAll();
 
         $users = $this->userMapper
                 ->makeInstance()
                 ->filterStatus($stt)
+                ->filterDeleted(false)
                 ->filterSearch($search)
                 ->getAll();
 
@@ -185,6 +187,16 @@ class UserCtrl extends RestCtrl
         $this->depMapper->moveDepartments($deps, $dest);
         $this->resp->setBody(Json::encode(array(
                     'status' => true
+        )));
+    }
+
+    function updateGroup($pk)
+    {
+        $group = $this->restInput();
+        $pk = $this->groupMapper->updateGroup($pk, $group);
+
+        $this->resp->setBody(Json::encode(array(
+            'pk' => $pk
         )));
     }
 
