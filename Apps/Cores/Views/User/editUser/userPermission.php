@@ -1,14 +1,18 @@
-<fieldset ng-repeat="group in permissions">
+<div ng-init="selectedAppPem = '0'"></div>
+<select class="form-control" ng-model="selectedAppPem">
+    <option ng-repeat="app in permissions" value="{{$index}}">{{app.name}}</option>
+</select>
+<fieldset ng-repeat="group in permissions[selectedAppPem]">
     <legend>{{group.name}}</legend>
 
     <table class='table-bordered table table-striped table-hover'>
         <tr ng-repeat="pem in group.permissions">
             <td>
                 <label class="check" value="pem.name">
-                    <input type="checkbox" value="{{pem.name}}" ng-checked="editingUser.permissions.indexOf(pem.name) != -1" ng-click="togglePermission($event)"/>
+                    <input type="checkbox" value="{{pem.id}}" ng-checked="editingUser.permissions.indexOf(pem.id) != -1" ng-click="togglePermission($event)"/>
                     <before></before>
                     <after></after>&nbsp;
-                    {{pem.value}}
+                    {{pem.name}}
                 </label>
             </td>
         </tr>

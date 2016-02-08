@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<application name="Quản trị hệ thống">
+    <group name="Nhóm 1">
+        <pem id="quyen1" name="Quyền 1"/>
+        <pem id="quyen2" name="Quyền 2"/>
+        <pem id="quyen3" name="Quyền 3"/>
+    </group>
+</application>

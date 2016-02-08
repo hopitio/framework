@@ -16,6 +16,13 @@ class Menu
     /** @var static */
     public $parent;
 
+    /**
+     * 
+     * @param type $id
+     * @param type $label
+     * @param type $url
+     * @param type $children
+     */
     function __construct($id, $label, $url, $children = array())
     {
         $this->id = $id;

@@ -155,20 +155,41 @@ abstract class Mapper extends Query
     }
 
     /**
+     * 
+     * @param type $pk
+     * @param type $updateData
+     * @return type
+     */
+    function update($pk, $updateData)
+    {
+        return $this->db->update($this->tableName(), $updateData, 'pk=?', array($pk));
+    }
+
+    /**
+     * 
+     * @param type $updateData
+     * @return type
+     */
+    function insert($updateData)
+    {
+        return $this->db->insert($this->tableName(), $updateData);
+    }
+
+    /**
      * pk = 0 insert; pk <> 0 update
      * @param type $pk
-     * @param type $updateDate
+     * @param type $updateData
      * @return int pk
      */
-    function replace($pk, $updateDate)
+    function replace($pk, $updateData)
     {
         if ($pk)
         {
-            $this->db->update($this->tableName(), $updateDate, 'pk=?', array($pk));
+            $this->update($pk, $updateData);
         }
         else
         {
-            $pk = $this->db->insert($this->tableName(), $updateDate);
+            $pk = $this->insert($updateData);
         }
         return $pk;
     }

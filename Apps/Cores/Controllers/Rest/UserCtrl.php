@@ -7,7 +7,7 @@ use Libs\RestCtrl;
 use Apps\Cores\Models\DepartmentMapper;
 use Apps\Cores\Models\UserMapper;
 use Apps\Cores\Models\GroupMapper;
-use Libs\Permission;
+use Apps\Cores\Models\Permission;
 
 class UserCtrl extends RestCtrl
 {
@@ -15,6 +15,7 @@ class UserCtrl extends RestCtrl
     protected $userMapper;
     protected $depMapper;
     protected $groupMapper;
+    protected $pemClass;
 
     protected function init()
     {
@@ -22,6 +23,7 @@ class UserCtrl extends RestCtrl
         $this->userMapper = UserMapper::makeInstance();
         $this->depMapper = DepartmentMapper::makeInstance();
         $this->groupMapper = GroupMapper::makeInstance();
+        $this->pemClass = new Permission;
     }
 
     function getDepartment($depPk)
@@ -123,9 +125,13 @@ class UserCtrl extends RestCtrl
         $this->resp->setBody(Json::encode($users));
     }
 
+    /**
+     * Trả về danh sách tất cả quyền của ứng dụng
+     */
     function getBasePermissions()
     {
-        $this->resp->setBody(Json::encode(Permission::getAll()));
+        $ret = $this->pemClass->getAll();
+        $this->resp->setBody(Json::encode($ret));
     }
 
     function checkUniqueAccount()
@@ -193,10 +199,29 @@ class UserCtrl extends RestCtrl
     function updateGroup($pk)
     {
         $group = $this->restInput();
+        if (!$this->groupMapper->checkCode($pk, $group['groupCode']))
+        {
+            $this->resp->setBody(Json::encode(array(
+                        'status' => false,
+                        'error'  => 'duplicateCode'
+            )));
+            return;
+        }
+
         $pk = $this->groupMapper->updateGroup($pk, $group);
 
         $this->resp->setBody(Json::encode(array(
-            'pk' => $pk
+                    'status' => true,
+                    'pk'     => $pk
+        )));
+    }
+
+    function deleteGroups()
+    {
+        $arrPk = $this->restInput('pk', array());
+        $this->groupMapper->deleteGroup($arrPk);
+        $this->resp->setBody(Json::encode(array(
+                    'status' => true
         )));
     }
 

@@ -23,7 +23,7 @@ $this->addJs(array(
             <tr>
                 <td colspan="5">
                     <button class="btn btn-default" ng-click="edit()"><i class="fa fa-plus"></i> Thêm mới</button>
-                    <button class="btn btn-default" ng-click="delete()"><i class="fa fa-trash"></i> Xóa</button>
+                    <button class="btn btn-default" ng-click="delete()" ng-disabled="getChecked().length==0"><i class="fa fa-trash"></i> Xóa</button>
                 </td>
             </tr>
             <tr>
@@ -53,7 +53,7 @@ $this->addJs(array(
                         <a href="javascript:;" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"></i></a>
                         <ul class="dropdown-menu">
                             <li><a href="javascript:;" ng-click="edit(group)">Sửa</a></li>
-                            <li><a href="javascript:;" ng-click="delete(group)">Xóa</a></li>
+                            <li><a href="javascript:;" ng-click="delete(group.pk)">Xóa</a></li>
                         </ul>
                     </div>
                 </td>

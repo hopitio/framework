@@ -22,6 +22,18 @@ class GroupMapper extends Mapper
         return 'cores_group';
     }
 
+    function __construct()
+    {
+        parent::__construct();
+        $this->filterDeleted(false);
+    }
+
+    function filterDeleted($bool)
+    {
+        $this->where('gp.deleted=?', __FUNCTION__)->setParam($bool ? 1 : 0, __FUNCTION__);
+        return $this;
+    }
+
     function filterPk($id)
     {
         $this->where('gp.pk=?', __FUNCTION__)->setParam($id, __FUNCTION__);
@@ -71,6 +83,39 @@ class GroupMapper extends Mapper
         }
 
         return $pk;
+    }
+
+    function filterCode($code)
+    {
+        $this->where('gp.groupCode=?', __FUNCTION__)->setParam($code, __FUNCTION__);
+        return $this;
+    }
+
+    function deleteGroup($pk)
+    {
+        if (!is_array($pk))
+        {
+            $pk = array($pk);
+        }
+        foreach ($pk as $i)
+        {
+            $this->db->Execute("UPDATE cores_group SET deleted=1, groupCode=CONCAT(groupCode, ?) WHERE pk=?", array('|' . uniqid() . $i, $i));
+        }
+    }
+
+    function checkCode($pk, $code)
+    {
+        $inserted = $this->makeInstance()->filterCode($code)->getEntity();
+
+        if (!$inserted->pk)
+        {
+            return true;
+        }
+        else if ($inserted->pk == $pk)
+        {
+            return true;
+        }
+        return false;
     }
 
 }

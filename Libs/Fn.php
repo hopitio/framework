@@ -43,3 +43,40 @@ function encodeForm($arr)
     }
     return $ret;
 }
+
+define('XPATH_STRING', 1);
+define('XPATH_ARRAY', 2);
+define('XPATH_DOM', 3);
+
+/**
+ * 
+ * @param SimpleXmlElement $dom
+ * @param type $xpath
+ * @param type $method
+ * @return SimpleXmlElement
+ */
+function xpath($dom, $xpath, $method = 1)
+{
+    if ($dom instanceof SimpleXMLElement == false)
+    {
+        switch ($method) {
+            case XPATH_STRING:
+                return '';
+            case XPATH_ARRAY:
+                return array();
+            case XPATH_DOM:
+                return null;
+        }
+    }
+
+    $r = $dom->xpath($xpath);
+    switch ($method) {
+        case XPATH_ARRAY:
+            return $r;
+        case XPATH_DOM:
+            return $r[0];
+        case XPATH_STRING:
+        default:
+            return count($r) ? (string) $r[0] : null;
+    }
+}

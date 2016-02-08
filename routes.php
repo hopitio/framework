@@ -8,8 +8,6 @@ $routes[] = new MvcContext('/admin/config.js', 'GET', "Apps\\Cores\\Controllers\
 
 $routes[] = new MvcContext('/admin/user', 'GET', "Apps\\Cores\\Controllers\\UserCtrl", 'index');
 $routes[] = new MvcContext('/admin/group', 'GET', "Apps\\Cores\\Controllers\\UserCtrl", 'group');
-$routes[] = new MvcContext('/admin/list', 'GET', "Apps\\Cores\\Controllers\\ListCtrl", 'index');
-
 
 
 $routes[] = new MvcContext('/rest/department/move', 'PUT', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'moveDepartments');
@@ -20,6 +18,7 @@ $routes[] = new MvcContext('/rest/department', 'DELETE', "Apps\\Cores\\Controlle
 $routes[] = new MvcContext('/rest/group', 'GET', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'getGroups');
 $routes[] = new MvcContext('/rest/group/:id/user', 'GET', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'getGroupUsers');
 $routes[] = new MvcContext('/rest/group/:id', 'PUT', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'updateGroup');
+$routes[] = new MvcContext('/rest/group', 'DELETE', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'deleteGroups');
 
 $routes[] = new MvcContext('/rest/basePermission', 'GET', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'getBasePermissions');
 
@@ -28,8 +27,4 @@ $routes[] = new MvcContext('/rest/user/move', 'PUT', "Apps\\Cores\\Controllers\\
 $routes[] = new MvcContext('/rest/user/checkUniqueAccount', 'POST', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'checkUniqueAccount');
 $routes[] = new MvcContext('/rest/user/:id', 'PUT', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'updateUser');
 $routes[] = new MvcContext('/rest/user', 'DELETE', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'deleteUsers');
-
-
-
-
 

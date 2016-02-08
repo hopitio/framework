@@ -171,21 +171,7 @@ sb2.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
             $scope.groups = resp.data;
         });
         $http.get(CONFIG.siteUrl + '/rest/basePermission').then(function (resp) {
-            $scope.permissions = [];
-            for (var i in resp.data) {
-                var group = {
-                    'name': i,
-                    'permissions': [],
-                    'show': true
-                };
-                for (var j in resp.data[i]) {
-                    group.permissions.push({
-                        'name': j,
-                        'value': resp.data[i][j]
-                    });
-                }
-                $scope.permissions.push(group);
-            }
+            $scope.permissions = resp.data;
         });
     };
 

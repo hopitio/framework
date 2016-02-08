@@ -49,14 +49,15 @@ sb2.controller('groupCtrl', function ($scope, $timeout, $apply, $http) {
         $scope.ajax = {};
         $scope.tab = 0;
 
-        $.ajax({
-            'url': CONFIG.siteUrl + '/rest/group/' + group.pk + '/user',
-            'dataType': 'json'
-        }).done(function (resp) {
-            $apply(function () {
-                $scope.editing.users = resp;
+        if (group.pk != 0)
+            $.ajax({
+                'url': CONFIG.siteUrl + '/rest/group/' + group.pk + '/user',
+                'dataType': 'json'
+            }).done(function (resp) {
+                $apply(function () {
+                    $scope.editing.users = resp;
+                });
             });
-        });
 
         $timeout(function () {
             $($scope.modalEdit).modal('show');
@@ -94,9 +95,27 @@ sb2.controller('groupCtrl', function ($scope, $timeout, $apply, $http) {
 
         $scope.ajax.save = true;
 
-        $http.put(CONFIG.siteUrl + '/rest/group/' + group.pk, group).then(function () {
+        $http.put(CONFIG.siteUrl + '/rest/group/' + group.pk, group).then(function (resp) {
             $scope.ajax.save = null;
-            $($scope.modalEdit).modal('hide');
+            if (resp.data.status) {
+                $($scope.modalEdit).modal('hide');
+                $scope.getGroups();
+            } else if (resp.data.error == 'duplicateCode') {
+                alert('Trùng mã nhóm');
+            }
+        });
+    };
+
+    $scope.delete = function (pk) {
+        if (pk) {
+            $scope.checked = {};
+            $scope.checked[pk] = true;
+        }
+
+        if (!confirm('Bạn chắc chắn muốn xóa những đối tượng này?'))
+            return;
+
+        $http.delete(CONFIG.siteUrl + '/rest/group', {data: {'pk': $scope.getChecked()}}).then(function () {
             $scope.getGroups();
         });
     };

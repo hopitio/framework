@@ -21,8 +21,7 @@ class TwoColsLayout extends Layout
         $this->companyWebsite = \Config::COMPANY_WEBSITE;
         $this->sideMenu = new Menu(null, null, null, array(
             new Menu('user', '<i class="fa fa-user"></i> Tài khoản', url('/admin/user')),
-            new Menu('group', '<i class="fa fa-folder-open"></i> Nhóm', url('/admin/group')),
-            new Menu('list', '<i class="fa fa-list"></i> Danh mục động', url('/admin/list')),
+            new Menu('group', '<i class="fa fa-folder-open"></i> Nhóm', url('/admin/group'))
         ));
     }
 
