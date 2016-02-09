@@ -14,9 +14,9 @@ abstract class Layout extends View
         $this->renderLayout($content);
     }
 
-    abstract protected function renderLayout($content);
-
     abstract function themeUrl();
+
+    abstract protected function renderLayout($content);
 
     function addJs($arr)
     {

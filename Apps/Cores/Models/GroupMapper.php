@@ -7,9 +7,16 @@ use Libs\SQL\Mapper;
 class GroupMapper extends Mapper
 {
 
+    protected $loadPermission;
+
     public function makeEntity($rawData)
     {
-        return new GroupEntity($rawData);
+        $entity = new GroupEntity($rawData);
+        if ($this->loadPermission)
+        {
+            $entity->permissions = $this->getPermissions($entity->pk);
+        }
+        return $entity;
     }
 
     public function tableAlias()
@@ -67,20 +74,35 @@ class GroupMapper extends Mapper
         {
             return false;
         }
-
+        
+        $this->db->StartTrans();
         $pk = $this->replace($pk, $update);
 
-        if ($pk)
+        if (!$pk)
         {
-            $this->db->delete('cores_group_user', 'groupFk=?', array($pk));
-            foreach (arrData($data, 'users') as $user)
-            {
-                $this->db->insert('cores_group_user', array(
-                    'userFk'  => $user,
-                    'groupFk' => $pk
-                ));
-            }
+            return false;
         }
+
+        //user in group
+        $this->db->delete('cores_group_user', 'groupFk=?', array($pk));
+        foreach (arrData($data, 'users', array()) as $user)
+        {
+            $this->db->insert('cores_group_user', array(
+                'userFk'  => $user,
+                'groupFk' => $pk
+            ));
+        }
+
+        //group permissions
+        $this->db->delete('cores_group_permission', 'groupFk=?', array($pk));
+        foreach (arrData($data, 'permissions', array()) as $pem)
+        {
+            $this->db->insert('cores_group_permission', array(
+                'groupFk'    => $pk,
+                'permission' => $pem
+            ));
+        }
+        $this->db->CompleteTrans();
 
         return $pk;
     }
@@ -116,6 +138,17 @@ class GroupMapper extends Mapper
             return true;
         }
         return false;
+    }
+
+    function setLoadPermission($bool = true)
+    {
+        $this->loadPermission = $bool;
+        return $this;
+    }
+
+    function getPermissions($groupPk)
+    {
+        return $this->db->GetCol("SELECT permission FROM cores_group_permission WHERE groupFk=?", array($groupPk));
     }
 
 }

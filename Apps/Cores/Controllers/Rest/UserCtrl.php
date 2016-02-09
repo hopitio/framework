@@ -101,6 +101,7 @@ class UserCtrl extends RestCtrl
         $stt = $this->req->get('status', -1);
         $groups = $this->groupMapper->makeInstance()
                 ->filterStatus($stt)
+                ->setLoadPermission()
                 ->getAll();
 
         $this->resp->setBody(Json::encode($groups));

@@ -48,6 +48,7 @@ sb2.controller('groupCtrl', function ($scope, $timeout, $apply, $http) {
         $scope.editing.checked = {};
         $scope.ajax = {};
         $scope.tab = 0;
+        $scope.editing.permissions = $scope.editing.permissions || [];
 
         if (group.pk != 0)
             $.ajax({
@@ -58,6 +59,10 @@ sb2.controller('groupCtrl', function ($scope, $timeout, $apply, $http) {
                     $scope.editing.users = resp;
                 });
             });
+
+        $http.get(CONFIG.siteUrl + '/rest/basePermission').then(function (resp) {
+            $scope.permissions = resp.data;
+        });
 
         $timeout(function () {
             $($scope.modalEdit).modal('show');
@@ -118,6 +123,17 @@ sb2.controller('groupCtrl', function ($scope, $timeout, $apply, $http) {
         $http.delete(CONFIG.siteUrl + '/rest/group', {data: {'pk': $scope.getChecked()}}).then(function () {
             $scope.getGroups();
         });
+    };
+    
+    $scope.togglePermission = function ($event) {
+        var target = $event.target;
+        if (target.checked && $scope.editing.permissions.indexOf(target.value) == -1)
+            $scope.editing.permissions.push(target.value);
+        else if (!target.checked) {
+            var idx = $scope.editing.permissions.indexOf(target.value);
+            if (idx != -1)
+                $scope.editing.permissions.splice(idx, 1);
+        }
     };
 });
 

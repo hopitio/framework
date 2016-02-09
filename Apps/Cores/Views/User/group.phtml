@@ -9,6 +9,7 @@ $this->addJs(array(
 <style>
     #modalEdit .modal-body{padding: 0;}
     #modalEdit .tab-content{padding: 15px;}
+    #modalEdit legend{margin-bottom: 0;}
 </style>
 
 <div class="row">
@@ -23,7 +24,7 @@ $this->addJs(array(
             <tr>
                 <td colspan="5">
                     <button class="btn btn-default" ng-click="edit()"><i class="fa fa-plus"></i> Thêm mới</button>
-                    <button class="btn btn-default" ng-click="delete()" ng-disabled="getChecked().length==0"><i class="fa fa-trash"></i> Xóa</button>
+                    <button class="btn btn-default" ng-click="delete()" ng-disabled="getChecked().length == 0"><i class="fa fa-trash"></i> Xóa</button>
                 </td>
             </tr>
             <tr>
@@ -77,9 +78,10 @@ $this->addJs(array(
                         <ul class="nav nav-tabs nav-justified" role="tablist">
                             <li role="presentation" ng-class="<?php echo "{active: tab==0}" ?>" ng-click="setTab(0)"><a href="javascript:;">Thông tin nhóm</a></li>
                             <li role="presentation" ng-class="<?php echo "{active: tab==1}" ?>" ng-click="setTab(1)"><a href="javascript:;">Thành viên <span ng-if="editing.users">({{editing.users.length}})</span></a></li>
+                            <li role="presentation" ng-class="<?php echo "{active: tab==2}" ?>" ng-click="setTab(2)"><a href="javascript:;">Phân quyền</a></li>
                         </ul>
                         <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane "  ng-class="<?php echo "{active: tab==0}" ?>">
+                            <div  class="tab-pane "  ng-class="<?php echo "{active: tab==0}" ?>">
                                 <div class="form-group">
                                     <label class="control-label col-xs-4" for="txt-code">* Mã nhóm:</label>
                                     <div class="col-xs-8">
@@ -103,7 +105,7 @@ $this->addJs(array(
                                     </div>
                                 </div>
                             </div>
-                            <div role="tabpanel" class="tab-pane" ng-class="<?php echo "{active: tab==1}" ?>">
+                            <div  class="tab-pane" ng-class="<?php echo "{active: tab==1}" ?>">
                                 <input type="text" class="form-control" style="width: 300px" placeholder="tìm kiếm">
                                 <h4></h4>
                                 <table class="table table-bordered table-hover table-striped table-record">
@@ -133,6 +135,31 @@ $this->addJs(array(
                                         </tr>
                                     </tbody>
                                 </table>
+                            </div>
+
+                            <div  class="tab-pane tab-permission" ng-class="<?php echo "{active: tab==2}" ?>">
+                                <div ng-init="selectedAppPem = '0'"></div>
+                                <select class="form-control" ng-model="selectedAppPem">
+                                    <option ng-repeat="app in permissions" value="{{$index}}">{{app.name}}</option>
+                                </select>
+                                <h4></h4>
+                                <fieldset ng-repeat="group in permissions[selectedAppPem]['groups']">
+                                    <legend style="">{{group.name}}</legend>
+
+                                    <table class='table-bordered table table-striped table-hover'>
+                                        <tr ng-repeat="pem in group.permissions">
+                                            <td>
+                                                <label class="check" value="pem.name">
+                                                    <input type="checkbox" value="{{pem.id}}" ng-checked="editing.permissions.indexOf(pem.id) != -1" ng-click="togglePermission($event)"/>
+                                                    <before></before>
+                                                    <after></after>&nbsp;
+                                                    {{pem.name}}
+                                                </label>
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                </fieldset>
                             </div>
                         </div>
 

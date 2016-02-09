@@ -2,7 +2,8 @@
 <select class="form-control" ng-model="selectedAppPem">
     <option ng-repeat="app in permissions" value="{{$index}}">{{app.name}}</option>
 </select>
-<fieldset ng-repeat="group in permissions[selectedAppPem]">
+<h4></h4>
+<fieldset ng-repeat="group in permissions[selectedAppPem]['groups']">
     <legend>{{group.name}}</legend>
 
     <table class='table-bordered table table-striped table-hover'>

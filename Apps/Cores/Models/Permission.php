@@ -39,7 +39,7 @@ class Permission
                         'name' => strval($pem->attributes()->name)
                     );
                 }
-                $app['groups'] = array(
+                $app['groups'][] = array(
                     'name'        => strval($group->attributes()->name),
                     'permissions' => $pems
                 );

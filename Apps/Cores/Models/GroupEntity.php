@@ -11,6 +11,7 @@ class GroupEntity extends Entity
     public $groupCode;
     public $groupName;
     public $stt;
+    public $permissions = array();
 
     function __construct($rawData = null)
     {
