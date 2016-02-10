@@ -50,6 +50,7 @@ class Bootstrap
             'cookies.secure'     => false,
             'cookies.secret_key' => \Config::CRYPT_SECRECT,
         ));
+
         //config session
         $this->slim->add(new \Slim\Middleware\SessionCookie(array(
             'expires' => 20 * 365 * 24 * 60 . ' minutes',
@@ -83,25 +84,41 @@ class Bootstrap
                 $context = $item;
                 $context->app = $this;
                 $context->rewriteBase = $this->rewriteBase;
-                $map = $this->slim->map($prefix . $item->path, function() use($bootstrap, $context)
+                if (!is_array($item->path))
                 {
-                    $bootstrap->executeAction($context, func_get_args());
-                });
-                //via method
-                $methods = array();
-                if ($context->method == '*')
-                {
-                    $methods = array('GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH');
+                    $item->path = array($item->path);
                 }
-                else
+
+                foreach ($item->path as $path)
                 {
-                    $methods = explode(',', strtoupper($context->method));
+                    $map = $this->slim->map($prefix . $path, function() use($bootstrap, $context)
+                    {
+                        $bootstrap->executeAction($context, func_get_args());
+                    });
+                    //via method
+                    $methods = array();
+                    if ($context->method == '*')
+                    {
+                        $methods = array('GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH');
+                    }
+                    else
+                    {
+                        $methods = explode(',', strtoupper($context->method));
+                    }
+                    call_user_func_array(array($map, 'via'), $methods);
                 }
-                call_user_func_array(array($map, 'via'), $methods);
             }
             else
             {
-                $this->appendRoute($item, $prefix . $item->path);
+                if (!is_array($item->path))
+                {
+                    $item->path = array($item->path);
+                }
+
+                foreach ($item->path as $path)
+                {
+                    $this->appendRoute($item, $prefix . $path);
+                }
             }
         }
     }
@@ -112,16 +129,17 @@ class Bootstrap
         $controller = $this->createController($context);
         if (!$controller)
         {
-            $this->notFound();
-            return;
+            throw new \Exception("Không tìm thấy Controller<br>
+                Route: {$context->controller}:{$context->action}");
         }
         //execute action
         if (!is_callable(array($controller, $context->action)))
         {
-            $this->notFound();
-            return;
+            throw new \Exception("Không tìm thấy Action<br>
+                Route: {$context->controller}:{$context->action}");
         }
         call_user_func_array(array($controller, $context->action), $args);
+        unset($controller);
     }
 
     function notFound()

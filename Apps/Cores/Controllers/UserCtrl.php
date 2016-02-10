@@ -20,12 +20,13 @@ class UserCtrl extends CoresCtrl
 
     function index()
     {
-
+        $this->requireAdmin();
         $this->twoColsLayout->render('User/user.phtml');
     }
 
     function group()
     {
+        $this->requireAdmin();
         $this->twoColsLayout->render('User/group.phtml');
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Slim - a micro PHP 5 framework
  *
@@ -30,6 +31,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 namespace Slim\Http;
 
 /**
@@ -45,6 +47,7 @@ namespace Slim\Http;
  */
 class Response implements \ArrayAccess, \Countable, \IteratorAggregate
 {
+
     /**
      * @var int HTTP status code
      */
@@ -155,7 +158,7 @@ class Response implements \ArrayAccess, \Countable, \IteratorAggregate
 
     public function setStatus($status)
     {
-        $this->status = (int)$status;
+        $this->status = (int) $status;
     }
 
     /**
@@ -167,7 +170,8 @@ class Response implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function status($status = null)
     {
-        if (!is_null($status)) {
+        if (!is_null($status))
+        {
             $this->status = (int) $status;
         }
 
@@ -184,7 +188,8 @@ class Response implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function header($name, $value = null)
     {
-        if (!is_null($value)) {
+        if (!is_null($value))
+        {
             $this->headers->set($name, $value);
         }
 
@@ -221,7 +226,8 @@ class Response implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function body($body = null)
     {
-        if (!is_null($body)) {
+        if (!is_null($body))
+        {
             $this->write($body, true);
         }
 
@@ -236,10 +242,13 @@ class Response implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function write($body, $replace = false)
     {
-        if ($replace) {
+        if ($replace)
+        {
             $this->body = $body;
-        } else {
-            $this->body .= (string)$body;
+        }
+        else
+        {
+            $this->body .= (string) $body;
         }
         $this->length = strlen($this->body);
 
@@ -260,7 +269,8 @@ class Response implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function length($length = null)
     {
-        if (!is_null($length)) {
+        if (!is_null($length))
+        {
             $this->length = (int) $length;
         }
 
@@ -279,7 +289,8 @@ class Response implements \ArrayAccess, \Countable, \IteratorAggregate
     public function finalize()
     {
         // Prepare response
-        if (in_array($this->status, array(204, 304))) {
+        if (in_array($this->status, array(204, 304)))
+        {
             $this->headers->remove('Content-Type');
             $this->headers->remove('Content-Length');
             $this->setBody('');
@@ -344,7 +355,7 @@ class Response implements \ArrayAccess, \Countable, \IteratorAggregate
      * @param string $url    The redirect destination
      * @param int    $status The redirect HTTP status code
      */
-    public function redirect ($url, $status = 302)
+    public function redirect($url, $status = 302)
     {
         $this->setStatus($status);
         $this->headers->set('Location', $url);
@@ -511,10 +522,14 @@ class Response implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public static function getMessageForCode($status)
     {
-        if (isset(self::$messages[$status])) {
+        if (isset(self::$messages[$status]))
+        {
             return self::$messages[$status];
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
+
 }

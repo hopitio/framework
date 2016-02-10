@@ -39,7 +39,7 @@
                 } else if (validity.tooLong) {
                     control.setCustomValidity(msgs.tooLong.replace('{1}', control.maxLength));
                 } else if (validity.tooShort) {
-                    control.setCustomValidity(msgs.tooLong.replace('{1}', control.minLength));
+                    control.setCustomValidity(msgs.tooShort.replace('{1}', control.minLength));
                 } else if (validity.rangeUnderflow) {
                     control.setCustomValidity(msgs.rangeUnderflow.replace('{1}', control.min));
                 } else if (validity.rangeOverflow) {

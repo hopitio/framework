@@ -7,9 +7,12 @@ abstract class Entity
 
     function __construct($rawData = null)
     {
-        foreach ($rawData as $k => $v)
+        if (is_array($rawData))
         {
-            $this->{$k} = $v;
+            foreach ($rawData as $k => $v)
+            {
+                $this->{$k} = $v;
+            }
         }
     }
 

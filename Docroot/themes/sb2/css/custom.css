@@ -7,6 +7,10 @@ body{
 }
 .navbar-default .navbar-brand{
     color: #26A69A;
+    line-height: 50px;
+    padding: 0 15px;
+    font-size: 20px;
+    text-transform: uppercase;
 }
 .panel > .panel-heading,
 .alert.alert-actions{

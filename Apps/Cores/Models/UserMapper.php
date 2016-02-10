@@ -7,9 +7,21 @@ use Libs\SQL\Mapper;
 class UserMapper extends Mapper
 {
 
+    protected $loadPermissions = 0;
+    protected $loadGroups = false;
+
     public function makeEntity($rawData)
     {
-        return new UserEntity($rawData);
+        $entity = new UserEntity($rawData);
+        if ($this->loadPermissions)
+        {
+            $entity->permissions = $this->loadPermissions($entity->pk, $this->loadPermissions == 2 ? true : false);
+        }
+        if ($this->loadGroups)
+        {
+            $entity->groups = $this->loadGroups($entity->pk);
+        }
+        return $entity;
     }
 
     public function tableAlias()
@@ -44,17 +56,8 @@ class UserMapper extends Mapper
     function loadGroups($userPk)
     {
         return GroupMapper::makeInstance()
-                        ->innerJoin('cores_group_user gu ON gu.groupFk=gp.pk AND gu.userFk=?' . intval($userPk))
+                        ->innerJoin('cores_group_user gu ON gu.groupFk=gp.pk AND gu.userFk=' . intval($userPk))
                         ->getAll();
-    }
-
-    function loadPermissions($userPk)
-    {
-        $sql = "SELECT permission FROM cores_user_permission WHERE userFk=?
-             UNION 
-             SELECT permission FROM cores_group_permission gp
-             INNER JOIN cores_group_user gu ON gp.groupFk=gu.groupFk AND gu.userFk=?";
-        return $this->db->GetCol($sql, array($userPk, $userPk));
     }
 
     function updateUser($id, $data)
@@ -176,6 +179,99 @@ class UserMapper extends Mapper
             __FUNCTION__ . 5 => "%$search%"
         ));
         return $this;
+    }
+
+    function setLoadPermissions($includeGroupPem = false)
+    {
+        $this->loadPermissions = $includeGroupPem ? 2 : 1;
+        return $this;
+    }
+
+    function loadPermissions($userPk, $includeGroupPem = false)
+    {
+        $userPk = (int) $userPk;
+        if (!$userPk)
+        {
+            return array();
+        }
+
+        $sql = "SELECT permission FROM cores_user_permission WHERE userFk=$userPk";
+        if ($includeGroupPem)
+        {
+            $groups = "SELECT groupFk FROM cores_group_user WHERE userFk=$userPk";
+            $sql .= "\nUNION SELECT permission FROM cores_group_permission WHERE groupFk IN($groups)";
+        }
+
+        return $this->db->GetCol($sql);
+    }
+
+    function setLoadGroups($bool = true)
+    {
+        $this->loadGroups = $bool;
+        return $this;
+    }
+
+    /**
+     * Lỗi array('status' => false, 'error' => '[code]')<br>
+     * badRequest: chưa điền account hoặc pass<br>
+     * notFound: không tìm thấy<br>
+     * inactive: không kích hoạt<br>
+     * wrongPassword: sai mật khẩu<Br>
+     * Thành công array('status'=> true, 'user' => [UserEntity])
+     * @param type $account
+     * @param type $password
+     * @return arra 
+     */
+    function authenticate($account, $password)
+    {
+        if (!$account || !$password)
+        {
+            return array(
+                'status' => false,
+                'error'  => 'badRequest'
+            );
+        }
+
+        $user = $this->makeInstance()
+                ->setLoadPermissions(true)
+                ->setLoadGroups()
+                ->filterAccount($account)
+                ->filterDeleted(false)
+                ->getEntity();
+
+        if (!$user->pk)
+        {
+            return array(
+                'status' => false,
+                'error'  => 'notFound'
+            );
+        }
+
+        if ($user->stt == 0)
+        {
+            return array(
+                'status' => false,
+                'error'  => 'inactive'
+            );
+        }
+
+        if ($user->pass != md5($password))
+        {
+            return array(
+                'status' => false,
+                'error'  => 'wrongPassword'
+            );
+        }
+
+        return array(
+            'status' => true,
+            'user'   => $user
+        );
+    }
+
+    function changePassword($userPk, $pass)
+    {
+        $this->update($userPk, array('pass' => md5($pass)));
     }
 
 }

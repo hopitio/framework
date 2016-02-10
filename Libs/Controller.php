@@ -25,9 +25,7 @@ abstract class Controller
         $this->context = $context;
         $this->req = $context->app->slim->request;
         $this->resp = $context->app->slim->response;
-        $this->session = new \Slim\Helper\Set($_SESSION);
-        $this->session = new Session();
-        $this->storageMapper = \Apps\Cores\Models\StorageMapper::makeInstance();
+        $this->session = new \Libs\Session($context);
 
         $this->init();
     }

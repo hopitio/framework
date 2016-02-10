@@ -2,7 +2,7 @@
 
 use Libs\MvcContext;
 
-$routes[] = new MvcContext('/', 'GET', "Apps\\Cores\\Controllers\\HomeCtrl", 'index');
+$routes[] = new MvcContext(array('/', '/admin(/)'), 'GET', "Apps\\Cores\\Controllers\\HomeCtrl", 'index');
 
 $routes[] = new MvcContext('/admin/config.js', 'GET', "Apps\\Cores\\Controllers\\HomeCtrl", 'configJS');
 
@@ -27,4 +27,7 @@ $routes[] = new MvcContext('/rest/user/move', 'PUT', "Apps\\Cores\\Controllers\\
 $routes[] = new MvcContext('/rest/user/checkUniqueAccount', 'POST', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'checkUniqueAccount');
 $routes[] = new MvcContext('/rest/user/:id', 'PUT', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'updateUser');
 $routes[] = new MvcContext('/rest/user', 'DELETE', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'deleteUsers');
+
+$routes[] = new MvcContext('/admin/login/changePassword', 'GET,POST', "Apps\\Cores\\Controllers\\LoginCtrl", 'changePassword');
+$routes[] = new MvcContext('/admin/login', 'GET,POST', "Apps\\Cores\\Controllers\\LoginCtrl", 'index');
 

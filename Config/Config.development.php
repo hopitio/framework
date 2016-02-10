@@ -13,7 +13,8 @@ class Config
     const DEBUG_MODE = 0;
 
     /** Ten phan mem */
-    const APP_NAME = 'Framework';
+    const APP_NAME = 'Framework lõi hệ thống';
+    const BRAND = 'Cores';
 
     /** Tham so database */
     const DB_TYPE = 'mysqli';

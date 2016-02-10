@@ -12,6 +12,9 @@ class TwoColsLayout extends Layout
     protected $brand = 'Brand';
     protected $companyWebsite;
 
+    /** @var \Apps\Cores\Models\UserEntity */
+    protected $user;
+
     /** @var Menu */
     protected $sideMenu;
 
@@ -19,10 +22,18 @@ class TwoColsLayout extends Layout
     {
         $this->title = \Config::APP_NAME;
         $this->companyWebsite = \Config::COMPANY_WEBSITE;
-        $this->sideMenu = new Menu(null, null, null, array(
-            new Menu('user', '<i class="fa fa-user"></i> Tài khoản', url('/admin/user')),
-            new Menu('group', '<i class="fa fa-folder-open"></i> Nhóm', url('/admin/group'))
-        ));
+    }
+
+    function setSideMenu($menus)
+    {
+        $this->sideMenu = $menus;
+        return $this;
+    }
+
+    function setUser($user)
+    {
+        $this->user = $user;
+        return $this;
     }
 
     function setTitle($title)
@@ -137,15 +148,12 @@ class TwoColsLayout extends Layout
                             <!-- /.dropdown -->
                             <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                    <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                                    <i class="fa fa-user fa-fw"></i> <?php echo $this->user->fullName ?>  <i class="fa fa-caret-down"></i>
                                 </a>
                                 <ul class="dropdown-menu dropdown-user">
-                                    <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
-                                    </li>
-                                    <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
-                                    </li>
+                                    <li><a href="<?php echo url('/admin/login/changePassword') ?>"><i class="fa fa-key fa-fw"></i> Đổi mật khẩu</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                                    <li><a href="<?php echo url('/admin/login') ?>"><i class="fa fa-sign-out fa-fw"></i> Đăng xuất</a>
                                     </li>
                                 </ul>
                                 <!-- /.dropdown-user -->

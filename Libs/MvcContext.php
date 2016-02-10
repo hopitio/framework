@@ -15,7 +15,7 @@ class MvcContext
     public $id;
 
     /**
-     * @param type $path
+     * @param String|Array $path
      * @param type $method
      * @param type $controller
      * @param type $action

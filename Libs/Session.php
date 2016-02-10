@@ -7,15 +7,18 @@ use \Slim\Helper\Set;
 class Session extends Set
 {
 
-    function __construct()
+    /** @var MvcContext */
+    protected $context;
+
+    function __construct(MvcContext $context)
     {
         parent::__construct($_SESSION);
+        $this->context = $context;
     }
-
-    function set($key, $value)
+    
+    function __destruct()
     {
-        parent::set($key, $value);
-        $_SESSION[$key] = $value;
+        $_SESSION = $this->data;
     }
 
 }
