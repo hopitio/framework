@@ -2,9 +2,9 @@
 
 namespace Apps\Cores\Controllers\Rest;
 
-use Libs\RestCtrl;
+use Apps\Cores\Models\UserEntity;
 
-class RestCtrl extends RestCtrl
+class RestCtrl extends \Libs\RestCtrl
 {
 
     /** @var Apps\Cores\Models\UserEntity */
@@ -18,7 +18,31 @@ class RestCtrl extends RestCtrl
 
     protected function requireLogin()
     {
-        
+        if (!$this->user || !$this->user->pk)
+        {
+            $this->resp->setStatus(401);
+            $this->resp->setBody('requireLogin');
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function requireAdmin()
+    {
+        if (!$this->requireLogin())
+        {
+            return false;
+        }
+
+        if (!$this->user->isAdmin)
+        {
+            $this->resp->setStatus(403);
+            $this->resp->setBody('Ban khong phai admin');
+            return false;
+        }
+
+        return true;
     }
 
 }
