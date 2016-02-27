@@ -23,8 +23,12 @@ class Bootstrap
     function __construct()
     {
         static::$instance = $this;
+        $env = getConfig('Enviroments/enviroment');
+        $config = getConfig("Enviroments/$env");
+        $config['enviroment'] = $env;
+
         //debug mode
-        $debug = isset($_GET['debug']) ? 10 : \Config::DEBUG_MODE;
+        $debug = isset($_GET['debug']) ? 10 : $config['debugMode'];
         if ($debug)
         {
             ini_set('display_errors', 1);
@@ -48,7 +52,7 @@ class Bootstrap
             'cookies.lifetime'   => 20 * 365 * 24 * 60 . ' minutes',
             'cookies.path'       => $this->rewriteBase,
             'cookies.secure'     => false,
-            'cookies.secret_key' => \Config::CRYPT_SECRECT,
+            'cookies.secret_key' => $config['cryptSecrect'],
         ));
 
         //config session
@@ -58,7 +62,7 @@ class Bootstrap
             'domain'  => null,
             'secure'  => false,
             'name'    => 'slim_session',
-            'secret'  => \Config::CRYPT_SECRECT,
+            'secret'  => $config['cryptSecrect'],
         )));
 
         //routing
@@ -66,7 +70,7 @@ class Bootstrap
         $this->appendRoute($routes);
 
         //database
-        DB::config(Config::DB_TYPE, Config::DB_HOST, Config::DB_USER, Config::DB_PASS, Config::DB_NAME, $debug);
+        DB::config($config['db']['type'], $config['db']['host'], $config['db']['user'], $config['db']['pass'], $config['db']['name'], $debug);
 
         //run slim application
         $this->slim->run();

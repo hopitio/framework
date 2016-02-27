@@ -18,12 +18,6 @@ class TwoColsLayout extends Layout
     /** @var Menu */
     protected $sideMenu;
 
-    function init()
-    {
-        $this->title = \Config::APP_NAME;
-        $this->companyWebsite = \Config::COMPANY_WEBSITE;
-    }
-
     function setSideMenu($menus)
     {
         $this->sideMenu = $menus;
@@ -45,6 +39,18 @@ class TwoColsLayout extends Layout
     function setBrand($brand)
     {
         $this->brand = $brand;
+        return $this;
+    }
+
+    /**
+     * 
+     * @param type $brand
+     * @param type $companyWebsite
+     */
+    function setBasicInfo($brand, $companyWebsite)
+    {
+        $this->brand = $brand;
+        $this->companyWebsite = $companyWebsite;
         return $this;
     }
 

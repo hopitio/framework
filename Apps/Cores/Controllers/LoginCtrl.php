@@ -20,7 +20,7 @@ class LoginCtrl extends CoresCtrl
         //xoa session cu
         $this->session->remove('user');
 
-        $data = array('appName' => \Config::APP_NAME);
+        $data = array('appName' => $this->themeConfig['appName']);
         if (!empty($_POST))
         {
             $acc = $this->req->post('account');
@@ -29,7 +29,10 @@ class LoginCtrl extends CoresCtrl
             $result = $this->userMapper->authenticate($acc, $pass);
             if ($result['status'])
             {
-                $this->session->set('user', $result['user']);
+                $this->session->set('user', array(
+                    'pk'   => $result['user']->pk,
+                    'pass' => md5($pass)
+                ));
                 $this->resp->redirect($callback);
                 return;
             }

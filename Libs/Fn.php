@@ -80,3 +80,19 @@ function xpath($dom, $xpath, $method = 1)
             return count($r) ? (string) $r[0] : null;
     }
 }
+
+/**
+ * Lấy config từ thư mục Config/
+ * @param string $fileName
+ * @return mixed
+ */
+function getConfig($fileName)
+{
+    $file = BASE_DIR . '/Config/' . $fileName . '.config.php';
+    require $file;
+    if (!isset($exports))
+    {
+        throw new Exception($file . ' phải có biến $exports');
+    }
+    return $exports;
+}

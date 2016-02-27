@@ -5,6 +5,8 @@ namespace Libs;
 class MvcContext
 {
 
+    public $config;
+
     /** @var Bootstrap */
     public $app;
     public $path;
