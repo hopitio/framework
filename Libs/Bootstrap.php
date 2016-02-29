@@ -23,8 +23,8 @@ class Bootstrap
     function __construct()
     {
         static::$instance = $this;
-        $env = getConfig('Enviroments/enviroment');
-        $config = getConfig("Enviroments/$env");
+        $env = getConfig('Enviroments/enviroment.config.php');
+        $config = getConfig("Enviroments/$env.config.php");
         $config['enviroment'] = $env;
 
         //debug mode

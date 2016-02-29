@@ -9,6 +9,9 @@ $routes[] = new MvcContext('/admin/config.js', 'GET', "Apps\\Cores\\Controllers\
 $routes[] = new MvcContext('/admin/user', 'GET', "Apps\\Cores\\Controllers\\UserCtrl", 'index');
 $routes[] = new MvcContext('/admin/group', 'GET', "Apps\\Cores\\Controllers\\UserCtrl", 'group');
 
+$routes[] = new MvcContext('/admin/setting', 'GET', "Apps\\Cores\\Controllers\\SettingCtrl", 'index');
+$routes[] = new MvcContext('/admin/setting/update', 'POST', "Apps\\Cores\\Controllers\\SettingCtrl", 'update');
+
 
 $routes[] = new MvcContext('/rest/department/move', 'PUT', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'moveDepartments');
 $routes[] = new MvcContext('/rest/department/:id', 'GET', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'getDepartment');

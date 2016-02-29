@@ -1,0 +1,91 @@
+<?php
+
+namespace Apps\Cores\Views\Setting;
+
+$settingDir = BASE_DIR . '/Config/Settings';
+$files = scandir($settingDir);
+
+$this->setTitle('Tùy chỉnh');
+?>
+
+<style>
+    #frmMain .form-group{max-width: 600px;}
+</style>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h1 class="page-header">Tùy chỉnh</h1>
+    </div>
+</div>
+
+<?php foreach ($files as $file): ?>
+    <?php
+    $path = $settingDir . '/' . $file;
+    if (!strpos($path, '.xml'))
+    {
+        continue;
+    }
+    $dom = simplexml_load_file($path, 'SimpleXMLElement', LIBXML_NOCDATA);
+    if (!$dom || $dom->attributes()->active != 'true')
+    {
+        continue;
+    }
+    ?>
+    <a href="#file-<?php echo $file ?>" class="btn btn-default"><?php echo $dom->attributes()->label ?></a>
+<?php endforeach; ?>
+
+<hr>
+
+<form method="post" class="form-horizontal" id="frmMain" action="<?php echo url('/admin/setting/update') ?>">
+    <?php foreach ($files as $file): ?>
+        <?php
+        $path = $settingDir . '/' . $file;
+        if (!strpos($path, '.xml'))
+        {
+            continue;
+        }
+        $dom = simplexml_load_file($path, 'SimpleXMLElement', LIBXML_NOCDATA);
+        if (!$dom || $dom->attributes()->active != 'true')
+        {
+            continue;
+        }
+        ?>
+        <fieldset id="file-<?php echo $file ?>">
+            <legend><?php echo $dom->attributes()->label ?></legend>
+            <?php
+            foreach ($dom->children() as $field)
+            {
+                switch ((string) $field->type)
+                {
+                    case 'string':
+                        echo new StringControl($field);
+                        break;
+                    case 'boolean':
+                        echo new BooleanControl($field);
+                        break;
+                    case 'select':
+                        echo new SelectControl($field);
+                        break;
+                    case 'text':
+                        echo new TextControl($field);
+                        break;
+                }
+            }
+            ?>
+        </fieldset>
+    <?php endforeach; ?>
+    <hr>
+
+    <div class="form-group row">
+        <div class="col-xs-8 col-xs-offset-4">
+            <input type="button" class="btn btn-primary" value="Ghi lại" onclick="submitForm()"/>
+        </div>
+    </div>
+</form>
+
+<script>
+    function submitForm() {
+        if (confirm('Lưu cấu hình hệ thống?'))
+            document.getElementById('frmMain').submit();
+    }
+</script>

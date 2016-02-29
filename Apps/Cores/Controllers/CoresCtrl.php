@@ -53,7 +53,7 @@ abstract class CoresCtrl extends \Libs\Controller
     {
         $this->userSeed = $this->session->get('user');
 
-        $this->themeConfig = $themeConfig = getConfig('Themes/sb2');
+        $this->themeConfig = $themeConfig = getConfig('Themes/sb2.config.php');
         $this->twoColsLayout = new TwoColsLayout($this->context);
         $this->twoColsLayout->setTemplatesDirectory(dirname(__DIR__) . '/Views');
         $this->twoColsLayout
@@ -61,7 +61,8 @@ abstract class CoresCtrl extends \Libs\Controller
                 ->setUser($this->user())
                 ->setSideMenu(new Menu(null, null, null, array(
                     new Menu('user', '<i class="fa fa-user"></i> Tài khoản', url('/admin/user')),
-                    new Menu('group', '<i class="fa fa-folder-open"></i> Nhóm', url('/admin/group'))
+                    new Menu('group', '<i class="fa fa-folder-open"></i> Nhóm', url('/admin/group')),
+                    new Menu('setting', '<i class="fa fa-cog"></i> Tùy chỉnh', url('/admin/setting'))
         )));
 
         $this->contentOnlyLayout = new ContentOnlyLayout($this->context);

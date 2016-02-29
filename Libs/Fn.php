@@ -59,7 +59,8 @@ function xpath($dom, $xpath, $method = 1)
 {
     if ($dom instanceof SimpleXMLElement == false)
     {
-        switch ($method) {
+        switch ($method)
+        {
             case XPATH_STRING:
                 return '';
             case XPATH_ARRAY:
@@ -70,7 +71,8 @@ function xpath($dom, $xpath, $method = 1)
     }
 
     $r = $dom->xpath($xpath);
-    switch ($method) {
+    switch ($method)
+    {
         case XPATH_ARRAY:
             return $r;
         case XPATH_DOM:
@@ -88,11 +90,31 @@ function xpath($dom, $xpath, $method = 1)
  */
 function getConfig($fileName)
 {
-    $file = BASE_DIR . '/Config/' . $fileName . '.config.php';
-    require $file;
-    if (!isset($exports))
+    $fullPath = BASE_DIR . '/Config/' . $fileName;
+    if (strpos($fileName, '.config.php') !== false)
     {
-        throw new Exception($file . ' phải có biến $exports');
+        require $fullPath;
+        if (!isset($exports))
+        {
+            throw new Exception($fullPath . ' phải có biến $exports');
+        }
+        return $exports;
     }
-    return $exports;
+    else if (strpos($fileName, '.xml') !== false)
+    {
+        $exports = array();
+        $dom = simplexml_load_file($fullPath);
+        if (!$dom)
+        {
+            return $exports;
+        }
+        foreach ($dom as $field)
+        {
+            $exports[strval($field->id)] = strval($field->value);
+        }
+
+        return $exports;
+    }
+
+    throw new Exception($fullPath . ' không hợp lệ (chỉ hỗ trợ .config.php hoặc .xml)');
 }
