@@ -16,6 +16,7 @@ sb2.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
 
     $(window).on('hashchange', function () {
         $apply(function () {
+            $scope.filter = {'search': ''};
             $scope.depPk = window.location.hash.replace('#', '').replace('/', '') || 0;
             $scope.getDep($scope.depPk);
         });
@@ -61,11 +62,11 @@ sb2.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
     });
 
     $scope.$watchCollection('filter', function (newVal) {
+        if ($scope.ajax.search)
+            $scope.ajax.search.abort();
         if (!newVal)
             return;
         if (newVal.search) {
-            if ($scope.ajax.search)
-                $scope.ajax.search.abort();
             $scope.ajax.search = $.ajax({
                 'url': CONFIG.siteUrl + '/rest/user/search',
                 'data': $scope.filter
