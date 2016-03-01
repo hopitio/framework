@@ -7,6 +7,7 @@ use Libs\Menu;
 
 class TwoColsLayout extends Layout
 {
+    const HTML_REQUIRED = '<span class="required">&#10033;</span>';
 
     protected $title;
     protected $brand = 'Brand';

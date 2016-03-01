@@ -1,7 +1,7 @@
 <fieldset>
     <legend>Tài khoản</legend>
     <div class="form-group">
-        <label class="control-label col-xs-3" for="user-account">* Đăng nhập:</label>
+        <label class="control-label col-xs-3" for="user-account"><?php echo static::HTML_REQUIRED ?> Đăng nhập:</label>
         <div class="col-xs-9">
             <div style="display: flex">
                 <div style="flex: 1;">
@@ -36,7 +36,7 @@
     </div>
     <div ng-show="editingUser.changePass">
         <div class="form-group">
-            <label class="control-label col-xs-3" for="user-new-pass"><span ng-if="!editingUser.pk">* </span>Mật khẩu mới:</label>
+            <label class="control-label col-xs-3" for="user-new-pass"><span ng-if="!editingUser.pk"><?php echo static::HTML_REQUIRED ?> </span>Mật khẩu mới:</label>
             <div class="col-xs-9">
                 <input type="password" id="user-new-pass" class="form-control" ng-model="editingUser.newPass" 
                        ng-dom="newPassDom" ng-required="!editingUser.pk"/>
@@ -73,7 +73,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-3" for="user-name">* Họ và tên:</label>
+        <label class="control-label col-xs-3" for="user-name"><?php echo static::HTML_REQUIRED ?> Họ và tên:</label>
         <div class="col-xs-9">
             <input type="text" id="user-name" class="form-control" ng-model="editingUser.fullName" required/>
         </div>

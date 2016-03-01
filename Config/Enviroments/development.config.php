@@ -5,7 +5,7 @@
  * 1 = PHP, Database trừ trên service
  * 10 = tất cả
  */
-$exports['debugMode'] = 0;
+$exports['debugMode'] = 1;
 
 //kết nối database
 $exports['db'] = array(

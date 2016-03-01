@@ -72,12 +72,12 @@ class UserMapper extends Mapper
         {
             return;
         }
-        if (!$id && !$update['newPass'])
+        if (!$id && !$data['newPass'])
         {
             return;
         }
 
-        if (arrData($data, 'changePass'))
+        if (arrData($data, 'changePass') || !$id)
         {
             $update['pass'] = md5(arrData($data, 'newPass'));
         }

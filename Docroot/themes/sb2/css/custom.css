@@ -274,3 +274,4 @@ legend{font-family: 'Roboto Condensed', sans-serif;  }
 .help-block{margin-bottom: 0;}
 .help-block.error{color: red;}
 footer{padding: 20px;}
+span.required{color: brown;font-size: 0.8em;}

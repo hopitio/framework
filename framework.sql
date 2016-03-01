@@ -74,7 +74,7 @@ CREATE TABLE `cores_group_user` (
 
 /*Data for the table `cores_group_user` */
 
-insert  into `cores_group_user`(`userFk`,`groupFk`) values (1,1),(1,4);
+insert  into `cores_group_user`(`userFk`,`groupFk`) values (1,1),(5,1),(6,1),(5,2),(6,2),(1,4);
 
 /*Table structure for table `cores_preference` */
 
@@ -118,12 +118,13 @@ CREATE TABLE `cores_user` (
   `stt` tinyint(4) DEFAULT '1',
   `isAdmin` tinyint(4) DEFAULT '0',
   `deleted` tinyint(4) DEFAULT '0',
-  PRIMARY KEY (`pk`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  PRIMARY KEY (`pk`),
+  UNIQUE KEY `unqAccount` (`account`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Data for the table `cores_user` */
 
-insert  into `cores_user`(`pk`,`fullName`,`jobTitle`,`depFk`,`account`,`pass`,`email`,`phone`,`stt`,`isAdmin`,`deleted`) values (1,'Admin','Admin',0,'admin','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,1,1,0),(4,'test','test',3,'test','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,0,0,0);
+insert  into `cores_user`(`pk`,`fullName`,`jobTitle`,`depFk`,`account`,`pass`,`email`,`phone`,`stt`,`isAdmin`,`deleted`) values (1,'Admin','Admin',0,'admin','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,1,1,0),(4,'test','test',3,'test','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,0,0,0),(6,'Dương Tuấn Anh','job',3,'duongtuananh','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,0,0,0);
 
 /*Table structure for table `cores_user_permission` */
 
@@ -137,7 +138,7 @@ CREATE TABLE `cores_user_permission` (
 
 /*Data for the table `cores_user_permission` */
 
-insert  into `cores_user_permission`(`userFk`,`permission`) values (1,'bientap'),(1,'MANAGE_USERS'),(1,'quyen1'),(1,'quyen2'),(1,'vietnhap'),(3,'MANAGE_USERS'),(4,'MANAGE_USERS');
+insert  into `cores_user_permission`(`userFk`,`permission`) values (1,'bientap'),(1,'MANAGE_USERS'),(1,'quyen1'),(1,'quyen2'),(1,'vietnhap'),(3,'MANAGE_USERS'),(4,'MANAGE_USERS'),(5,'vietnhap'),(6,'vietnhap');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

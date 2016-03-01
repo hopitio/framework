@@ -24,9 +24,9 @@ class View extends \Slim\View
         
     }
 
-    function render($template, $data = null)
+    function render($template, $data = array())
     {
-        $this->context->app->slim->response->setBody(parent::render($template));
+        $this->context->app->slim->response->setBody(parent::render($template, $data));
     }
 
     function getOutput($template)
