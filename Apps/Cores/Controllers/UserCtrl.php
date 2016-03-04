@@ -117,16 +117,12 @@ class UserCtrl extends CoresCtrl
             );
         }
 
-        return array(
-            'status' => true,
-            'path'   => $destDir . $destFile
-        );
+        $this->importUserProgress($destDir . $destFile);
     }
 
-    protected function importUserProgress($path, $progress = -1)
+    protected function importUserProgress($path)
     {
         $fullPath = BASE_DIR . '/Docroot/upload/' . $path;
-        $inserLimit = 10; //1 lần chỉ 10 bản ghi
 
         if (!file_exists($fullPath))
         {

@@ -23,7 +23,9 @@ abstract class CoresCtrl extends \Libs\Controller
 
     /** @var ContentOnlyLayout */
     protected $contentOnlyLayout;
-    protected $themeConfig;
+
+    /** @var \Libs\Setting */
+    protected $setting;
 
     /** @var \Apps\Cores\Models\UserEntity */
     protected function user()
@@ -52,12 +54,12 @@ abstract class CoresCtrl extends \Libs\Controller
     protected function init()
     {
         $this->userSeed = $this->session->get('user');
+        $this->setting = new \Libs\Setting('Cores');
 
-        $this->themeConfig = $themeConfig = getConfig('Themes/sb2.config.php');
         $this->twoColsLayout = new TwoColsLayout($this->context);
         $this->twoColsLayout->setTemplatesDirectory(dirname(__DIR__) . '/Views');
         $this->twoColsLayout
-                ->setBasicInfo($themeConfig['brand'], $themeConfig['companyWebsite'])
+                ->setBasicInfo($this->setting->getSetting('themeBrand'), $this->setting->getSetting('themeCompanyWebsite'))
                 ->setUser($this->user())
                 ->setSideMenu(new Menu(null, null, null, array(
                     new Menu('user', '<i class="fa fa-user"></i> Tài khoản', url('/admin/user')),
@@ -67,7 +69,6 @@ abstract class CoresCtrl extends \Libs\Controller
 
         $this->contentOnlyLayout = new ContentOnlyLayout($this->context);
         $this->contentOnlyLayout->setTemplatesDirectory(dirname(__DIR__) . '/Views');
-        $this->contentOnlyLayout->setBrand($themeConfig['brand']);
     }
 
     protected function requireLogin()

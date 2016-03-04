@@ -14,7 +14,6 @@ class UserCtrl extends RestCtrl
     protected $userMapper;
     protected $depMapper;
     protected $groupMapper;
-    protected $pemClass;
 
     protected function init()
     {
@@ -22,13 +21,12 @@ class UserCtrl extends RestCtrl
         $this->userMapper = UserMapper::makeInstance();
         $this->depMapper = DepartmentMapper::makeInstance();
         $this->groupMapper = GroupMapper::makeInstance();
-        $this->pemClass = new Permission;
     }
 
     function getDepartment($depPk)
     {
         $this->requireLogin();
-        
+
         $depPk = (int) $depPk;
         $loadUsers = $this->req->get('users');
         $loadDeps = $this->req->get('departments');
@@ -59,7 +57,7 @@ class UserCtrl extends RestCtrl
     function search()
     {
         $this->requireLogin();
-        
+
         $search = $this->req->get('search');
         $stt = $this->req->get('status', -1);
 
@@ -88,7 +86,7 @@ class UserCtrl extends RestCtrl
     function updateDepartment($depPk)
     {
         $this->requireAdmin();
-        
+
         $code = $this->restInput('depCode');
         $name = $this->restInput('depName');
         $stt = $this->restInput('stt');
@@ -104,7 +102,7 @@ class UserCtrl extends RestCtrl
     function getGroups()
     {
         $this->requireLogin();
-        
+
         $stt = $this->req->get('status', -1);
         $groups = $this->groupMapper->makeInstance()
                 ->filterStatus($stt)
@@ -117,7 +115,7 @@ class UserCtrl extends RestCtrl
     function getGroupUsers($groupPk)
     {
         $this->requireLogin();
-        
+
         $users = $this->userMapper
                 ->makeInstance()
                 ->select('dep.depName', false)
@@ -141,15 +139,40 @@ class UserCtrl extends RestCtrl
     function getBasePermissions()
     {
         $this->requireAdmin();
-        
-        $ret = $this->pemClass->getAll();
+
+        $ret = array();
+        foreach (\Libs\Setting::getAllApp() as $appId)
+        {
+            $setting = new \Libs\Setting($appId);
+            $app = array(
+                'name'   => (string) $setting->xml->attributes()->name,
+                'groups' => array()
+            );
+            foreach ($setting->xml->permissions->group as $groupXml)
+            {
+                $group = array(
+                    'name'        => (string) $groupXml->attributes()->name,
+                    'permissions' => array()
+                );
+                foreach ($groupXml->pem as $pem)
+                {
+                    $group['permissions'][] = array(
+                        'id'   => (string) $pem->attributes()->id,
+                        'name' => (string) $pem->attributes()->name
+                    );
+                }
+                $app['groups'][] = $group;
+            }
+            $ret[] = $app;
+        }
+
         $this->resp->setBody(Json::encode($ret));
     }
 
     function checkUniqueAccount()
     {
         $this->requireAdmin();
-        
+
         $userPk = $this->restInput('pk');
         $acc = $this->restInput('account');
         $result = $this->userMapper->checkUniqueAccount($userPk, $acc);
@@ -160,7 +183,7 @@ class UserCtrl extends RestCtrl
     function updateUser($id)
     {
         $this->requireAdmin();
-        
+
         $data = $this->restInput();
         $id = $this->userMapper->updateUser($id, $data);
 
@@ -173,7 +196,7 @@ class UserCtrl extends RestCtrl
     function deleteUsers()
     {
         $this->requireAdmin();
-        
+
         $users = $this->restInput();
         $this->userMapper->deleteUsers($users);
 
@@ -185,7 +208,7 @@ class UserCtrl extends RestCtrl
     function deleteDepartments()
     {
         $this->requireAdmin();
-        
+
         $deps = $this->restInput();
         $this->depMapper->deleteDepartments($deps);
 
@@ -197,7 +220,7 @@ class UserCtrl extends RestCtrl
     function moveUsers()
     {
         $this->requireAdmin();
-        
+
         $users = $this->restInput('pks');
         $dest = $this->restInput('dest');
 
@@ -210,7 +233,7 @@ class UserCtrl extends RestCtrl
     function moveDepartments()
     {
         $this->requireAdmin();
-        
+
         $deps = $this->restInput('pks');
         $dest = $this->restInput('dest');
 
@@ -223,7 +246,7 @@ class UserCtrl extends RestCtrl
     function updateGroup($pk)
     {
         $this->requireAdmin();
-        
+
         $group = $this->restInput();
         if (!$this->groupMapper->checkCode($pk, $group['groupCode']))
         {
@@ -245,7 +268,7 @@ class UserCtrl extends RestCtrl
     function deleteGroups()
     {
         $this->requireAdmin();
-        
+
         $arrPk = $this->restInput('pk', array());
         $this->groupMapper->deleteGroup($arrPk);
         $this->resp->setBody(Json::encode(array(
