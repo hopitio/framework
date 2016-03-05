@@ -64,7 +64,8 @@ abstract class CoresCtrl extends \Libs\Controller
                 ->setSideMenu(new Menu(null, null, null, array(
                     new Menu('user', '<i class="fa fa-user"></i> Tài khoản', url('/admin/user')),
                     new Menu('group', '<i class="fa fa-folder-open"></i> Nhóm', url('/admin/group')),
-                    new Menu('setting', '<i class="fa fa-cog"></i> Tùy chỉnh', url('/admin/setting'))
+                    new Menu('setting', '<i class="fa fa-cog"></i> Cấu hình hệ thống', url('/admin/setting')),
+                    new Menu('app', '<i class="fa fa-th-large"></i> Quản lý ứng dụng', url('/admin/application'))
         )));
 
         $this->contentOnlyLayout = new ContentOnlyLayout($this->context);

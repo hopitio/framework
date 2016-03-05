@@ -144,6 +144,10 @@ class UserCtrl extends RestCtrl
         foreach (\Libs\Setting::getAllApp() as $appId)
         {
             $setting = new \Libs\Setting($appId);
+            if ($setting->xml->attributes()->active != 'true')
+            {
+                continue;
+            }
             $app = array(
                 'name'   => (string) $setting->xml->attributes()->name,
                 'groups' => array()

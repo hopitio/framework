@@ -36,6 +36,7 @@ $this->addJs(array(
                     </label>
                 </th>
                 <th style="min-width: 50px;" class="center">&nbsp;</th>
+                <th style="min-width: 50px;">ID</th>
                 <th style="min-width: 150px;">Mã nhóm</th>
                 <th style="width: 100%;">Tên nhóm</th>
             </tr>
@@ -58,6 +59,7 @@ $this->addJs(array(
                         </ul>
                     </div>
                 </td>
+                <td>{{group.pk}}</td>
                 <td>{{group.groupCode}}</td>
                 <td><a href="javascript:;" ng-click="edit(group)">{{group.groupName}}</a></td>
             </tr>

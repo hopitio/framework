@@ -8,9 +8,9 @@ abstract class Layout extends View
     protected $js = array();
     protected $css = array();
 
-    function render($template, $data = null)
+    function render($template, $data = array())
     {
-        $content = parent::getOutput($template);
+        $content = parent::getOutput($template, $data);
         $this->renderLayout($content);
     }
 

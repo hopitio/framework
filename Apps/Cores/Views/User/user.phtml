@@ -76,7 +76,7 @@ $this->setTitle('Tài khoản')
     <table class="table table-record table-bordered table-striped table-hover" ng-show="department">
         <thead>
             <tr>
-                <td colspan="4">
+                <td colspan="5">
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-plus"></i> Thêm mới
@@ -101,6 +101,7 @@ $this->setTitle('Tài khoản')
                 </th>
                 <th class="center">Loại</th>
                 <th></th>
+                <th>ID</th>
                 <th>Tên</th>
             </tr>
         </thead>
@@ -134,8 +135,9 @@ $this->setTitle('Tài khoản')
                         </ul>
                     </div>
                 </td>
+                <td><span class="id">{{childDep.pk}}</span></td>
                 <td class="tbl-text">
-                    <a href="#/{{childDep.pk}}">{{childDep.depName}}</a> <span class="id">[{{childDep.pk}}]</span>
+                    <a href="#/{{childDep.pk}}">{{childDep.depName}}</a> 
                     <br>
                     Đơn vị/Phòng ban
                 </td>
@@ -163,8 +165,9 @@ $this->setTitle('Tài khoản')
                         </ul>
                     </div>
                 </td>
+                <td><span class="id">{{user.pk}}</span></td>
                 <td class="tbl-text">
-                    <a href="javascript:;" ng-click="editUser(user)">{{user.fullName}}</a> <span class="id">[{{user.pk}}]</span>
+                    <a href="javascript:;" ng-click="editUser(user)">{{user.fullName}}</a>
                     <br>
                     {{user.jobTitle}}
                 </td>
@@ -172,7 +175,7 @@ $this->setTitle('Tài khoản')
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="4">
+                <td colspan="5">
                     <div class="pull-left">
                         <span class="dropdown select">
                             <button class="btn btn-default" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">

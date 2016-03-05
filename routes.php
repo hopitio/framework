@@ -10,7 +10,8 @@ $routes[] = new MvcContext('/admin/user', 'GET', "Apps\\Cores\\Controllers\\User
 $routes[] = new MvcContext('/admin/user/import', 'GET,POST', "Apps\\Cores\\Controllers\\UserCtrl", 'importUser');
 $routes[] = new MvcContext('/admin/group', 'GET', "Apps\\Cores\\Controllers\\UserCtrl", 'group');
 
-$routes[] = new MvcContext('/admin/setting', 'GET', "Apps\\Cores\\Controllers\\SettingCtrl", 'index');
+$routes[] = new MvcContext('/admin/application', 'GET', "Apps\\Cores\\Controllers\\SettingCtrl", 'application');
+$routes[] = new MvcContext('/admin/setting', 'GET', "Apps\\Cores\\Controllers\\SettingCtrl", 'setting');
 $routes[] = new MvcContext('/admin/setting/update', 'POST', "Apps\\Cores\\Controllers\\SettingCtrl", 'update');
 
 

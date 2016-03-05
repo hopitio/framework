@@ -2,14 +2,16 @@
 
 namespace Apps\Cores\Views\Setting;
 
-$settingDir = BASE_DIR . '/Config/Settings';
-$files = scandir($settingDir);
+use Libs\Setting;
 
 $this->setTitle('Tùy chỉnh');
 ?>
 
 <style>
+    #frmMain{border-left: 1px solid #ddd;padding-left: 10px;}
     #frmMain .form-group{max-width: 600px;}
+    a.setting-group{display: block;padding: 10px;border-bottom: 1px solid #eee;}
+    a.setting-group.active{background: #EEEEEE;}
 </style>
 
 <div class="row">
@@ -18,74 +20,75 @@ $this->setTitle('Tùy chỉnh');
     </div>
 </div>
 
-<?php foreach ($files as $file): ?>
-    <?php
-    $path = $settingDir . '/' . $file;
-    if (!strpos($path, '.xml'))
-    {
-        continue;
-    }
-    $dom = simplexml_load_file($path, 'SimpleXMLElement', LIBXML_NOCDATA);
-    if (!$dom || $dom->attributes()->active != 'true')
-    {
-        continue;
-    }
-    ?>
-    <a href="#file-<?php echo $file ?>" class="btn btn-default"><?php echo $dom->attributes()->label ?></a>
-<?php endforeach; ?>
-
-<hr>
-
-<form method="post" class="form-horizontal" id="frmMain" action="<?php echo url('/admin/setting/update') ?>">
-    <?php foreach ($files as $file): ?>
-        <?php
-        $path = $settingDir . '/' . $file;
-        if (!strpos($path, '.xml'))
-        {
-            continue;
-        }
-        $dom = simplexml_load_file($path, 'SimpleXMLElement', LIBXML_NOCDATA);
-        if (!$dom || $dom->attributes()->active != 'true')
-        {
-            continue;
-        }
-        ?>
-        <fieldset id="file-<?php echo $file ?>">
-            <legend><?php echo $dom->attributes()->label ?></legend>
+<div class="row">
+    <div class="col-xs-4">
+        <?php foreach (Setting::getAllApp() as $appId): ?>
             <?php
-            foreach ($dom->children() as $field)
+            $setting = new Setting($appId);
+            if (!$setting->xml->settings || $setting->xml->attributes()->active != 'true')
             {
-                switch ((string) $field->type)
-                {
-                    case 'string':
-                        echo new StringControl($field);
-                        break;
-                    case 'boolean':
-                        echo new BooleanControl($field);
-                        break;
-                    case 'select':
-                        echo new SelectControl($field);
-                        break;
-                    case 'text':
-                        echo new TextControl($field);
-                        break;
-                }
+                continue;
             }
             ?>
-        </fieldset>
-    <?php endforeach; ?>
-    <hr>
+            <table style="width: 100%;" class="table-hover">
+                <?php foreach ($setting->xml->settings->group as $groupXml): ?>
+                    <tr>
+                        <td>
+                            <?php if ($appId == $pAppId && $groupXml->attributes()->name == $pGroupName): ?>
+                                <a class="setting-group active"><?php echo $groupXml->attributes()->name ?></a>
+                            <?php else: ?>
+                                <a class="setting-group" href="?appId=<?php echo $appId ?>&group=<?php echo $groupXml->attributes()->name ?>">
+                                    <?php echo $groupXml->attributes()->name ?>
+                                </a>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
 
-    <div class="form-group row">
-        <div class="col-xs-8 col-xs-offset-4">
-            <input type="button" class="btn btn-primary" value="Ghi lại" onclick="submitForm()"/>
-        </div>
+        <?php endforeach; ?>
     </div>
-</form>
-
-<script>
-    function submitForm() {
-        if (confirm('Lưu cấu hình hệ thống?'))
-            document.getElementById('frmMain').submit();
-    }
-</script>
+    <div class="col-xs-8">
+        <?php $setting = new Setting($pAppId); ?>
+        <?php if ($setting->xml->attributes()->active == 'true'): ?>
+            <form method="post" id="frmMain" action="<?php echo url('/admin/setting/update') ?>" class="form-horizontal">
+                <input type="hidden" name="appId" value="<?php echo $pAppId ?>"/>
+                <input type="hidden" name="groupName" value="<?php echo $pGroupName ?>"/>
+                <fieldset>
+                    <legend><?php echo $setting->xml->attributes()->name . '/' . $pGroupName ?></legend>
+                </fieldset>
+                <?php
+                foreach ($setting->xml->settings->group as $group)
+                {
+                    if ($group->attributes()->name != $pGroupName)
+                    {
+                        continue;
+                    }
+                    foreach ($group->field as $field)
+                    {
+                        switch ((string) $field->type) {
+                            case 'string':
+                                echo new StringControl($field);
+                                break;
+                            case 'text':
+                                echo new TextControl($field);
+                                break;
+                            case 'boolean':
+                                echo new BooleanControl($field);
+                                break;
+                            case 'select':
+                                echo new SelectControl($field);
+                                break;
+                        }
+                    }
+                }
+                ?>
+                <div class="row form-group">
+                    <div class="col-xs-offset-4 col-xs-8">
+                        <input type="submit" value="Ghi lại" class="btn btn-primary"/>
+                    </div>
+                </div>
+            </form>
+        <?php endif; ?>
+    </div>
+</div>
