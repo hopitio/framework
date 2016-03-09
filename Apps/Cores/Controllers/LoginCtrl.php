@@ -20,7 +20,7 @@ class LoginCtrl extends CoresCtrl
         //xoa session cu
         $this->session->remove('user');
 
-        $data = array('appName' => $this->themeConfig['appName']);
+        $data = array('appName' => $this->setting->getSetting('themeAppName'));
         if (!empty($_POST))
         {
             $acc = $this->req->post('account');
