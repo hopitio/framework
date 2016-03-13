@@ -12,3 +12,4 @@ label.check{margin:0;}
 .dropdown-menu{border-color: #ccc;}
 .breadcrumb{padding:0;}
 [ng-cloak]{display: none !important;}
+.breadcrumb li, .breadcrumb li a{color:inherit;font-size: 1em;}

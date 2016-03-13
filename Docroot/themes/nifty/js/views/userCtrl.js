@@ -26,6 +26,21 @@ $('#modal-user').on('hide.bs.modal', function () {
     $('#form-user').bootstrapValidator('resetForm');
 });
 
+function reBalanceCols() {
+    var left = $('.tree-left .panel-body');
+    var right = $('.tree-right .panel-body');
+    //reset
+    left.css({height: 'auto'});
+    right.css({height: 'auto'});
+    //height
+    var leftHeight = left.height();
+    var rightHeight = right.height() + 50;
+    if (leftHeight > rightHeight)
+        right.css({height: leftHeight});
+    else
+        left.css({height: rightHeight});
+}
+
 //collapse thay đổi chiều cao của modal khi bấm vào
 //update lại chiều cao của nền đen
 $('#acc-pem').on('shown.bs.collapse', function () {
@@ -67,6 +82,7 @@ RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
         }).done(function (res) {
             $apply(function () {
                 $scope.department = res;
+                $timeout(reBalanceCols);
             });
         }).always(function () {
             $scope.ajax.load = false;
@@ -99,10 +115,16 @@ RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
             }).done(function (resp) {
                 $apply(function () {
                     $scope.searchResult = resp;
+                    $timeout(function () {
+                        reBalanceCols();
+                    });
                 });
             });
         } else {
             $scope.searchResult = null;
+            $timeout(function () {
+                reBalanceCols();
+            });
         }
     });
 
@@ -191,6 +213,9 @@ RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
                 $timeout(function () {
                     $scope.editDep(null, true);
                 }, 500);
+
+            //reload lai cot trai
+            $scope.getDepTree();
         });
     };
 
@@ -383,5 +408,60 @@ RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
         });
         $scope.editUser(u);
     };
+
+    //cây thư mục bên trái
+    $scope.root = {
+        pk: 0,
+        depName: '[Thư mục gốc]'
+    };
+
+    $scope.getDepTree = function () {
+        var params = {
+            'departments': 1,
+            'rescusively': 1
+        };
+        var url = CONFIG.siteUrl + '/rest/department/0?' + $.param(params);
+        $.getJSON(url, function (res) {
+            function findSelected(dep) {
+                var ret = false;
+                for (var i in dep.deps)
+                    if (findSelected(dep.deps[i])) {
+                        dep.expand = true;
+                        ret = true;
+                    }
+
+                if (dep.pk == $scope.depPk) {
+                    $scope.selected = dep;
+                    ret = true;
+                }
+                return ret;
+            }
+
+            $apply(function () {
+                findSelected(res);
+                $scope.depTree = res;
+
+                //tính lại chiều cao 2 cột
+                $timeout(function () {
+                    reBalanceCols();
+                });
+            });
+        });
+    };
+    $scope.getDepTree();
+
+    $scope.toggleExpand = function (dep) {
+        dep.expand = !dep.expand;
+    };
+
+    $scope.setSelected = function (dep, $event) {
+        $event.stopPropagation();
+        var target = $($event.target);
+        if (target.hasClass('fa-caret-down') || target.hasClass('fa-caret-right'))
+            return;
+
+        window.location.hash = '/' + dep.pk;
+    };
+
 });
 

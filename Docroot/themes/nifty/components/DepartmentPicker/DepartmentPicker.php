@@ -1,6 +1,6 @@
 <style>
     .modal-department-picker .fa{font-size: 1.3em;color: gray;width: 15px;text-align: center;}
-    .modal-department-picker .fa-folder, .modal-department-picker .fa-folder-open{color: #FBC02D;margin-right: 5px;}
+    .modal-department-picker .fa-folder-o, .modal-department-picker .fa-folder-open-o{color: #FBC02D;margin-right: 5px;}
     .modal-department-picker ul{list-style-type: none; }
     .modal-department-picker ul li{min-height: 30px;line-height: 30px; cursor: pointer;clear: both;}
     .modal-department-picker ul li.selected{background: #337AB7;}
@@ -32,7 +32,7 @@ function ulTemplate($level, $maxDepth = 10)
             <i class='fa' ng-if="<?php echo $class ?>.deps.length" ng-click="toggleExpand(<?php echo $class ?>)"
                ng-class="<?php echo "{'fa-caret-right': !$class.expand, 'fa-caret-down': $class.expand}" ?>"></i>
             <span>
-                <i class="fa" ng-class="<?php echo "{'fa-folder': !$class.expand, 'fa-folder-open': $class.expand}" ?>"></i>
+                <i class="fa" ng-class="<?php echo "{'fa-folder-o': !$class.expand, 'fa-folder-open-o': $class.expand}" ?>"></i>
                 {{<?php echo $class ?>.depName}}
             </span>
             <?php
@@ -67,7 +67,7 @@ function ulTemplate($level, $maxDepth = 10)
                             <i class='fa' ng-if="lvl1.deps.length" ng-click="toggleExpand(lvl1)"
                                ng-class="<?php echo "{'fa-caret-right': !lvl1.expand, 'fa-caret-down': lvl1.expand}" ?>"></i>
                             <span>
-                                <i class="fa" ng-class="<?php echo "{'fa-folder': !lvl1.expand, 'fa-folder-open': lvl1.expand}" ?>"></i> {{lvl1.depName}}
+                                <i class="fa" ng-class="<?php echo "{'fa-folder-o': !lvl1.expand, 'fa-folder-open-o': lvl1.expand}" ?>"></i> {{lvl1.depName}}
                             </span>
                             <?php ulTemplate(2) ?>
                         </li>
