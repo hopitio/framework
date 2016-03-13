@@ -60,7 +60,7 @@ abstract class Mapper extends Query
         $mapper->select('COUNT(*)')
                 ->limit(1)
                 ->offset(0)
-                ->order_by(null);
+                ->orderBy(null);
         $totalRecord = $this->db->GetOne($mapper->__toString(), $this->params);
         return $this;
     }

@@ -177,11 +177,10 @@ class UserCtrl extends RestCtrl
     {
         $this->requireAdmin();
 
-        $userPk = $this->restInput('pk');
-        $acc = $this->restInput('account');
-        $result = $this->userMapper->checkUniqueAccount($userPk, $acc);
-
-        $this->resp->setBody(Json::encode($result));
+        $result = $this->userMapper->checkUniqueAccount($this->req->get('pk'), $this->req->get('account'));
+        $this->resp->setBody(Json::encode(array(
+                    'valid' => $result
+        )));
     }
 
     function updateUser($id)

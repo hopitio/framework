@@ -1,0 +1,14 @@
+#container {
+    opacity: 1;
+    visibility: visible;
+}
+#navbar .brand-title{padding-left: 15px;}
+#page-title, #page-title .page-header{padding-top: 0;padding-left: 0;}
+span.required{color: brown;}
+.center{text-align: center;}
+.label-table{width: auto;display: block;max-width: none;}
+input[type="checkbox"], input[type="radio"]{vertical-align: middle;margin:0;}
+label.check{margin:0;}
+.dropdown-menu{border-color: #ccc;}
+.breadcrumb{padding:0;}
+[ng-cloak]{display: none !important;}

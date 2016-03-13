@@ -15,8 +15,7 @@ class HomeCtrl extends CoresCtrl
     function configJS()
     {
         $config = json_encode(array(
-            'siteUrl' => url(),
-            'appName' => $this->themeConfig['appName']
+            'siteUrl' => url()
         ));
 
         $this->resp->setBody("var CONFIG = $config;");

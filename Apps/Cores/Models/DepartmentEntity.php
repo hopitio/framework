@@ -7,13 +7,6 @@ use Libs\SQL\Entity;
 class DepartmentEntity extends Entity
 {
 
-    public $pk;
-    public $depCode;
-    public $depName;
-    public $depFk;
-    public $path;
-    public $stt;
-
     /** @var DepartmentEntity */
     public $parent;
 

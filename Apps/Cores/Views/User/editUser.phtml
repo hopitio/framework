@@ -1,3 +1,4 @@
+
 <style>
     #user-permission legend,
     #user-group legend{margin-bottom: 0;}
@@ -7,7 +8,7 @@
     #modal-user .tab-content{padding: 15px;}
 </style>
 
-<form method="post" ng-submit="submitUser($event)" class="form-horizontal form-validate">
+<form id="form-user" method="post" class="form-horizontal">
     <div id="modal-user" class="modal fade" tabindex="-1" role="dialog" ng-dom="modalUser">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -51,7 +52,12 @@
                         Ghi & thêm mới&nbsp;
                     </label>
                     <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="ajax.submit">Hủy bỏ</button>
-                    <button type="submit" class="btn btn-primary" ng-disabled="ajax.checkUniqueAccount || ajax.submit">Ghi lại</button>
+                    <button 
+                        type="button" class="btn btn-primary" ng-disabled="ajax.checkUniqueAccount || ajax.submit"
+                        ng-click="submitUser($event)"
+                        >
+                        Ghi lại
+                    </button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->

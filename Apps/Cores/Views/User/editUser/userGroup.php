@@ -1,7 +1,7 @@
 <fieldset>
-    <legend>Chọn nhóm</legend>
+    <legend class="text-thin">Chọn nhóm</legend>
 
-    <table class='table-bordered table table-striped table-hover'>
+    <table class='table table-striped table-hover'>
         <tr ng-repeat="group in groups">
             <td>
                 <label class="check">

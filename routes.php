@@ -29,10 +29,9 @@ $routes[] = new MvcContext('/rest/basePermission', 'GET', "Apps\\Cores\\Controll
 
 $routes[] = new MvcContext('/rest/user/search', 'GET', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'search');
 $routes[] = new MvcContext('/rest/user/move', 'PUT', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'moveUsers');
-$routes[] = new MvcContext('/rest/user/checkUniqueAccount', 'POST', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'checkUniqueAccount');
+$routes[] = new MvcContext('/rest/user/checkUniqueAccount', 'GET', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'checkUniqueAccount');
 $routes[] = new MvcContext('/rest/user/:id', 'PUT', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'updateUser');
 $routes[] = new MvcContext('/rest/user', 'DELETE', "Apps\\Cores\\Controllers\\Rest\\UserCtrl", 'deleteUsers');
 
-$routes[] = new MvcContext('/admin/login/changePassword', 'GET,POST', "Apps\\Cores\\Controllers\\LoginCtrl", 'changePassword');
-$routes[] = new MvcContext('/admin/login', 'GET,POST', "Apps\\Cores\\Controllers\\LoginCtrl", 'index');
-
+$routes[] = new MvcContext('/account/change-password', 'GET,POST', "Apps\\Cores\\Controllers\\AccountCtrl", 'changePassword');
+$routes[] = new MvcContext('/account/login', 'GET,POST', "Apps\\Cores\\Controllers\\AccountCtrl", 'index');

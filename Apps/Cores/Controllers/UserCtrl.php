@@ -30,4 +30,11 @@ class UserCtrl extends CoresCtrl
         $this->twoColsLayout->render('User/group.phtml');
     }
 
+    function test()
+    {
+        $this->defaultLayout = new \Apps\Cores\Views\Layouts\DefaultLayout($this->context);
+        $this->defaultLayout->setTemplatesDirectory(dirname(__DIR__) . '/Views');
+        $this->defaultLayout->render('/test.phtml');
+    }
+
 }

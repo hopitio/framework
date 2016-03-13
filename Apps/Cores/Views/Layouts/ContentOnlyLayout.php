@@ -7,12 +7,12 @@ use Libs\Layout;
 class ContentOnlyLayout extends Layout
 {
 
-    protected $title;
+    protected $title = 'Cores';
     protected $brand;
 
     public function themeUrl()
     {
-        return url('/themes/sb2');
+        return url('/themes/nifty');
     }
 
     function setTitle($title)
@@ -30,77 +30,70 @@ class ContentOnlyLayout extends Layout
     protected function renderLayout($content)
     {
         ?>
-        <html lang="en">
+
+        <!DOCTYPE html>
+        <html lang="vi">
             <head>
                 <meta charset="utf-8">
-                <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                <meta name="viewport" content="width=device-width, initial-scale=1">
-                <meta name="description" content="">
-                <meta name="author" content="">
-
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <link href="<?php echo $this->themeUrl() ?>/icon.ico" rel="shortcut icon">
                 <title><?php echo $this->title ?></title>
 
-                <!-- Bootstrap Core CSS -->
+                <!--Open Sans Font [ OPTIONAL ] -->
+                <link href="<?php echo $this->themeUrl() ?>/css/font/font.css" rel="stylesheet">
+
+                <!--Bootstrap Stylesheet [ REQUIRED ]-->
                 <link href="<?php echo $this->themeUrl() ?>/css/bootstrap.min.css" rel="stylesheet">
 
-                <!-- MetisMenu CSS -->
-                <link href="<?php echo $this->themeUrl() ?>/plugins/metisMenu/metisMenu.min.css" rel="stylesheet">
+                <!--Nifty Stylesheet [ REQUIRED ]-->
+                <link href="<?php echo $this->themeUrl() ?>/css/nifty.min.css" rel="stylesheet">
 
-                <!-- Custom CSS -->
-                <link href="<?php echo $this->themeUrl() ?>/css/sb-admin-2.css" rel="stylesheet">
+                <!--Font Awesome [ OPTIONAL ]-->
+                <link href="<?php echo $this->themeUrl() ?>/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 
-                <!-- Custom Fonts -->
-                <link href="<?php echo $this->themeUrl() ?>/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-                <link href='<?php echo $this->themeUrl() ?>/fonts/google/roboto.css' rel='stylesheet' type='text/css'>
+                <!--Custom-->
+                <link href="<?php echo $this->themeUrl() ?>/css/demo/nifty-demo.min.css" rel="stylesheet">
 
-                <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-                <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-                <!--[if lt IE 9]>
-                    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-                    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-                <![endif]-->
-
-                <link href="<?php echo $this->themeUrl() ?>/css/custom.css" rel="stylesheet" type="text/css">
-
-                <?php
-                foreach ($this->css as $css)
-                {
-                    echo "\n<link href='$css' rel='stylesheet' type='text/css'>";
-                }
-                ?>
-
-                <!-- jQuery -->
-                <script src="<?php echo $this->themeUrl() ?>/js/jquery.min.js"></script>
-                <script src="<?php echo url('/admin/config.js') ?>"></script>
+                <link href="<?php echo $this->themeUrl() ?>/css/style.css" rel="stylesheet">
+                
+                <!--jQuery [ REQUIRED ]-->
+                <script src="<?php echo $this->themeUrl() ?>/js/jquery-2.1.1.min.js"></script>
             </head>
 
-            <body ng-app="sb2">
-                <?php echo $content ?>
-                <!--angular-->
-                <script src="<?php echo $this->themeUrl() ?>/js/angular.min.js"></script>
+            <!--TIPS-->
+            <!--You may remove all ID or Class names which contain "demo-", they are only used for demonstration. -->
 
-                <!-- Bootstrap Core JavaScript -->
+            <body>
+                <div id="container" class="cls-container">
+                    <?php echo $content ?>
+                </div>
+                <!--===================================================-->
+                <!-- END OF CONTAINER -->
+
+
+
+                <!--BootstrapJS [ RECOMMENDED ]-->
                 <script src="<?php echo $this->themeUrl() ?>/js/bootstrap.min.js"></script>
 
-                <!-- Metis Menu Plugin JavaScript -->
-                <script src="<?php echo $this->themeUrl() ?>/plugins/metisMenu/metisMenu.min.js"></script>
+                <!--Nifty Admin [ RECOMMENDED ]-->
+                <script src="<?php echo $this->themeUrl() ?>/js/nifty.min.js"></script>
 
-                <!-- Custom Theme JavaScript -->
-                <script src="<?php echo $this->themeUrl() ?>/js/sb-admin-2.js"></script>
 
-                <!--validation-->
-                <script src="<?php echo $this->themeUrl() ?>/plugins/validation/html5-validation.js"></script>
+                <!--Switchery [ OPTIONAL ]-->
+                <script src="<?php echo $this->themeUrl() ?>/plugins/switchery/switchery.min.js"></script>
 
-                <script src="<?php echo $this->themeUrl() ?>/js/custom.js"></script>
-                <?php
-                foreach ($this->js as $js)
-                {
-                    echo "\n<script src='$js'></script>";
-                }
-                ?>
+                <script src="<?php echo $this->themeUrl() ?>/js/angular.min.js"></script>
+
+                <!--Bootstrap Validator [ OPTIONAL ]-->
+                <script src="<?php echo $this->themeUrl() ?>/plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
+
+                <script src="<?php echo url('/admin/config.js') ?>"></script>
+
+
+                <script src="<?php echo $this->themeUrl() ?>/js/app.js"></script>
             </body>
-
         </html>
+
         <?php
     }
 

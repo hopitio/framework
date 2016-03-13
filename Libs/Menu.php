@@ -10,7 +10,7 @@ class Menu
     public $url;
     public $selected = false;
 
-    /** @var static */
+    /** @var Menu */
     public $children = array();
 
     /** @var static */

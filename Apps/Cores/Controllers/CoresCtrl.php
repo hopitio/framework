@@ -2,7 +2,7 @@
 
 namespace Apps\Cores\Controllers;
 
-use Apps\Cores\Views\Layouts\TwoColsLayout;
+use Apps\Cores\Views\Layouts\DefaultLayout;
 use Apps\Cores\Views\Layouts\ContentOnlyLayout;
 use Apps\Cores\Models\UserEntity;
 use Apps\Cores\Models\UserMapper;
@@ -18,7 +18,7 @@ abstract class CoresCtrl extends \Libs\Controller
     private $user;
     private $userSeed = array();
 
-    /** @var TwoColsLayout */
+    /** @var DefaultLayout */
     protected $twoColsLayout;
 
     /** @var ContentOnlyLayout */
@@ -56,16 +56,17 @@ abstract class CoresCtrl extends \Libs\Controller
         $this->userSeed = $this->session->get('user');
         $this->setting = new \Libs\Setting('Cores');
 
-        $this->twoColsLayout = new TwoColsLayout($this->context);
+        $this->twoColsLayout = new DefaultLayout($this->context);
         $this->twoColsLayout->setTemplatesDirectory(dirname(__DIR__) . '/Views');
         $this->twoColsLayout
-                ->setBasicInfo($this->setting->getSetting('themeBrand'), $this->setting->getSetting('themeCompanyWebsite'))
+                ->setBrand($this->setting->getSetting('themeBrand'))
+                ->setCompanyWebsite($this->setting->getSetting('themeCompanyWebsite'))
                 ->setUser($this->user())
                 ->setSideMenu(new Menu(null, null, null, array(
-                    new Menu('user', '<i class="fa fa-user"></i> Tài khoản', url('/admin/user')),
-                    new Menu('group', '<i class="fa fa-folder-open"></i> Nhóm', url('/admin/group')),
-                    new Menu('setting', '<i class="fa fa-cog"></i> Cấu hình hệ thống', url('/admin/setting')),
-                    new Menu('app', '<i class="fa fa-th-large"></i> Quản lý ứng dụng', url('/admin/application'))
+                    'user'    => new Menu('user', '<i class="fa fa-user"></i> Tài khoản', url('/admin/user')),
+                    'group'   => new Menu('group', '<i class="fa fa-folder-open"></i> Nhóm', url('/admin/group')),
+                    'setting' => new Menu('setting', '<i class="fa fa-cog"></i> Cấu hình hệ thống', url('/admin/setting')),
+                    'app'     => new Menu('app', '<i class="fa fa-th-large"></i> Quản lý ứng dụng', url('/admin/application'))
         )));
 
         $this->contentOnlyLayout = new ContentOnlyLayout($this->context);
@@ -76,8 +77,8 @@ abstract class CoresCtrl extends \Libs\Controller
     {
         if (!$this->user() || !$this->user()->pk)
         {
-            $uri = str_replace(url(), '/', $_SERVER['REQUEST_URI']);
-            $this->resp->redirect(url('/admin/login?callback=' . $uri));
+            $uri = $_SERVER['REQUEST_URI'];
+            $this->resp->redirect(url('/account/login?callback=' . $uri));
         }
     }
 

@@ -4,7 +4,8 @@ namespace Apps\Cores\Views\Setting;
 
 use Libs\Setting;
 
-$this->setTitle('Tùy chỉnh');
+$this->setTitle('Tùy chỉnh')
+        ->setSideMenuActive('setting');
 ?>
 
 <style>
@@ -37,7 +38,7 @@ $this->setTitle('Tùy chỉnh');
                             <?php if ($appId == $pAppId && $groupXml->attributes()->name == $pGroupName): ?>
                                 <a class="setting-group active"><?php echo $groupXml->attributes()->name ?></a>
                             <?php else: ?>
-                                <a class="setting-group" href="?appId=<?php echo $appId ?>&group=<?php echo $groupXml->attributes()->name ?>">
+                                <a class="setting-group btn-link"  href="?appId=<?php echo $appId ?>&group=<?php echo $groupXml->attributes()->name ?>">
                                     <?php echo $groupXml->attributes()->name ?>
                                 </a>
                             <?php endif; ?>
@@ -55,7 +56,7 @@ $this->setTitle('Tùy chỉnh');
                 <input type="hidden" name="appId" value="<?php echo $pAppId ?>"/>
                 <input type="hidden" name="groupName" value="<?php echo $pGroupName ?>"/>
                 <fieldset>
-                    <legend><?php echo $setting->xml->attributes()->name . '/' . $pGroupName ?></legend>
+                    <legend class="text-thin"><?php echo $setting->xml->attributes()->name . '/' . $pGroupName ?></legend>
                 </fieldset>
                 <?php
                 foreach ($setting->xml->settings->group as $group)

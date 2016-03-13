@@ -7,10 +7,6 @@ use Libs\SQL\Entity;
 class GroupEntity extends Entity
 {
 
-    public $pk;
-    public $groupCode;
-    public $groupName;
-    public $stt;
     public $permissions = array();
 
     function __construct($rawData = null)
