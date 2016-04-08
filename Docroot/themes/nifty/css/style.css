@@ -13,3 +13,4 @@ label.check{margin:0;}
 .breadcrumb{padding:0;}
 [ng-cloak]{display: none !important;}
 .breadcrumb li, .breadcrumb li a{color:inherit;font-size: 1em;}
+.page-header{color: #333;}

@@ -2,13 +2,14 @@
 
 spl_autoload_register(function($class)
 {
-    $parts = explode('/', BASE_DIR . '/' . str_replace("\\", '/', $class) . '.php');
+    $parts = explode('/', str_replace("\\", '/', $class) . '.php');
+    
     $file = '';
     foreach ($parts as $part)
     {
         $file .= ucfirst($part) . '/';
     }
-    $file = rtrim($file, '/');
+    $file = BASE_DIR . '/' . rtrim($file, '/');
 
     if (file_exists($file))
     {
