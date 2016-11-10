@@ -266,6 +266,22 @@ class Request {
     }
 
     /**
+     * fetch GET/POST/PUT from form-encode or json
+     * @param type $key
+     * @param type $default
+     */
+    function input($key = null, $default = null) {
+        $input = json_decode(file_get_contents('php://input'), true);
+        if (!$input) {
+            $input = $_REQUEST;
+        }
+        if ($key === null) {
+            return $input;
+        }
+        return isset($input[$key]) ? $input[$key] : $default;
+    }
+
+    /**
      * Fetch PUT data (alias for \Slim\Http\Request::post)
      * @param  string           $key
      * @param  mixed            $default Default return value when key does not exist
