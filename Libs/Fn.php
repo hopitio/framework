@@ -19,10 +19,7 @@ function url($path = '', $params = array())
 
 function urlAbsolute($path = '', $params = array())
 {
-    $protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
-    $host = $_SERVER['HTTP_HOST'];
-    $port = $_SERVER['SERVER_PORT'] == 80 || $_SERVER['SERVER_PORT'] == 443 ? '' : ':' . $_SERVER['SERVER_PORT'];
-    return "{$protocol}://{$host}{$port}/" . static::url($path, $params);
+    return Bootstrap::getInstance()->fullSiteAddr . url($path, $params);
 }
 
 /**
