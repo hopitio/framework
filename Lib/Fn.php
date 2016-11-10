@@ -222,3 +222,10 @@ function unicode_to_nosign($str) {
 
     return strtr($str, $ret_str);
 }
+
+function modelResult($status, $data = null) {
+    return [
+        'status' => $status,
+        'data'   => $data
+    ];
+}
