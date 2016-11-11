@@ -19,6 +19,9 @@ abstract class Controller {
     /** @var \App\Model\StorageMapper */
     protected $storageMapper;
 
+    /** @var \App\View\Layout\NoLayout */
+    protected $noLayout;
+
     function __construct(MvcContext $context) {
         $this->context = $context;
         $this->req = $context->app->slim->request;
@@ -30,7 +33,8 @@ abstract class Controller {
 
     /** run after __construct, tobe overrided */
     protected function init() {
-        
+        $this->noLayout = new \App\View\Layout\NoLayout($this->context);
+        $this->noLayout->setTemplatesDirectory(BASE_DIR . '/App/View');
     }
 
     protected function escape($str) {

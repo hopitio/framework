@@ -47,6 +47,8 @@ abstract class CoreCtrl extends \Lib\Controller {
     }
 
     protected function init() {
+        parent::init();
+
         $this->userSeed = $this->session->get('user');
         $this->setting = new \Lib\Setting('Cores');
 
@@ -57,6 +59,7 @@ abstract class CoreCtrl extends \Lib\Controller {
                 ->setCompanyWebsite($this->setting->getSetting('themeCompanyWebsite'))
                 ->setUser($this->user())
                 ->setSideMenu(new Menu(null, null, null, array(
+                    'map'     => new Menu('map', '<i class="fa fa-truck"></i> Quản lý liên thông', url('/admin/map')),
                     'user'    => new Menu('user', '<i class="fa fa-user"></i> Tài khoản', url('/admin/user')),
                     'group'   => new Menu('group', '<i class="fa fa-folder-open"></i> Nhóm', url('/admin/group')),
                     'setting' => new Menu('setting', '<i class="fa fa-cog"></i> Cấu hình hệ thống', url('/admin/setting')),
