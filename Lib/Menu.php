@@ -30,7 +30,7 @@ class Menu {
     }
 
     function addChild(Menu $menu) {
-        $this->children[] = $menu;
+        $this->children[$menu->id] = $menu;
         return $this;
     }
 
