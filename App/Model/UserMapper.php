@@ -12,10 +12,10 @@ class UserMapper extends Mapper {
     public function makeEntity($rawData) {
         $entity = new UserEntity($rawData);
         if ($this->loadPermissions) {
-            $entity->permissions = $this->loadPermissions($entity->pk, $this->loadPermissions == 2 ? true : false);
+            $entity->permissions = $this->loadPermissions($entity->id, $this->loadPermissions == 2 ? true : false);
         }
         if ($this->loadGroups) {
-            $entity->groups = $this->loadGroups($entity->pk);
+            $entity->groups = $this->loadGroups($entity->id);
         }
         return $entity;
     }
@@ -33,8 +33,8 @@ class UserMapper extends Mapper {
         $this->filterDeleted(false);
     }
 
-    function filterParent($depPk) {
-        $this->where('u.depFk=?', __FUNCTION__)->setParam($depPk, __FUNCTION__);
+    function filterParent($depID) {
+        $this->where('u.depFk=?', __FUNCTION__)->setParam($depID, __FUNCTION__);
         return $this;
     }
 
@@ -44,9 +44,9 @@ class UserMapper extends Mapper {
     }
 
     /** @return GroupEntity */
-    function loadGroups($userPk) {
+    function loadGroups($userID) {
         return GroupMapper::makeInstance()
-                        ->innerJoin('cores_group_user gu ON gu.groupFk=gp.pk AND gu.userFk=' . intval($userPk))
+                        ->innerJoin('cores_group_user gu ON gu.groupFk=gp.id AND gu.userFk=' . intval($userID))
                         ->getAll();
     }
 
@@ -94,15 +94,15 @@ class UserMapper extends Mapper {
         return $id;
     }
 
-    function checkUniqueAccount($userPk, $account) {
+    function checkUniqueAccount($userID, $account) {
         $inserted = $this->makeInstance()
                 ->filterAccount($account)
                 ->getEntity();
 
-        if ($userPk && $inserted->pk == $userPk) {
+        if ($userID && $inserted->id == $userID) {
             return true;
         }
-        if (!$inserted->pk) {
+        if (!$inserted->id) {
             return true;
         }
 
@@ -156,15 +156,15 @@ class UserMapper extends Mapper {
         return $this;
     }
 
-    function loadPermissions($userPk, $includeGroupPem = false) {
-        $userPk = (int) $userPk;
-        if (!$userPk) {
+    function loadPermissions($userID, $includeGroupPem = false) {
+        $userID = (int) $userID;
+        if (!$userID) {
             return array();
         }
 
-        $sql = "SELECT permission FROM cores_user_permission WHERE userFk=$userPk";
+        $sql = "SELECT permission FROM cores_user_permission WHERE userFk=$userID";
         if ($includeGroupPem) {
-            $groups = "SELECT groupFk FROM cores_group_user WHERE userFk=$userPk";
+            $groups = "SELECT groupFk FROM cores_group_user WHERE userFk=$userID";
             $sql .= "\nUNION SELECT permission FROM cores_group_permission WHERE groupFk IN($groups)";
         }
 
@@ -202,7 +202,7 @@ class UserMapper extends Mapper {
                 ->filterDeleted(false)
                 ->getEntity();
 
-        if (!$user->pk) {
+        if (!$user->id) {
             return array(
                 'status' => false,
                 'error'  => 'notFound'
@@ -229,8 +229,8 @@ class UserMapper extends Mapper {
         );
     }
 
-    function changePassword($userPk, $pass) {
-        $this->update($userPk, array('pass' => md5($pass)));
+    function changePassword($userID, $pass) {
+        $this->update($userID, array('pass' => md5($pass)));
     }
 
 }

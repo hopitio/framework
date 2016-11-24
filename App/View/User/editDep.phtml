@@ -13,7 +13,7 @@
                             <div class="parent-dep">
                                 <input type="text" class="form-control" name="editDep" id="editDep" readonly placeholder="Chọn đơn vị"
                                        value="{{editingDep.parentDep.depName}}" ng-click="pickEditDep()"/>
-                                <span ng-if="editingDep.parentDep && editingDep.parentDep.pk" ng-click="clearParentDep()">&times;</span>
+                                <span ng-if="editingDep.parentDep && editingDep.parentDep.id" ng-click="clearParentDep()">&times;</span>
                             </div>
                         </div>
                     </div>

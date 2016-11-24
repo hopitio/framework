@@ -48,7 +48,7 @@ $('#acc-pem').on('shown.bs.collapse', function () {
 });
 
 RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
-    $scope.depPk;
+    $scope.depID;
     $scope.department = null;
     $scope.ajax = {};
     $scope.editingDep;
@@ -65,17 +65,17 @@ RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
     $(window).on('hashchange', function () {
         $apply(function () {
             $scope.filter = {'search': ''};
-            $scope.depPk = window.location.hash.replace('#', '').replace('/', '') || 0;
-            $scope.getDep($scope.depPk);
+            $scope.depID = window.location.hash.replace('#', '').replace('/', '') || 0;
+            $scope.getDep($scope.depID);
         });
     }).trigger('hashchange');
 
-    $scope.getDep = function (depPk) {
+    $scope.getDep = function (depID) {
         if ($scope.ajax.load)
             $scope.ajax.load.abort();
 
         $scope.ajax.load = $.ajax({
-            'url': CONFIG.siteUrl + '/rest/department/' + depPk,
+            'url': CONFIG.siteUrl + '/rest/department/' + depID,
             'cache': false,
             'data': {'users': 1, 'departments': 1, 'ancestors': 1},
             'dataType': 'json'
@@ -128,7 +128,7 @@ RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
         }
     });
 
-    $scope.$watch('depPk', function (newVal) {
+    $scope.$watch('depID', function (newVal) {
         if (typeof newVal === 'undefined')
             return;
     });
@@ -139,7 +139,7 @@ RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
             return;
         }
         var parentDep = $scope.department.ancestors[$scope.department.ancestors.length - 1];
-        window.location.hash = '#/' + parentDep.pk;
+        window.location.hash = '#/' + parentDep.id;
     };
 
     $scope.editDep = function (dep, insertAndOpen) {
@@ -162,8 +162,8 @@ RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
 
     $scope.pickEditDep = function () {
         $('[ng-department-picker]')[0].openModal({
-            'selected': $scope.editingDep.parentDep ? $scope.editingDep.parentDep.pk : null,
-            'not': $scope.editingDep.pk,
+            'selected': $scope.editingDep.parentDep ? $scope.editingDep.parentDep.id : null,
+            'not': $scope.editingDep.id,
             'submit': function (dep) {
                 $apply(function () {
                     $scope.editingDep.parentDep = dep;
@@ -174,7 +174,7 @@ RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
 
     $scope.checkUniqueAcc = function () {
         var url = CONFIG.siteUrl + '/rest/user/checkUniqueAccount';
-        var data = {pk: $scope.editingUser.pk, account: $scope.editingUser.account};
+        var data = {id: $scope.editingUser.id, account: $scope.editingUser.account};
 
         $.getJSON(url, data, function (resp) {
             if (resp.valid)
@@ -194,18 +194,18 @@ RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
         if (!newVal)
             return;
         if (newVal.parentDep)
-            newVal.depFk = newVal.parentDep.pk;
-        newVal.pk = newVal.pk || 0;
+            newVal.depFk = newVal.parentDep.id;
+        newVal.id = newVal.id || 0;
     });
 
     $scope.submitDep = function ($event) {
         if (!$event.target.checkValidity()) {
             return;
         }
-        var url = CONFIG.siteUrl + '/rest/department/' + $scope.editingDep.pk;
+        var url = CONFIG.siteUrl + '/rest/department/' + $scope.editingDep.id;
         $scope.ajax.submit = true;
         $http.put(url, $scope.editingDep).then(function () {
-            $scope.getDep($scope.depPk);
+            $scope.getDep($scope.depID);
             $($scope.modalDep).modal('hide');
             $scope.ajax.submit = false;
 
@@ -255,7 +255,7 @@ RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
 
     $scope.pickUserDep = function () {
         $('[ng-department-picker]')[0].openModal({
-            'selected': $scope.editingUser.parentDep ? $scope.editingUser.parentDep.pk : null,
+            'selected': $scope.editingUser.parentDep ? $scope.editingUser.parentDep.id : null,
             'submit': function (dep) {
                 $apply(function () {
                     $scope.editingUser.parentDep = dep;
@@ -266,8 +266,8 @@ RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
     $scope.$watchCollection('editingUser', function (newVal) {
         if (!newVal)
             return;
-        newVal.depFk = newVal.parentDep ? newVal.parentDep.pk : 0;
-        newVal.pk = newVal.pk || 0;
+        newVal.depFk = newVal.parentDep ? newVal.parentDep.id : 0;
+        newVal.id = newVal.id || 0;
     });
 
     $scope.clearUserDep = function () {
@@ -287,11 +287,11 @@ RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
         var user = $scope.editingUser;
         user.passError = null;
 
-        var url = CONFIG.siteUrl + '/rest/user/' + (user.pk ? user.pk : 0);
+        var url = CONFIG.siteUrl + '/rest/user/' + (user.id ? user.id : 0);
         $scope.ajax.submit = true;
         $http.put(url, user).then(function (resp) {
             $($scope.modalUser).modal('hide');
-            $scope.getDep($scope.depPk);
+            $scope.getDep($scope.depID);
             $scope.ajax.submit = false;
 
             if ($scope.editingUser.insertAndOpen) {
@@ -350,7 +350,7 @@ RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
             $http.delete(CONFIG.siteUrl + '/rest/user', {'data': $scope.getCheckedUsers()}).then(function () {
                 return $http.delete(CONFIG.siteUrl + '/rest/department', {'data': $scope.getCheckedDeps()});
             }).then(function () {
-                $scope.getDep($scope.depPk);
+                $scope.getDep($scope.depID);
             });
         }
     };
@@ -358,16 +358,16 @@ RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
     $scope.move = function () {
         $('[ng-department-picker]')[0].openModal({
             'not': $scope.getCheckedDeps(),
-            'selected': $scope.depPk,
+            'selected': $scope.depID,
             'submit': function (dep) {
-                if (dep.pk == $scope.depPk)
+                if (dep.id == $scope.depID)
                     return;
-                $http.put(CONFIG.siteUrl + '/rest/department/move', {'pks': $scope.getCheckedDeps(), 'dest': dep.pk})
+                $http.put(CONFIG.siteUrl + '/rest/department/move', {'ids': $scope.getCheckedDeps(), 'dest': dep.id})
                         .then(function () {
-                            return $http.put(CONFIG.siteUrl + '/rest/user/move', {'pks': $scope.getCheckedUsers(), 'dest': dep.pk});
+                            return $http.put(CONFIG.siteUrl + '/rest/user/move', {'ids': $scope.getCheckedUsers(), 'dest': dep.id});
                         })
                         .then(function () {
-                            $scope.getDep($scope.depPk);
+                            $scope.getDep($scope.depID);
                             $scope.checkedDeps = {};
                             $scope.checkedUsers = {};
                         });
@@ -378,7 +378,7 @@ RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
     $scope.deleteUser = function (user) {
         $scope.checkedUsers = {};
         $scope.checkedDeps = {};
-        $scope.checkedUsers[user.pk] = true;
+        $scope.checkedUsers[user.id] = true;
 
         $timeout(function () {
             $scope.delete();
@@ -389,7 +389,7 @@ RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
     $scope.deleteDep = function (dep) {
         $scope.checkedUsers = {};
         $scope.checkedDeps = {};
-        $scope.checkedDeps[dep.pk] = true;
+        $scope.checkedDeps[dep.id] = true;
 
         $timeout(function () {
             $scope.delete();
@@ -400,7 +400,7 @@ RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
     $scope.copyUser = function (user) {
         var u = $.extend({}, user);
         $.extend(u, {
-            'pk': 0,
+            'id': 0,
             'isAdmin': 0,
             'account': '',
             'fullName': '',
@@ -411,7 +411,7 @@ RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
 
     //cây thư mục bên trái
     $scope.root = {
-        pk: 0,
+        id: 0,
         depName: '[Thư mục gốc]'
     };
 
@@ -430,7 +430,7 @@ RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
                         ret = true;
                     }
 
-                if (dep.pk == $scope.depPk) {
+                if (dep.id == $scope.depID) {
                     $scope.selected = dep;
                     ret = true;
                 }
@@ -460,7 +460,7 @@ RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
         if (target.hasClass('fa-caret-down') || target.hasClass('fa-caret-right'))
             return;
 
-        window.location.hash = '/' + dep.pk;
+        window.location.hash = '/' + dep.id;
     };
 
 });

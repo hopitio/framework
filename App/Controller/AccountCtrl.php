@@ -25,7 +25,7 @@ class AccountCtrl extends CoreCtrl {
             $result = $this->userMapper->authenticate($acc, $pass);
             if ($result['status']) {
                 $this->session->set('user', array(
-                    'pk'   => $result['user']->pk,
+                    'id'   => $result['user']->id,
                     'pass' => md5($pass)
                 ));
                 $this->resp->redirect($callback);
@@ -54,7 +54,7 @@ class AccountCtrl extends CoreCtrl {
             } else if ($newPass !== $rePass) {
                 $data['error'] = 'wrongRePass';
             } else {
-                $this->userMapper->changePassword($this->user->pk, $newPass);
+                $this->userMapper->changePassword($this->user->id, $newPass);
                 $data['success'] = true;
             }
         }

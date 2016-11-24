@@ -20,7 +20,7 @@ class RestCtrl extends \Lib\RestCtrl {
     }
 
     protected function requireLogin() {
-        if (!$this->user() || !$this->user()->pk) {
+        if (!$this->user() || !$this->user()->id) {
             $this->resp->setStatus(401);
             $this->resp->setBody('requireLogin');
             return false;
@@ -37,7 +37,7 @@ class RestCtrl extends \Lib\RestCtrl {
 
         if (!$this->user) {
             $user = UserMapper::makeInstance()
-                    ->filterPk($this->userSeed['pk'])
+                    ->filterID($this->userSeed['id'])
                     ->getEntity();
             if ($user->pass != $this->userSeed['pass']) {
                 return new UserEntity;

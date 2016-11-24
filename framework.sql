@@ -17,36 +17,36 @@ MySQL - 5.5.29 : Database - framework
 DROP TABLE IF EXISTS `cores_department`;
 
 CREATE TABLE `cores_department` (
-  `pk` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `depCode` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `depName` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `depFk` int(11) DEFAULT '0',
   `path` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `stt` tinyint(4) DEFAULT '1',
   `deleted` tinyint(4) DEFAULT '0',
-  PRIMARY KEY (`pk`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Data for the table `cores_department` */
 
-insert  into `cores_department`(`pk`,`depCode`,`depName`,`depFk`,`path`,`stt`,`deleted`) values (2,'trien-khai','Trien khai',3,'/3/2/',1,0),(3,'kinh-doanh','Kinh Doanh',0,'/3/',1,0),(4,'hanh-chinh','Hanh chinh',2,'/3/2/4/',1,0),(5,'tes','tes',0,'/5/',1,0),(7,'adasdsad','sdasd',0,'/7/',1,0),(11,'asdasdasdasd|11569b4a0f24585','asdsad',3,'/3/11/',1,1);
+insert  into `cores_department`(`id`,`depCode`,`depName`,`depFk`,`path`,`stt`,`deleted`) values (2,'trien-khai','Trien khai',3,'/3/2/',1,0),(3,'kinh-doanh','Kinh Doanh',0,'/3/',1,0),(4,'hanh-chinh','Hanh chinh',2,'/3/2/4/',1,0),(5,'tes','tes',0,'/5/',1,0),(7,'adasdsad','sdasd',0,'/7/',1,0),(11,'asdasdasdasd|11569b4a0f24585','asdsad',3,'/3/11/',1,1);
 
 /*Table structure for table `cores_group` */
 
 DROP TABLE IF EXISTS `cores_group`;
 
 CREATE TABLE `cores_group` (
-  `pk` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `groupCode` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `groupName` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `stt` tinyint(4) DEFAULT '1',
   `deleted` tinyint(4) DEFAULT '0',
-  PRIMARY KEY (`pk`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Data for the table `cores_group` */
 
-insert  into `cores_group`(`pk`,`groupCode`,`groupName`,`stt`,`deleted`) values (1,'g1','Nhom 1',1,0),(2,'g2','Nhom 2',1,0),(3,'g3|56b1fc1ec50eb3','Nhom 3',1,1),(4,'g456b1fad5cb22a4|56b1fb10ad7ba4','g4',1,1),(5,'g3','sddasd',1,0);
+insert  into `cores_group`(`id`,`groupCode`,`groupName`,`stt`,`deleted`) values (1,'g1','Nhom 1',1,0),(2,'g2','Nhom 2',1,0),(3,'g3|56b1fc1ec50eb3','Nhom 3',1,1),(4,'g456b1fad5cb22a4|56b1fb10ad7ba4','g4',1,1),(5,'g3','sddasd',1,0);
 
 /*Table structure for table `cores_group_permission` */
 
@@ -95,9 +95,9 @@ CREATE TABLE `cores_preference` (
 DROP TABLE IF EXISTS `cores_storage`;
 
 CREATE TABLE `cores_storage` (
-  `pk` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `id` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `val` text COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`pk`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Data for the table `cores_storage` */
@@ -107,7 +107,7 @@ CREATE TABLE `cores_storage` (
 DROP TABLE IF EXISTS `cores_user`;
 
 CREATE TABLE `cores_user` (
-  `pk` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `fullName` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `jobTitle` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `depFk` int(11) DEFAULT NULL,
@@ -118,13 +118,13 @@ CREATE TABLE `cores_user` (
   `stt` tinyint(4) DEFAULT '1',
   `isAdmin` tinyint(4) DEFAULT '0',
   `deleted` tinyint(4) DEFAULT '0',
-  PRIMARY KEY (`pk`),
+  PRIMARY KEY (`id`),
   UNIQUE KEY `unqAccount` (`account`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Data for the table `cores_user` */
 
-insert  into `cores_user`(`pk`,`fullName`,`jobTitle`,`depFk`,`account`,`pass`,`email`,`phone`,`stt`,`isAdmin`,`deleted`) values (1,'Admin','Admin',0,'admin','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,1,1,0),(4,'test','test',3,'test','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,0,0,0),(6,'Dương Tuấn Anh','job',3,'duongtuananh','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,0,0,0);
+insert  into `cores_user`(`id`,`fullName`,`jobTitle`,`depFk`,`account`,`pass`,`email`,`phone`,`stt`,`isAdmin`,`deleted`) values (1,'Admin','Admin',0,'admin','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,1,1,0),(4,'test','test',3,'test','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,0,0,0),(6,'Dương Tuấn Anh','job',3,'duongtuananh','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,0,0,0);
 
 /*Table structure for table `cores_user_permission` */
 

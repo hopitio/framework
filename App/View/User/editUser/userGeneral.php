@@ -37,11 +37,11 @@
     </div>
     <div ng-show="editingUser.changePass">
         <div class="form-group">
-            <label class="control-label col-xs-3" for="user-new-pass"><span ng-if="!editingUser.pk"><?php echo static::HTML_REQUIRED ?> </span>Mật khẩu mới:</label>
+            <label class="control-label col-xs-3" for="user-new-pass"><span ng-if="!editingUser.id"><?php echo static::HTML_REQUIRED ?> </span>Mật khẩu mới:</label>
             <div class="col-xs-9">
                 <input type="password" id="user-new-pass" class="form-control" ng-model="editingUser.newPass" 
                        name="newPass"
-                       ng-required="!editingUser.pk"
+                       ng-required="!editingUser.id"
                        data-bv-notempty-message="Vui lòng nhập mật khẩu"
                        data-bv-stringlength-min="6"
                        data-bv-stringlength-message="Độ dài tối thiểu 6 ký tự"
@@ -59,7 +59,7 @@
                        ng-dom="rePassDom"/>
                 <div class="help-block">
                     <div class="pull-left">
-                        <a href="javascript:;" class="btn-link" ng-click="togglePassword()" ng-if="editingUser.pk">Hủy đổi mật khẩu</a>&nbsp;
+                        <a href="javascript:;" class="btn-link" ng-click="togglePassword()" ng-if="editingUser.id">Hủy đổi mật khẩu</a>&nbsp;
                     </div>
                     <div class="pull-right">
                         <span ng-if="editingUser.passError">{{editingUser.passError}}</span>
@@ -79,7 +79,7 @@
             <div class="parent-dep">
                 <input type="text" class="form-control" id="user-dep" readonly placeholder="Chọn đơn vị"
                        value="{{editingUser.parentDep.depName}}" ng-click="pickUserDep()"/>
-                <span ng-if="editingUser.parentDep && editingUser.parentDep.pk" ng-click="clearUserDep()">&times;</span>
+                <span ng-if="editingUser.parentDep && editingUser.parentDep.id" ng-click="clearUserDep()">&times;</span>
             </div>
         </div>
     </div>

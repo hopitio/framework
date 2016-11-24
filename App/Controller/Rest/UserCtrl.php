@@ -21,10 +21,10 @@ class UserCtrl extends RestCtrl {
         $this->groupMapper = GroupMapper::makeInstance();
     }
 
-    function getDepartment($depPk) {
+    function getDepartment($depID) {
         $this->requireLogin();
 
-        $depPk = (int) $depPk;
+        $depID = (int) $depID;
         $loadUsers = $this->req->get('users');
         $loadDeps = $this->req->get('departments');
         $rescusively = $this->req->get('rescusively');
@@ -39,12 +39,12 @@ class UserCtrl extends RestCtrl {
                 ->setLoadAncestors($loadAncestors)
                 ->setLoadChildDeps($loadDeps, $rescusively)
                 ->setLoadUsers($loadUsers, function($rawData, $entity) use ($userMapper) {
-                    $entity->groups = $userMapper->db->GetCol('SELECT groupFk FROM cores_group_user WHERE userFk=?', array($entity->pk));
-                    $entity->permissions = $userMapper->loadPermissions($entity->pk);
+                    $entity->groups = $userMapper->db->GetCol('SELECT groupFk FROM cores_group_user WHERE userFk=?', array($entity->id));
+                    $entity->permissions = $userMapper->loadPermissions($entity->id);
                 })
                 ->filterNot($not)
                 //query
-                ->filterPk($depPk)
+                ->filterID($depID)
                 ->getEntity();
 
         $this->resp->setBody(Json::encode($dep));
@@ -78,7 +78,7 @@ class UserCtrl extends RestCtrl {
         )));
     }
 
-    function updateDepartment($depPk) {
+    function updateDepartment($depID) {
         $this->requireAdmin();
 
         $code = $this->restInput('depCode');
@@ -86,10 +86,10 @@ class UserCtrl extends RestCtrl {
         $stt = $this->restInput('stt');
         $depFk = $this->restInput('depFk');
 
-        $depPk = $this->depMapper->updateDep($depPk, $depFk, $code, $name, $stt);
+        $depID = $this->depMapper->updateDep($depID, $depID, $code, $name, $stt);
         $this->resp->setBody(Json::encode(array(
                     'status'   => true,
-                    'resource' => url('/rest/department/' . $depPk)
+                    'resource' => url('/rest/department/' . $depID)
         )));
     }
 
@@ -105,15 +105,15 @@ class UserCtrl extends RestCtrl {
         $this->resp->setBody(Json::encode($groups));
     }
 
-    function getGroupUsers($groupPk) {
+    function getGroupUsers($groupID) {
         $this->requireLogin();
 
         $users = $this->userMapper
                 ->makeInstance()
                 ->select('dep.depName', false)
                 ->filterDeleted(false)
-                ->innerJoin('cores_group_user gu ON u.pk=gu.userFk AND gu.groupFk=' . intval($groupPk))
-                ->leftJoin('cores_department dep ON u.depFk=dep.pk')
+                ->innerJoin('cores_group_user gu ON u.id=gu.userFk AND gu.groupFk=' . intval($groupID))
+                ->leftJoin('cores_department dep ON u.depID=dep.id')
                 ->getAll(function($rawData, $entity) {
             if (!$entity->depName) {
                 $entity->depName = '[Thư mục gốc]';
@@ -161,7 +161,7 @@ class UserCtrl extends RestCtrl {
     function checkUniqueAccount() {
         $this->requireAdmin();
 
-        $result = $this->userMapper->checkUniqueAccount($this->req->get('pk'), $this->req->get('account'));
+        $result = $this->userMapper->checkUniqueAccount($this->req->get('id'), $this->req->get('account'));
         $this->resp->setBody(Json::encode(array(
                     'valid' => $result
         )));
@@ -225,11 +225,11 @@ class UserCtrl extends RestCtrl {
         )));
     }
 
-    function updateGroup($pk) {
+    function updateGroup($id) {
         $this->requireAdmin();
 
         $group = $this->restInput();
-        if (!$this->groupMapper->checkCode($pk, $group['groupCode'])) {
+        if (!$this->groupMapper->checkCode($id, $group['groupCode'])) {
             $this->resp->setBody(Json::encode(array(
                         'status' => false,
                         'error'  => 'duplicateCode'
@@ -237,19 +237,19 @@ class UserCtrl extends RestCtrl {
             return;
         }
 
-        $pk = $this->groupMapper->updateGroup($pk, $group);
+        $id = $this->groupMapper->updateGroup($id, $group);
 
         $this->resp->setBody(Json::encode(array(
                     'status' => true,
-                    'pk'     => $pk
+                    'id'     => $id
         )));
     }
 
     function deleteGroups() {
         $this->requireAdmin();
 
-        $arrPk = $this->restInput('pk', array());
-        $this->groupMapper->deleteGroup($arrPk);
+        $arrID = $this->restInput('id', array());
+        $this->groupMapper->deleteGroup($arrID);
         $this->resp->setBody(Json::encode(array(
                     'status' => true
         )));

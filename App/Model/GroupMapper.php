@@ -11,7 +11,7 @@ class GroupMapper extends Mapper {
     public function makeEntity($rawData) {
         $entity = new GroupEntity($rawData);
         if ($this->loadPermission) {
-            $entity->permissions = $this->getPermissions($entity->pk);
+            $entity->permissions = $this->getPermissions($entity->id);
         }
         return $entity;
     }
@@ -34,8 +34,8 @@ class GroupMapper extends Mapper {
         return $this;
     }
 
-    function filterPk($id) {
-        $this->where('gp.pk=?', __FUNCTION__)->setParam($id, __FUNCTION__);
+    function filterID($id) {
+        $this->where('gp.id=?', __FUNCTION__)->setParam($id, __FUNCTION__);
         return $this;
     }
 
@@ -47,13 +47,13 @@ class GroupMapper extends Mapper {
     }
 
     /** @return UserEntity */
-    function loadUsers($groupPk) {
+    function loadUsers($groupID) {
         return UserMapper::makeInstance()
-                        ->innerJoin('cores_group_user gu ON u.pk=gu.userFk AND gu.groupFk=' . intval($groupPk))
+                        ->innerJoin('cores_group_user gu ON u.id=gu.userFk AND gu.groupFk=' . intval($groupID))
                         ->getAll();
     }
 
-    function updateGroup($pk, $data) {
+    function updateGroup($id, $data) {
         $update['groupCode'] = arrData($data, 'groupCode');
         $update['groupName'] = arrData($data, 'groupName');
         $update['stt'] = arrData($data, 'stt') ? 1 : 0;
@@ -63,32 +63,32 @@ class GroupMapper extends Mapper {
         }
 
         $this->db->StartTrans();
-        $pk = $this->replace($pk, $update);
+        $id = $this->replace($id, $update);
 
-        if (!$pk) {
+        if (!$id) {
             return false;
         }
 
         //user in group
-        $this->db->delete('cores_group_user', 'groupFk=?', array($pk));
+        $this->db->delete('cores_group_user', 'groupFk=?', array($id));
         foreach (arrData($data, 'users', array()) as $user) {
             $this->db->insert('cores_group_user', array(
                 'userFk'  => $user,
-                'groupFk' => $pk
+                'groupFk' => $id
             ));
         }
 
         //group permissions
-        $this->db->delete('cores_group_permission', 'groupFk=?', array($pk));
+        $this->db->delete('cores_group_permission', 'groupFk=?', array($id));
         foreach (arrData($data, 'permissions', array()) as $pem) {
             $this->db->insert('cores_group_permission', array(
-                'groupFk'    => $pk,
+                'groupFk'    => $id,
                 'permission' => $pem
             ));
         }
         $this->db->CompleteTrans();
 
-        return $pk;
+        return $id;
     }
 
     function filterCode($code) {
@@ -96,21 +96,21 @@ class GroupMapper extends Mapper {
         return $this;
     }
 
-    function deleteGroup($pk) {
-        if (!is_array($pk)) {
-            $pk = array($pk);
+    function deleteGroup($id) {
+        if (!is_array($id)) {
+            $id = array($id);
         }
-        foreach ($pk as $i) {
+        foreach ($id as $i) {
             $this->db->Execute("UPDATE cores_group SET deleted=1, groupCode=CONCAT(groupCode, ?) WHERE pk=?", array('|' . uniqid() . $i, $i));
         }
     }
 
-    function checkCode($pk, $code) {
+    function checkCode($id, $code) {
         $inserted = $this->makeInstance()->filterCode($code)->getEntity();
 
-        if (!$inserted->pk) {
+        if (!$inserted->id) {
             return true;
-        } else if ($inserted->pk == $pk) {
+        } else if ($inserted->id == $id) {
             return true;
         }
         return false;
@@ -121,8 +121,8 @@ class GroupMapper extends Mapper {
         return $this;
     }
 
-    function getPermissions($groupPk) {
-        return $this->db->GetCol("SELECT permission FROM cores_group_permission WHERE groupFk=?", array($groupPk));
+    function getPermissions($groupID) {
+        return $this->db->GetCol("SELECT permission FROM cores_group_permission WHERE groupFk=?", array($groupID));
     }
 
 }

@@ -25,14 +25,14 @@
                             <li>
                                 <div class="btn-group">
                                     <a href='javascript:;' class='btn btn-default ' ng-disabled="currentDep == 0 || ancestors.length == 0"
-                                       ng-click="setDep(depInstance.ancestors[depInstance.ancestors.length - 1].pk || 0)">
+                                       ng-click="setDep(depInstance.ancestors[depInstance.ancestors.length - 1].id || 0)">
                                         <i class='fa fa-arrow-left'></i>
                                     </a>
                                     <a href='javascript:;' class='btn btn-default' ng-disabled="currentDep == 0" ng-click="setDep(0)"><i class='fa fa-home'></i></a>
                                 </div>
                             </li>
                             <li ng-repeat="dep in depInstance.ancestors">
-                                <a href="javascript:;" ng-click="setDep(dep.pk)">{{dep.depName}}</a>
+                                <a href="javascript:;" ng-click="setDep(dep.id)">{{dep.depName}}</a>
                             </li>
                             <li class="active" ng-if="depInstance">{{depInstance.depName}}</li>
                         </ol>
@@ -43,7 +43,7 @@
                                 <tr ng-if="deps() && users() && !users().length && !deps().length">
                                     <td colspan="2" class="center">Chưa có phòng ban/tài khoản nào</td>
                                 </tr>
-                                <tr ng-repeat="dep in deps()" ng-click="setDep(dep.pk)" ng-class="<?php echo "{'stt-active': dep.stt==1, 'stt-inactive': dep.stt!=1}" ?>">
+                                <tr ng-repeat="dep in deps()" ng-click="setDep(dep.id)" ng-class="<?php echo "{'stt-active': dep.stt==1, 'stt-inactive': dep.stt!=1}" ?>">
                                     <td style="min-width: 50px;" class="center">
                                         <i class="fa fa-folder-open"></i>
                                     </td>
@@ -54,7 +54,7 @@
                                 <tr ng-repeat="user in users()" ng-class="<?php echo "{'stt-active': user.stt==1, 'stt-inactive': user.stt!=1}" ?>">
                                     <td style="min-width: 50px;box-sizing: border-box;" class="center">
                                         <label class="check">
-                                            <input type="checkbox" id="chk-user-picker-{{$index}}" ng-model="checked[user.pk]"/>
+                                            <input type="checkbox" id="chk-user-picker-{{$index}}" ng-model="checked[user.id]"/>
                                             <before></before>
                                             <after></after>
                                         </label>
@@ -100,7 +100,7 @@
                                 <tr ng-repeat="user in selectedGroup.users" ng-class="<?php echo "{'stt-active': user.stt==1, 'stt-inactive': user.stt!=1}" ?>">
                                     <td class="center" style="min-width: 50px;box-sizing: border-box;">
                                         <label class="check">
-                                            <input type="checkbox" id="chk-user-picker2-{{$index}}" ng-model="checked[user.pk]"/>
+                                            <input type="checkbox" id="chk-user-picker2-{{$index}}" ng-model="checked[user.id]"/>
                                             <before></before>
                                             <after></after>
                                         </label>

@@ -6,7 +6,7 @@ RED.ngApp.directive('ngDepartmentPicker', function ($apply, $timeout) {
         scope.tree;
         scope.selected;
         scope.root = {
-            pk: 0,
+            id: 0,
             depName: '[Thư mục gốc]'
         };
 
@@ -34,7 +34,7 @@ RED.ngApp.directive('ngDepartmentPicker', function ($apply, $timeout) {
                             ret = true;
                         }
 
-                    if (dep.pk == options.selected) {
+                    if (dep.id == options.selected) {
                         scope.selected = dep;
                         ret = true;
                     }

@@ -25,7 +25,7 @@ RED.ngApp.directive('ngUserPicker', function ($apply) {
                         for (var i in resp) {
                             var group = resp[i];
                             for (var j in scope.notGroup) {
-                                if (group.pk == scope.notGroup[j]) {
+                                if (group.id == scope.notGroup[j]) {
                                     resp.splice(i, 1);
                                     break;
                                 }
@@ -72,8 +72,8 @@ RED.ngApp.directive('ngUserPicker', function ($apply) {
             for (var i in scope.depInstance.users) {
                 var user = scope.depInstance.users[i];
                 for (var j in scope.notUser) {
-                    var pk = scope.notUser[j];
-                    if (user.pk == pk) {
+                    var id = scope.notUser[j];
+                    if (user.id == id) {
                         scope.depInstance.users.splice(i, 1);
                         break;
                     }
@@ -104,8 +104,8 @@ RED.ngApp.directive('ngUserPicker', function ($apply) {
             });
         });
 
-        scope.setDep = function (pk) {
-            scope.currentDep = pk;
+        scope.setDep = function (id) {
+            scope.currentDep = id;
             scope.search = null;
 
             if (scope.ajax.loadDep)
@@ -140,13 +140,13 @@ RED.ngApp.directive('ngUserPicker', function ($apply) {
             if (scope.tab == 0)
                 for (var i in scope.users()) {
                     var user = $.extend({}, scope.users()[i]);
-                    if (scope.checked[user.pk])
+                    if (scope.checked[user.id])
                         users.push(user);
                 }
             else if (scope.selectedGroup && scope.selectedGroup.users)
                 for (var i in scope.selectedGroup.users) {
                     var user = $.extend({}, scope.selectedGroup.users[i]);
-                    if (scope.checked[user.pk])
+                    if (scope.checked[user.id])
                         users.push(user);
                 }
 
@@ -159,13 +159,13 @@ RED.ngApp.directive('ngUserPicker', function ($apply) {
             scope.checked = {};
 
             if (group)
-                $.getJSON(CONFIG.siteUrl + '/rest/group/' + group.pk + '/user', function (resp) {
+                $.getJSON(CONFIG.siteUrl + '/rest/group/' + group.id + '/user', function (resp) {
                     $apply(function () {
                         //xóa not
                         for (var i in resp) {
                             var user = resp[i];
                             for (var j in scope.notUser) {
-                                if (user.pk == scope.notUser[j]) {
+                                if (user.id == scope.notUser[j]) {
                                     resp.splice(i, 1);
                                     break;
                                 }

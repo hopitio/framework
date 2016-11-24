@@ -20,7 +20,7 @@ function ulTemplate($level, $maxDepth = 10) {
     <ul class="<?php echo $class ?>" ng-if="<?php echo $parent ?>.deps.length">
         <li ng-repeat="<?php echo "{$class} in {$parent}.deps" ?>" 
             ng-click="setSelected(<?php echo $class ?>, $event)" 
-            ng-class="<?php echo "{expand: $class.expand, selected: $class.pk==depPk}" ?>">
+            ng-class="<?php echo "{expand: $class.expand, selected: $class.id==depID}" ?>">
             <i class='fa' ng-if="!<?php echo $class ?>.deps.length"></i>
             <i class='fa' ng-if="<?php echo $class ?>.deps.length" ng-click="toggleExpand(<?php echo $class ?>)"
                ng-class="<?php echo "{'fa-caret-right': !$class.expand, 'fa-caret-down': $class.expand}" ?>"></i>
@@ -85,16 +85,16 @@ function ulTemplate($level, $maxDepth = 10) {
     <ol class="breadcrumb">
         <li>
             <div class="btn-group">
-                <a href="javascript:;" ng-class="<?php echo "{'disabled': !depPk}" ?>" ng-click="goUp()"  class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Quay lại">
+                <a href="javascript:;" ng-class="<?php echo "{'disabled': !depID}" ?>" ng-click="goUp()"  class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Quay lại">
                     <i class="fa fa-arrow-left"></i>
                 </a>
-                <a href="#" ng-class="<?php echo "{'disabled': !depPk}" ?>" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Trở về gốc">
+                <a href="#" ng-class="<?php echo "{'disabled': !depID}" ?>" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Trở về gốc">
                     <i class="fa fa-home"></i>
                 </a>
             </div>
         </li>
         <li ng-repeat="ancestor in department.ancestors">
-            <a href="#/{{ancestor.pk}}">{{ancestor.depName}}</a>
+            <a href="#/{{ancestor.id}}">{{ancestor.depName}}</a>
         </li>
         <li class="active">{{department.depName}}</li>
     </ol>
@@ -104,11 +104,11 @@ function ulTemplate($level, $maxDepth = 10) {
             <div class="panel" id="dep-tree">
                 <div class="panel-body">
                     <ul>
-                        <li class="expand" ng-click="setSelected(root, $event)"  ng-class="<?php echo "{selected: root.pk==depPk}" ?>">
+                        <li class="expand" ng-click="setSelected(root, $event)"  ng-class="<?php echo "{selected: root.id==depID}" ?>">
                             <i class="fa fa-caret-down"></i>&nbsp;<span>{{root.depName}}</span>
                         </li>
                         <ul>
-                            <li ng-repeat='lvl1 in depTree.deps' ng-class="<?php echo "{expand: lvl1.expand, selected: lvl1.pk==depPk}" ?>" 
+                            <li ng-repeat='lvl1 in depTree.deps' ng-class="<?php echo "{expand: lvl1.expand, selected: lvl1.id==depID}" ?>" 
                                 ng-click="setSelected(lvl1, $event)" ng-dblclick="submit()">
                                 <i class='fa' ng-if="!lvl1.deps.length"></i>
                                 <i class='fa' ng-if="lvl1.deps.length" ng-click="toggleExpand(lvl1)"
@@ -174,7 +174,7 @@ function ulTemplate($level, $maxDepth = 10) {
                             <tr ng-repeat="childDep in deps()" ng-class="<?php echo "{'stt-active': childDep.stt, 'stt-inactive': !childDep.stt}" ?>">
                                 <td class="center ">
                                     <div class="tbl-check">
-                                        <input type="checkbox" value="{{childDep.pk}}" ng-model="checkedDeps[childDep.pk]" />
+                                        <input type="checkbox" value="{{childDep.id}}" ng-model="checkedDeps[childDep.id]" />
                                     </div>
                                 </td>
                                 <td class="tbl-type center">
@@ -189,9 +189,9 @@ function ulTemplate($level, $maxDepth = 10) {
                                         </ul>
                                     </div>
                                 </td>
-                                <td><span class="id">{{childDep.pk}}</span></td>
+                                <td><span class="id">{{childDep.id}}</span></td>
                                 <td class="tbl-text">
-                                    <a href="#/{{childDep.pk}}" class="btn-link">{{childDep.depName}}</a> 
+                                    <a href="#/{{childDep.id}}" class="btn-link">{{childDep.depName}}</a> 
                                     <br>
                                     Đơn vị/Phòng ban
                                 </td>
@@ -203,7 +203,7 @@ function ulTemplate($level, $maxDepth = 10) {
                             <tr ng-repeat="user in users()" ng-class="<?php echo "{'stt-active': user.stt, 'stt-inactive': !user.stt}" ?>">
                                 <td class="center">
                                     <div class="tbl-check">
-                                        <input type="checkbox" value="{{user.pk}}" ng-model="checkedUsers[user.pk]" ng-disabled="user.isAdmin"/>
+                                        <input type="checkbox" value="{{user.id}}" ng-model="checkedUsers[user.id]" ng-disabled="user.isAdmin"/>
                                     </div>
                                 </td>
                                 <td class="tbl-type center">
@@ -219,7 +219,7 @@ function ulTemplate($level, $maxDepth = 10) {
                                         </ul>
                                     </div>
                                 </td>
-                                <td><span class="id">{{user.pk}}</span></td>
+                                <td><span class="id">{{user.id}}</span></td>
                                 <td class="tbl-text">
                                     <a href="javascript:;" class="btn-link" ng-click="editUser(user)">{{user.fullName}}</a>
                                     <br>

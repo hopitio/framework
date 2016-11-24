@@ -25,13 +25,13 @@ class DepartmentMapper extends Mapper {
 
     public function makeEntity($rawData) {
         $entity = new DepartmentEntity($rawData);
-        $entity->pk = (int) $entity->pk;
+        $entity->id = (int) $entity->id;
 
         if ($this->loadUsers) {
-            $entity->users = $this->loadUsers($entity->pk, $this->loadUsersCallback);
+            $entity->users = $this->loadUsers($entity->id, $this->loadUsersCallback);
         }
         if ($this->loadChildDeps) {
-            $entity->deps = $this->loadChildDeps($entity->pk, $this->loadChildDepsRecusiveLy);
+            $entity->deps = $this->loadChildDeps($entity->id, $this->loadChildDepsRecusiveLy);
         }
         if ($this->loadAncestors) {
             $entity->ancestors = $this->loadAncestors($entity);
@@ -48,13 +48,13 @@ class DepartmentMapper extends Mapper {
         return 'cores_department';
     }
 
-    function filterPk($depPk) {
-        $this->where('dep.pk=?', __FUNCTION__)->setParam($depPk, __FUNCTION__);
+    function filterID($depID) {
+        $this->where('dep.id=?', __FUNCTION__)->setParam($depID, __FUNCTION__);
         return $this;
     }
 
-    function filterParent($depPk) {
-        $this->where('dep.depFk=?', __FUNCTION__)->setParam($depPk, __FUNCTION__);
+    function filterParent($depID) {
+        $this->where('dep.depFk=?', __FUNCTION__)->setParam($depID, __FUNCTION__);
         return $this;
     }
 
@@ -81,22 +81,22 @@ class DepartmentMapper extends Mapper {
     }
 
     /** @return UserEntity */
-    function loadUsers($depPk, $callback = null) {
+    function loadUsers($depID, $callback = null) {
         return $this->userMapper()
                         ->filterDeleted(false)
-                        ->filterParent($depPk)
+                        ->filterParent($depID)
                         ->getAll($callback);
     }
 
     /** @return DepartmentEntity */
-    function loadChildDeps($depPk, $rescusively = false) {
+    function loadChildDeps($depID, $rescusively = false) {
         $mapper = $this;
         return $this->makeInstance()
-                        ->filterParent($depPk)
+                        ->filterParent($depID)
                         ->filterDeleted(false)
                         ->filterNot($this->not)
                         ->getAll(function($rawData, $entity) use($mapper, $rescusively) {
-                            $entity->deps = $mapper->loadChildDeps($entity->pk, $rescusively);
+                            $entity->deps = $mapper->loadChildDeps($entity->id, $rescusively);
                         });
     }
 
@@ -106,14 +106,14 @@ class DepartmentMapper extends Mapper {
      * @return DepartmentEntity 
      */
     function loadAncestors(DepartmentEntity $dep) {
-        $pks = explode('/', trim($dep->path, '/'));
+        $ids = explode('/', trim($dep->path, '/'));
         //remove this dep
-        array_pop($pks);
+        array_pop($ids);
 
-        if (count($pks)) {
-            $pks = implode(',', $pks);
+        if (count($ids)) {
+            $ids = implode(',', $ids);
             return $this->makeInstance()
-                            ->where("dep.pk IN($pks)")
+                            ->where("dep.id IN($ids)")
                             ->getAll();
         } else {
             return $this->makeEntitySet();
@@ -129,38 +129,38 @@ class DepartmentMapper extends Mapper {
         $where = array();
         foreach ($arr as &$id) {
             $id = (int) $id;
-            $where[] = "dep.pk <> $id";
+            $where[] = "dep.id <> $id";
         }
         $this->where("(" . implode(' AND ', $where) . ")", __FUNCTION__);
 
         return $this;
     }
 
-    function updateDep($depPk, $depFk, $code, $name, $stt) {
+    function updateDep($depID, $depFk, $code, $name, $stt) {
         if (!$code || !$name) {
             return;
         }
         $data = array(
-            'depFk'   => (int) $depFk,
+            'depID'   => (int) $depID,
             'depCode' => $code,
             'depName' => $name,
             'stt'     => $stt ? 1 : 0
         );
 
 
-        if ($depPk) {
-            $this->db->update('cores_department', $data, 'pk=?', array($depPk));
+        if ($depID) {
+            $this->db->update('cores_department', $data, 'pk=?', array($depID));
         } else {
-            $depPk = $this->db->insert('cores_department', $data);
+            $depID = $this->db->insert('cores_department', $data);
         }
         //re-index path
         $this->rebuildDepPath();
 
-        return $depPk;
+        return $depID;
     }
 
     protected function rebuildDepPath() {
-        $this->rebuildPath('depFk', 'path', 'pk');
+        $this->rebuildPath('depID', 'path', 'id');
     }
 
     function deleteDepartments($arrId) {
@@ -170,8 +170,8 @@ class DepartmentMapper extends Mapper {
         foreach ($arrId as $id) {
             $this->db->Execute("UPDATE cores_department SET deleted=1, depCode=CONCAT(depCode, ?) WHERE pk=?", array('|' . uniqid($id), $id));
             //chuyển đơn vị, tk vè thư mục gốc
-            $this->db->update('cores_department', array('depFk' => 0), 'depFk=?', array($id));
-            $this->db->update('cores_user', array('depFk' => 0), 'depFk=?', array($id));
+            $this->db->update('cores_department', array('depID' => 0), 'depID=?', array($id));
+            $this->db->update('cores_user', array('depID' => 0), 'depID=?', array($id));
         }
         $this->rebuildDepPath();
         $this->db->CompleteTrans();
@@ -182,13 +182,13 @@ class DepartmentMapper extends Mapper {
         return $this;
     }
 
-    function moveDepartments($arrId, $depFk) {
+    function moveDepartments($arrId, $depID) {
         if (!is_array($arrId))
             return;
         $this->db->StartTrans();
 
         foreach ($arrId as $id) {
-            $this->db->update('cores_department', array('depFk' => $depFk), 'pk=?', array($id));
+            $this->db->update('cores_department', array('depID' => $depID), 'pk=?', array($id));
         }
         $this->rebuildDepPath();
         $this->db->CompleteTrans();

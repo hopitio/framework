@@ -102,8 +102,8 @@ abstract class Mapper extends Query {
         return $this->db->GetAssoc($this->__toString(), $this->params);
     }
 
-    function filterPk($id) {
-        $this->where($this->tableAlias() . '.pk=?', __FUNCTION__)->setParam($id, __FUNCTION__);
+    function filterID($id) {
+        $this->where($this->tableAlias() . '.id=?', __FUNCTION__)->setParam($id, __FUNCTION__);
         return $this;
     }
 
@@ -112,8 +112,8 @@ abstract class Mapper extends Query {
 
         $table = $this->tableName();
 
-        $node = $this->db->GetRow("SELECT * FROM $table WHERE pk=?", array($fromNode));
-        $parentNode = $this->db->GetRow("SELECT * FROM $table WHERE pk=?", array(arrData($node, $parentCol)));
+        $node = $this->db->GetRow("SELECT * FROM $table WHERE id=?", array($fromNode));
+        $parentNode = $this->db->GetRow("SELECT * FROM $table WHERE id=?", array(arrData($node, $parentCol)));
         $childNodes = $this->db->GetAll("SELECT * FROM $table WHERE $parentCol=?", array($fromNode));
 
         if (!empty($node)) {
@@ -121,13 +121,13 @@ abstract class Mapper extends Query {
             $this->db->update(
                     $table
                     , array($pathCol => $path . $node[$srcCol] . '/')
-                    , 'pk=?'
-                    , array($node['pk'])
+                    , 'id=?'
+                    , array($node['id'])
             );
         }
 
         foreach ($childNodes as $node) {
-            $this->rebuildPath($parentCol, $pathCol, $srcCol, $node['pk']);
+            $this->rebuildPath($parentCol, $pathCol, $srcCol, $node['id']);
         }
 
         $this->db->completeTrans();
@@ -135,12 +135,12 @@ abstract class Mapper extends Query {
 
     /**
      * 
-     * @param type $pk
+     * @param type $id
      * @param type $updateData
      * @return type
      */
-    function update($pk, $updateData) {
-        return $this->db->update($this->tableName(), $updateData, 'pk=?', array($pk));
+    function update($id, $updateData) {
+        return $this->db->update($this->tableName(), $updateData, 'id=?', array($id));
     }
 
     /**
@@ -153,18 +153,18 @@ abstract class Mapper extends Query {
     }
 
     /**
-     * pk = 0 insert; pk <> 0 update
-     * @param type $pk
+     * id = 0 insert; id <> 0 update
+     * @param type $id
      * @param type $updateData
-     * @return int pk
+     * @return int id
      */
-    function replace($pk, $updateData) {
-        if ($pk) {
-            $this->update($pk, $updateData);
+    function replace($id, $updateData) {
+        if ($id) {
+            $this->update($id, $updateData);
         } else {
-            $pk = $this->insert($updateData);
+            $id = $this->insert($updateData);
         }
-        return $pk;
+        return $id;
     }
 
 }

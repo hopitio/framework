@@ -27,7 +27,7 @@ function ulTemplate($level, $maxDepth = 10)
     <ul class="<?php echo $class ?>" ng-if="<?php echo $parent ?>.deps.length">
         <li ng-repeat="<?php echo "{$class} in {$parent}.deps" ?>" 
             ng-click="setSelected(<?php echo $class ?>, $event)" ng-dblclick="submit()"
-            ng-class="<?php echo "{expand: $class.expand, selected: $class.pk==selected.pk}" ?>">
+            ng-class="<?php echo "{expand: $class.expand, selected: $class.id==selected.id}" ?>">
             <i class='fa' ng-if="!<?php echo $class ?>.deps.length"></i>
             <i class='fa' ng-if="<?php echo $class ?>.deps.length" ng-click="toggleExpand(<?php echo $class ?>)"
                ng-class="<?php echo "{'fa-caret-right': !$class.expand, 'fa-caret-down': $class.expand}" ?>"></i>
@@ -57,11 +57,11 @@ function ulTemplate($level, $maxDepth = 10)
             </div>
             <div class="modal-body">
                 <ul>
-                    <li class="expand" ng-click="setSelected(root, $event)" ng-dblclick="submit()" ng-class="<?php echo "{selected: root.pk==selected.pk}" ?>">
+                    <li class="expand" ng-click="setSelected(root, $event)" ng-dblclick="submit()" ng-class="<?php echo "{selected: root.id==selected.id}" ?>">
                         <i class="fa fa-caret-down"></i>&nbsp;<span>{{root.depName}}</span>
                     </li>
                     <ul>
-                        <li ng-repeat='lvl1 in tree.deps' ng-class="<?php echo "{expand: lvl1.expand, selected: lvl1.pk==selected.pk}" ?>" 
+                        <li ng-repeat='lvl1 in tree.deps' ng-class="<?php echo "{expand: lvl1.expand, selected: lvl1.id==selected.id}" ?>" 
                             ng-click="setSelected(lvl1, $event)" ng-dblclick="submit()">
                             <i class='fa' ng-if="!lvl1.deps.length"></i>
                             <i class='fa' ng-if="lvl1.deps.length" ng-click="toggleExpand(lvl1)"

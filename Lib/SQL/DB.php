@@ -80,11 +80,11 @@ class DB {
      * Insert vào CSDL
      * @param string $table Tên bảng
      * @param array $arr_data Mảng dữ liệu
-     * @param string $pk Tên trường khóa chính
+     * @param string $id Tên trường khóa chính
      * @return int ID vừa tạo hoặc FALSE nếu thất bại 
      * @throws InvalidArgumentException
      */
-    public function insert($table, $arr_data, $pk = null) {
+    public function insert($table, $arr_data, $id = null) {
         if (!is_array($arr_data)) {
             throw new InvalidArgumentException('$arr_data Phải là array $k=>$v');
         }
@@ -93,7 +93,7 @@ class DB {
         }
         $sql = "INSERT INTO $table(" . implode(',', array_keys($arr_data)) . ") VALUES(?" . str_repeat(',?', count($arr_data) - 1) . ")";
         $this->Execute($sql, array_values($arr_data));
-        return $this->Insert_ID($table, $pk);
+        return $this->Insert_ID($table, $id);
     }
 
     /**

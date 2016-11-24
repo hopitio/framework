@@ -5,7 +5,7 @@
         <tr ng-repeat="group in groups">
             <td>
                 <label class="check">
-                    <input type="checkbox" value="{{group.pk}}" ng-checked="editingUser.groups.indexOf(group.pk) != -1" ng-click="toggleGroup($event)"/>
+                    <input type="checkbox" value="{{group.id}}" ng-checked="editingUser.groups.indexOf(group.id) != -1" ng-click="toggleGroup($event)"/>
                     <before></before>
                     <after></after>&nbsp;
                     {{group.groupName}}

@@ -78,17 +78,17 @@ RED.ngApp.controller('groupCtrl', function ($scope, $timeout, $apply, $http) {
 
     $scope.edit = function (group) {
 
-        group = group || {'pk': 0, 'stt': true};
+        group = group || {'id': 0, 'stt': true};
         $scope.editing = $.extend({}, group);
         $scope.editing.checked = {};
         $scope.ajax = {};
         $scope.tab = 0;
         $scope.editing.permissions = $scope.editing.permissions || [];
 
-        if (group.pk != 0)
+        if (group.id != 0)
             $.ajax({
                 'cache': false,
-                'url': CONFIG.siteUrl + '/rest/group/' + group.pk + '/user',
+                'url': CONFIG.siteUrl + '/rest/group/' + group.id + '/user',
                 'dataType': 'json'
             }).done(function (resp) {
                 $apply(function () {
@@ -108,10 +108,10 @@ RED.ngApp.controller('groupCtrl', function ($scope, $timeout, $apply, $http) {
     $scope.pickUser = function () {
         var notUser = [];
         for (var i in $scope.editing.users)
-            notUser.push($scope.editing.users[i].pk);
+            notUser.push($scope.editing.users[i].id);
 
         $('[ng-user-picker]')[0].openModal({
-            notGroup: [$scope.editing.pk],
+            notGroup: [$scope.editing.id],
             notUser: notUser,
             submit: function (users) {
                 $apply(function () {
@@ -123,7 +123,7 @@ RED.ngApp.controller('groupCtrl', function ($scope, $timeout, $apply, $http) {
 
     $scope.removeUser = function () {
         for (var i in $scope.editing.users)
-            if ($scope.editing.checked[$scope.editing.users[i].pk])
+            if ($scope.editing.checked[$scope.editing.users[i].id])
                 $scope.editing.users.splice(i, 1);
         $scope.editing.checked = {};
     };
@@ -139,11 +139,11 @@ RED.ngApp.controller('groupCtrl', function ($scope, $timeout, $apply, $http) {
         var group = $.extend({}, $scope.editing);
         group.users = [];
         for (var i in $scope.editing.users)
-            group.users.push($scope.editing.users[i].pk);
+            group.users.push($scope.editing.users[i].id);
 
         $scope.ajax.save = true;
 
-        $http.put(CONFIG.siteUrl + '/rest/group/' + group.pk, group).then(function (resp) {
+        $http.put(CONFIG.siteUrl + '/rest/group/' + group.id, group).then(function (resp) {
             $scope.ajax.save = null;
             if (resp.data.status) {
                 $($scope.modalEdit).modal('hide');
@@ -154,16 +154,16 @@ RED.ngApp.controller('groupCtrl', function ($scope, $timeout, $apply, $http) {
         });
     };
 
-    $scope.delete = function (pk) {
-        if (pk) {
+    $scope.delete = function (id) {
+        if (id) {
             $scope.checked = {};
-            $scope.checked[pk] = true;
+            $scope.checked[id] = true;
         }
 
         if (!confirm('Bạn chắc chắn muốn xóa những đối tượng này?'))
             return;
 
-        $http.delete(CONFIG.siteUrl + '/rest/group', {data: {'pk': $scope.getChecked()}}).then(function () {
+        $http.delete(CONFIG.siteUrl + '/rest/group', {data: {'id': $scope.getChecked()}}).then(function () {
             $scope.getGroups();
         });
     };

@@ -2,7 +2,7 @@
 
 namespace App\View\Layout;
 
-class NoLayout extends Layout {
+class NoLayout extends \Lib\Layout {
 
     protected function renderLayout($content) {
         echo $content;

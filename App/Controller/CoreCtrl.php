@@ -34,7 +34,10 @@ abstract class CoreCtrl extends \Lib\Controller {
 
         if (!$this->user) {
             $user = UserMapper::makeInstance()
-                    ->filterPk($this->userSeed['pk'])
+                    ->filterID($this->userSeed['id'])
+                    ->getEntity();
+            $user->department = \App\Model\DepartmentMapper::makeInstance()
+                    ->filterID($user->depID)
                     ->getEntity();
             if ($user->pass != $this->userSeed['pass']) {
                 return new UserEntity;
@@ -57,21 +60,25 @@ abstract class CoreCtrl extends \Lib\Controller {
         $this->twoColsLayout
                 ->setBrand($this->setting->getSetting('themeBrand'))
                 ->setCompanyWebsite($this->setting->getSetting('themeCompanyWebsite'))
-                ->setUser($this->user())
-                ->setSideMenu(new Menu(null, null, null, array(
-                    'map'     => new Menu('map', '<i class="fa fa-truck"></i> Quản lý liên thông', url('/admin/map')),
-                    'user'    => new Menu('user', '<i class="fa fa-user"></i> Tài khoản', url('/admin/user')),
-                    'group'   => new Menu('group', '<i class="fa fa-folder-open"></i> Nhóm', url('/admin/group')),
-                    'setting' => new Menu('setting', '<i class="fa fa-cog"></i> Cấu hình hệ thống', url('/admin/setting')),
-                    'app'     => new Menu('app', '<i class="fa fa-th-large"></i> Quản lý ứng dụng', url('/admin/application'))
-        )));
+                ->setUser($this->user());
+
+        $menu = new Menu(null, null, null, array(
+            'map' => new Menu('map', '<i class="fa fa-truck"></i> Quản lý liên thông', url('/admin/map'))
+        ));
+        if ($this->user()->isAdmin) {
+            $menu->addChild(new Menu('user', '<i class="fa fa-user"></i> Tài khoản', url('/admin/user')))
+                    ->addChild(new Menu('group', '<i class="fa fa-folder-open"></i> Nhóm', url('/admin/group')))
+                    ->addChild(new Menu('setting', '<i class="fa fa-cog"></i> Cấu hình hệ thống', url('/admin/setting')))
+                    ->addChild(new Menu('app', '<i class="fa fa-th-large"></i> Quản lý ứng dụng', url('/admin/application')));
+        }
+        $this->twoColsLayout->setSideMenu($menu);
 
         $this->contentOnlyLayout = new ContentOnlyLayout($this->context);
         $this->contentOnlyLayout->setTemplatesDirectory(dirname(__DIR__) . '/View');
     }
 
     protected function requireLogin() {
-        if (!$this->user() || !$this->user()->pk) {
+        if (!$this->user() || !$this->user()->id) {
             $uri = $_SERVER['REQUEST_URI'];
             $this->resp->redirect(url('/account/login?callback=' . $uri));
         }
@@ -80,8 +87,8 @@ abstract class CoreCtrl extends \Lib\Controller {
     protected function requireAdmin() {
         $this->requireLogin();
         if (!$this->user()->isAdmin) {
-            $this->resp->setStatus(403);
-            $this->resp->setBody('Bạn không có quyền truy cập chức năng này');
+            http_response_code(403);
+            die("Bạn không có quyền truy cập chức năng này. <a href='" . url() . "'>Quay về trang chủ</a>");
         }
     }
 

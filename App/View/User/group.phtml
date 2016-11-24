@@ -38,18 +38,18 @@ $this->addJs(array(
                 <tbody>
                     <tr ng-repeat="group in groups" ng-class="<?php echo "{'stt-active': group.stt==1, 'stt-inactive': group.stt!=1}" ?>">
                         <td class="center">
-                            <input type="checkbox"  ng-model="checked[group.pk]"/>
+                            <input type="checkbox"  ng-model="checked[group.id]"/>
                         </td>
                         <td class="tbl-actions center">
                             <div class="dropdown">
                                 <a href="javascript:;" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"></i></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="javascript:;" ng-click="edit(group)">Sửa</a></li>
-                                    <li><a href="javascript:;" ng-click="delete(group.pk)">Xóa</a></li>
+                                    <li><a href="javascript:;" ng-click="delete(group.id)">Xóa</a></li>
                                 </ul>
                             </div>
                         </td>
-                        <td>{{group.pk}}</td>
+                        <td>{{group.id}}</td>
                         <td>{{group.groupCode}}</td>
                         <td><a href="javascript:;" class="btn-link" ng-click="edit(group)">{{group.groupName}}</a></td>
                         <td>
@@ -127,7 +127,7 @@ $this->addJs(array(
                                         <tr ng-repeat="user in editing.users | filter: filterMember" ng-class="<?php echo "{'stt-active': user.stt == 1, 'stt-inactive': user.stt != 1}" ?>" >
                                             <td class="center" style="min-width: 50px;">
                                                 <label class="check">
-                                                    <input type="checkbox" id="chk-{{$index}}" ng-model="editing.checked[user.pk]"/>
+                                                    <input type="checkbox" id="chk-{{$index}}" ng-model="editing.checked[user.id]"/>
                                                     <before></before>
                                                     <after></after>
                                                 </label>
