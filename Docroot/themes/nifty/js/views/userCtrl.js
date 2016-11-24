@@ -187,14 +187,14 @@ RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
 
     $scope.clearParentDep = function () {
         $scope.editingDep.parentDep = null;
-        $scope.editingDep.depFk = null;
+        $scope.editingDep.depID = null;
     };
 
     $scope.$watchCollection('editingDep', function (newVal) {
         if (!newVal)
             return;
         if (newVal.parentDep)
-            newVal.depFk = newVal.parentDep.id;
+            newVal.depID = newVal.parentDep.id;
         newVal.id = newVal.id || 0;
     });
 
@@ -266,7 +266,7 @@ RED.ngApp.controller('userCtrl', function ($scope, $apply, $timeout, $http) {
     $scope.$watchCollection('editingUser', function (newVal) {
         if (!newVal)
             return;
-        newVal.depFk = newVal.parentDep ? newVal.parentDep.id : 0;
+        newVal.depID = newVal.parentDep ? newVal.parentDep.id : 0;
         newVal.id = newVal.id || 0;
     });
 

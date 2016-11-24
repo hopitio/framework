@@ -39,7 +39,7 @@ class UserCtrl extends RestCtrl {
                 ->setLoadAncestors($loadAncestors)
                 ->setLoadChildDeps($loadDeps, $rescusively)
                 ->setLoadUsers($loadUsers, function($rawData, $entity) use ($userMapper) {
-                    $entity->groups = $userMapper->db->GetCol('SELECT groupFk FROM cores_group_user WHERE userFk=?', array($entity->id));
+                    $entity->groups = $userMapper->db->GetCol('SELECT groupID FROM cores_group_user WHERE userID=?', array($entity->id));
                     $entity->permissions = $userMapper->loadPermissions($entity->id);
                 })
                 ->filterNot($not)
@@ -84,7 +84,7 @@ class UserCtrl extends RestCtrl {
         $code = $this->restInput('depCode');
         $name = $this->restInput('depName');
         $stt = $this->restInput('stt');
-        $depFk = $this->restInput('depFk');
+        $depID = $this->restInput('depID');
 
         $depID = $this->depMapper->updateDep($depID, $depID, $code, $name, $stt);
         $this->resp->setBody(Json::encode(array(
@@ -112,7 +112,7 @@ class UserCtrl extends RestCtrl {
                 ->makeInstance()
                 ->select('dep.depName', false)
                 ->filterDeleted(false)
-                ->innerJoin('cores_group_user gu ON u.id=gu.userFk AND gu.groupFk=' . intval($groupID))
+                ->innerJoin('cores_group_user gu ON u.id=gu.userID AND gu.groupID=' . intval($groupID))
                 ->leftJoin('cores_department dep ON u.depID=dep.id')
                 ->getAll(function($rawData, $entity) {
             if (!$entity->depName) {

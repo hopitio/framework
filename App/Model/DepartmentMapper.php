@@ -54,7 +54,7 @@ class DepartmentMapper extends Mapper {
     }
 
     function filterParent($depID) {
-        $this->where('dep.depFk=?', __FUNCTION__)->setParam($depID, __FUNCTION__);
+        $this->where('dep.depID=?', __FUNCTION__)->setParam($depID, __FUNCTION__);
         return $this;
     }
 
@@ -136,7 +136,7 @@ class DepartmentMapper extends Mapper {
         return $this;
     }
 
-    function updateDep($depID, $depFk, $code, $name, $stt) {
+    function updateDep($depID, $depID, $code, $name, $stt) {
         if (!$code || !$name) {
             return;
         }

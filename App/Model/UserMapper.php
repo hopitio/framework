@@ -34,7 +34,7 @@ class UserMapper extends Mapper {
     }
 
     function filterParent($depID) {
-        $this->where('u.depFk=?', __FUNCTION__)->setParam($depID, __FUNCTION__);
+        $this->where('u.depID=?', __FUNCTION__)->setParam($depID, __FUNCTION__);
         return $this;
     }
 
@@ -46,14 +46,14 @@ class UserMapper extends Mapper {
     /** @return GroupEntity */
     function loadGroups($userID) {
         return GroupMapper::makeInstance()
-                        ->innerJoin('cores_group_user gu ON gu.groupFk=gp.id AND gu.userFk=' . intval($userID))
+                        ->innerJoin('cores_group_user gu ON gu.groupID=gp.id AND gu.userID=' . intval($userID))
                         ->getAll();
     }
 
     function updateUser($id, $data) {
         $update['account'] = arrData($data, 'account');
         $update['fullName'] = arrData($data, 'fullName');
-        $update['depFk'] = (int) arrData($data, 'depFk');
+        $update['depID'] = (int) arrData($data, 'depID');
         $update['jobTitle'] = arrData($data, 'jobTitle');
         $update['stt'] = arrData($data, 'stt') ? 1 : 0;
 
@@ -79,15 +79,15 @@ class UserMapper extends Mapper {
         }
 
         //group
-        $this->db->delete('cores_group_user', 'userFk=?', array($id));
-        foreach ($groups as $groupFk) {
-            $this->db->insert('cores_group_user', array('userFk' => $id, 'groupFk' => $groupFk));
+        $this->db->delete('cores_group_user', 'userID=?', array($id));
+        foreach ($groups as $groupID) {
+            $this->db->insert('cores_group_user', array('userID' => $id, 'groupID' => $groupID));
         }
 
         //permissions
-        $this->db->delete('cores_user_permission', 'userFk=?', array($id));
+        $this->db->delete('cores_user_permission', 'userID=?', array($id));
         foreach ($permissions as $pem) {
-            $this->db->insert('cores_user_permission', array('userFk' => $id, 'permission' => $pem));
+            $this->db->insert('cores_user_permission', array('userID' => $id, 'permission' => $pem));
         }
 
         $this->db->CompleteTrans();
@@ -124,11 +124,11 @@ class UserMapper extends Mapper {
         return $this;
     }
 
-    function moveUsers($arrId, $depFk) {
+    function moveUsers($arrId, $depID) {
         if (!is_array($arrId))
             return;
         foreach ($arrId as $id) {
-            $this->db->update('cores_user', array('depFk' => $depFk), 'pk=?', array($id));
+            $this->db->update('cores_user', array('depID' => $depID), 'pk=?', array($id));
         }
     }
 
@@ -162,10 +162,10 @@ class UserMapper extends Mapper {
             return array();
         }
 
-        $sql = "SELECT permission FROM cores_user_permission WHERE userFk=$userID";
+        $sql = "SELECT permission FROM cores_user_permission WHERE userID=$userID";
         if ($includeGroupPem) {
-            $groups = "SELECT groupFk FROM cores_group_user WHERE userFk=$userID";
-            $sql .= "\nUNION SELECT permission FROM cores_group_permission WHERE groupFk IN($groups)";
+            $groups = "SELECT groupID FROM cores_group_user WHERE userID=$userID";
+            $sql .= "\nUNION SELECT permission FROM cores_group_permission WHERE groupID IN($groups)";
         }
 
         return $this->db->GetCol($sql);

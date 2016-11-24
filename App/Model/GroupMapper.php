@@ -49,7 +49,7 @@ class GroupMapper extends Mapper {
     /** @return UserEntity */
     function loadUsers($groupID) {
         return UserMapper::makeInstance()
-                        ->innerJoin('cores_group_user gu ON u.id=gu.userFk AND gu.groupFk=' . intval($groupID))
+                        ->innerJoin('cores_group_user gu ON u.id=gu.userID AND gu.groupID=' . intval($groupID))
                         ->getAll();
     }
 
@@ -70,19 +70,19 @@ class GroupMapper extends Mapper {
         }
 
         //user in group
-        $this->db->delete('cores_group_user', 'groupFk=?', array($id));
+        $this->db->delete('cores_group_user', 'groupID=?', array($id));
         foreach (arrData($data, 'users', array()) as $user) {
             $this->db->insert('cores_group_user', array(
-                'userFk'  => $user,
-                'groupFk' => $id
+                'userID'  => $user,
+                'groupID' => $id
             ));
         }
 
         //group permissions
-        $this->db->delete('cores_group_permission', 'groupFk=?', array($id));
+        $this->db->delete('cores_group_permission', 'groupID=?', array($id));
         foreach (arrData($data, 'permissions', array()) as $pem) {
             $this->db->insert('cores_group_permission', array(
-                'groupFk'    => $id,
+                'groupID'    => $id,
                 'permission' => $pem
             ));
         }
@@ -122,7 +122,7 @@ class GroupMapper extends Mapper {
     }
 
     function getPermissions($groupID) {
-        return $this->db->GetCol("SELECT permission FROM cores_group_permission WHERE groupFk=?", array($groupID));
+        return $this->db->GetCol("SELECT permission FROM cores_group_permission WHERE groupID=?", array($groupID));
     }
 
 }
