@@ -2,7 +2,8 @@
 SQLyog Ultimate v10.00 Beta1
 MySQL - 5.5.29 : Database - framework
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
@@ -20,7 +21,7 @@ CREATE TABLE `cores_department` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `depCode` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `depName` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `depFk` int(11) DEFAULT '0',
+  `depID` int(11) DEFAULT '0',
   `path` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `stt` tinyint(4) DEFAULT '1',
   `deleted` tinyint(4) DEFAULT '0',
@@ -29,7 +30,7 @@ CREATE TABLE `cores_department` (
 
 /*Data for the table `cores_department` */
 
-insert  into `cores_department`(`id`,`depCode`,`depName`,`depFk`,`path`,`stt`,`deleted`) values (2,'trien-khai','Trien khai',3,'/3/2/',1,0),(3,'kinh-doanh','Kinh Doanh',0,'/3/',1,0),(4,'hanh-chinh','Hanh chinh',2,'/3/2/4/',1,0),(5,'tes','tes',0,'/5/',1,0),(7,'adasdsad','sdasd',0,'/7/',1,0),(11,'asdasdasdasd|11569b4a0f24585','asdsad',3,'/3/11/',1,1);
+insert  into `cores_department`(`id`,`depCode`,`depName`,`depID`,`path`,`stt`,`deleted`) values (2,'trien-khai','Trien khai',3,'/3/2/',1,0),(3,'kinh-doanh','Kinh Doanh',0,'/3/',1,0),(4,'hanh-chinh','Hanh chinh',2,'/3/2/4/',1,0),(5,'tes','tes',0,'/5/',1,0),(7,'adasdsad','sdasd',0,'/7/',1,0),(11,'asdasdasdasd|11569b4a0f24585','asdsad',3,'/3/11/',1,1);
 
 /*Table structure for table `cores_group` */
 
@@ -53,28 +54,28 @@ insert  into `cores_group`(`id`,`groupCode`,`groupName`,`stt`,`deleted`) values 
 DROP TABLE IF EXISTS `cores_group_permission`;
 
 CREATE TABLE `cores_group_permission` (
-  `groupFk` int(11) NOT NULL,
+  `groupID` int(11) NOT NULL,
   `permission` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`groupFk`,`permission`)
+  PRIMARY KEY (`groupID`,`permission`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Data for the table `cores_group_permission` */
 
-insert  into `cores_group_permission`(`groupFk`,`permission`) values (1,'quyen1'),(1,'vietnhap');
+insert  into `cores_group_permission`(`groupID`,`permission`) values (1,'quyen1'),(1,'vietnhap');
 
 /*Table structure for table `cores_group_user` */
 
 DROP TABLE IF EXISTS `cores_group_user`;
 
 CREATE TABLE `cores_group_user` (
-  `userFk` int(11) NOT NULL,
-  `groupFk` int(11) NOT NULL,
-  PRIMARY KEY (`groupFk`,`userFk`)
+  `userID` int(11) NOT NULL,
+  `groupID` int(11) NOT NULL,
+  PRIMARY KEY (`groupID`,`userID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Data for the table `cores_group_user` */
 
-insert  into `cores_group_user`(`userFk`,`groupFk`) values (1,1),(5,1),(6,1),(5,2),(6,2),(1,4);
+insert  into `cores_group_user`(`userID`,`groupID`) values (1,1),(5,1),(6,1),(5,2),(6,2),(1,4);
 
 /*Table structure for table `cores_preference` */
 
@@ -84,7 +85,7 @@ CREATE TABLE `cores_preference` (
   `uri` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `id` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `preference` text COLLATE utf8_unicode_ci,
-  `userFk` int(11) DEFAULT '0',
+  `userID` int(11) DEFAULT '0',
   PRIMARY KEY (`uri`,`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -110,7 +111,7 @@ CREATE TABLE `cores_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `fullName` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `jobTitle` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `depFk` int(11) DEFAULT NULL,
+  `depID` int(11) DEFAULT NULL,
   `account` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `pass` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `email` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -124,21 +125,21 @@ CREATE TABLE `cores_user` (
 
 /*Data for the table `cores_user` */
 
-insert  into `cores_user`(`id`,`fullName`,`jobTitle`,`depFk`,`account`,`pass`,`email`,`phone`,`stt`,`isAdmin`,`deleted`) values (1,'Admin','Admin',0,'admin','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,1,1,0),(4,'test','test',3,'test','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,0,0,0),(6,'Dương Tuấn Anh','job',3,'duongtuananh','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,0,0,0);
+insert  into `cores_user`(`id`,`fullName`,`jobTitle`,`depID`,`account`,`pass`,`email`,`phone`,`stt`,`isAdmin`,`deleted`) values (1,'Admin','Admin',0,'admin','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,1,1,0),(4,'test','test',3,'test','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,0,0,0),(6,'Dương Tuấn Anh','job',3,'duongtuananh','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,0,0,0);
 
 /*Table structure for table `cores_user_permission` */
 
 DROP TABLE IF EXISTS `cores_user_permission`;
 
 CREATE TABLE `cores_user_permission` (
-  `userFk` int(11) NOT NULL,
+  `userID` int(11) NOT NULL,
   `permission` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`userFk`,`permission`)
+  PRIMARY KEY (`userID`,`permission`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Data for the table `cores_user_permission` */
 
-insert  into `cores_user_permission`(`userFk`,`permission`) values (1,'bientap'),(1,'MANAGE_USERS'),(1,'quyen1'),(1,'quyen2'),(1,'vietnhap'),(3,'MANAGE_USERS'),(4,'MANAGE_USERS'),(5,'vietnhap'),(6,'vietnhap');
+insert  into `cores_user_permission`(`userID`,`permission`) values (1,'bientap'),(1,'MANAGE_USERS'),(1,'quyen1'),(1,'quyen2'),(1,'vietnhap'),(3,'MANAGE_USERS'),(4,'MANAGE_USERS'),(5,'vietnhap'),(6,'vietnhap');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
