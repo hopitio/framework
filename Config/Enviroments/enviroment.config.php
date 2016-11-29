@@ -14,5 +14,3 @@ foreach (scandir(__DIR__) as $item)
 }
 
 $exports = str_replace('.config.php', '', $config);
-
-}
