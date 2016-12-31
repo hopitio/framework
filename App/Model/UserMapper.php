@@ -73,7 +73,7 @@ class UserMapper extends Mapper {
 
         $this->db->StartTrans();
         if ($id) {
-            $this->db->update('cores_user', $update, 'pk=?', array($id));
+            $this->db->update('cores_user', $update, 'id=?', array($id));
         } else {
             $id = $this->db->insert('cores_user', $update);
         }
@@ -115,7 +115,7 @@ class UserMapper extends Mapper {
         foreach ($arrId as $id) {
             if ($id == 1)
                 continue;
-            $this->db->Execute("UPDATE cores_user SET deleted=1, account=CONCAT(account, ?) WHERE pk=?", array('|' . uniqid($id), $id));
+            $this->db->Execute("UPDATE cores_user SET deleted=1, account=CONCAT(account, ?) WHERE id=?", array('|' . uniqid($id), $id));
         }
     }
 
@@ -128,7 +128,7 @@ class UserMapper extends Mapper {
         if (!is_array($arrId))
             return;
         foreach ($arrId as $id) {
-            $this->db->update('cores_user', array('depID' => $depID), 'pk=?', array($id));
+            $this->db->update('cores_user', array('depID' => $depID), 'id=?', array($id));
         }
     }
 

@@ -101,7 +101,7 @@ class GroupMapper extends Mapper {
             $id = array($id);
         }
         foreach ($id as $i) {
-            $this->db->Execute("UPDATE cores_group SET deleted=1, groupCode=CONCAT(groupCode, ?) WHERE pk=?", array('|' . uniqid() . $i, $i));
+            $this->db->Execute("UPDATE cores_group SET deleted=1, groupCode=CONCAT(groupCode, ?) WHERE id=?", array('|' . uniqid() . $i, $i));
         }
     }
 

@@ -5,15 +5,15 @@
  * 1 = PHP, Database trừ trên service
  * 10 = tất cả
  */
-$exports['debugMode'] = 0;
+$exports['debugMode'] = 10;
 
 //kết nối database
 $exports['db'] = array(
     'type' => 'mysqli',
-    'host' => '127.0.0.1',
-    'name' => 'framework',
-    'user' => 'root',
-    'pass' => 'root'
+    'host' => '172.16.10.90',
+    'name' => 'telerad2',
+    'user' => 'ehr',
+    'pass' => 'ehr'
 );
 
 $exports['cryptSecrect'] = 'abM)(*2312';

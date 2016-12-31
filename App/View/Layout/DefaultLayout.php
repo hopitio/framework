@@ -107,7 +107,7 @@ class DefaultLayout extends Layout {
                             <!--Brand logo & name-->
                             <!--================================-->
                             <div class="navbar-header">
-                                <a href="index.html" class="navbar-brand">
+                                <a href="<?php echo url() ?>" class="navbar-brand">
                                     <div class="brand-title">
                                         <span class="brand-text"><?php echo $this->brand ?></span>
                                     </div>

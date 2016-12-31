@@ -37,26 +37,26 @@ class Bootstrap {
         //read rewritebase
         $htaccess = file_get_contents(BASE_DIR . '/Docroot/.htaccess');
         preg_match('@RewriteBase\s*(.*)$@m', $htaccess, $matches);
-        $this->rewriteBase = $matches[1];
+        $this->rewriteBase = str_replace(["\n", "\r"], "", $matches[1]);
 
         //create slim instance
         \Slim\Slim::registerAutoloader();
         $this->slim = new \Slim\Slim(array(
-            'cookies.encrypt'    => true,
-            'cookies.lifetime'   => 20 * 365 * 24 * 60 . ' minutes',
-            'cookies.path'       => $this->rewriteBase,
-            'cookies.secure'     => false,
+            'cookies.encrypt' => true,
+            'cookies.lifetime' => 20 * 365 * 24 * 60 . ' minutes',
+            'cookies.path' => $this->rewriteBase,
+            'cookies.secure' => false,
             'cookies.secret_key' => $config['cryptSecrect'],
         ));
 
         //config session
         $this->slim->add(new \Slim\Middleware\SessionCookie(array(
             'expires' => 20 * 365 * 24 * 60 . ' minutes',
-            'path'    => $this->rewriteBase,
-            'domain'  => null,
-            'secure'  => false,
-            'name'    => 'slim_session',
-            'secret'  => $config['cryptSecrect'],
+            'path' => $this->rewriteBase,
+            'domain' => null,
+            'secure' => false,
+            'name' => 'slim_session',
+            'secret' => $config['cryptSecrect'],
         )));
 
         //routing

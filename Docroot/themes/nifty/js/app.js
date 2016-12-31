@@ -71,7 +71,7 @@ RED.compareObj = function (a, b) {
     return JSON.stringify(a) === JSON.stringify(b);
 };
 
-RED.ngApp = angular.module('ngApp', []);
+RED.ngApp = angular.module('ngApp', ['ui.bootstrap']);
 RED.ngApp.factory('$apply', ['$rootScope', function ($rootScope) {
         return function (fn) {
             setTimeout(function () {

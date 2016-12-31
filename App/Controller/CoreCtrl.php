@@ -80,7 +80,9 @@ abstract class CoreCtrl extends \Lib\Controller {
     protected function requireLogin() {
         if (!$this->user() || !$this->user()->id) {
             $uri = $_SERVER['REQUEST_URI'];
-            $this->resp->redirect(url('/account/login?callback=' . $uri));
+            $query = ['callback' => $uri];
+            header('Location: ' . url('/account/login?' . http_build_query($query)));
+            die;
         }
     }
 

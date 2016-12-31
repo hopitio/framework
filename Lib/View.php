@@ -8,12 +8,16 @@ class View extends \Slim\View {
     protected $context;
 
     /**
+
      * 
-     * @param \Lib\MvcContext $context
+
+     * @param \Libs\MvcContext $context
+
      */
     function __construct(MvcContext $context) {
         parent::__construct();
         $this->context = $context;
+        $this->setTemplatesDirectory(BASE_DIR . '/App/View');
         $this->init();
     }
 
@@ -26,7 +30,9 @@ class View extends \Slim\View {
     }
 
     function getOutput($template, $data = array()) {
+
         $this->setData($data);
+
         return parent::render($template);
     }
 

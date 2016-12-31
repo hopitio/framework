@@ -91,6 +91,12 @@ class DB {
         if (empty($arr_data)) {
             throw new InvalidArgumentException('$arr_data Không được empty()');
         }
+        foreach ($arr_data as $field => $val) {
+            if (strpos($field, '`') === false) {
+                unset($arr_data[$field]);
+                $arr_data["`$field`"] = $val;
+            }
+        }
         $sql = "INSERT INTO $table(" . implode(',', array_keys($arr_data)) . ") VALUES(?" . str_repeat(',?', count($arr_data) - 1) . ")";
         $this->Execute($sql, array_values($arr_data));
         return $this->Insert_ID($table, $id);
@@ -140,6 +146,9 @@ class DB {
         $sql = '';
         $params = array();
         foreach ($arr_data as $k => $v) {
+            if (strpos($k, '`') === false) {
+                $k = "`$k`";
+            }
             $sql .= strlen($sql) > 0 ? ",$k=?" : "UPDATE $table SET $k=?";
             array_push($params, $v);
         }

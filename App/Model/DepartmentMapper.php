@@ -149,7 +149,7 @@ class DepartmentMapper extends Mapper {
 
 
         if ($depID) {
-            $this->db->update('cores_department', $data, 'pk=?', array($depID));
+            $this->db->update('cores_department', $data, 'id=?', array($depID));
         } else {
             $depID = $this->db->insert('cores_department', $data);
         }
@@ -168,7 +168,7 @@ class DepartmentMapper extends Mapper {
             return;
         $this->db->StartTrans();
         foreach ($arrId as $id) {
-            $this->db->Execute("UPDATE cores_department SET deleted=1, depCode=CONCAT(depCode, ?) WHERE pk=?", array('|' . uniqid($id), $id));
+            $this->db->Execute("UPDATE cores_department SET deleted=1, depCode=CONCAT(depCode, ?) WHERE id=?", array('|' . uniqid($id), $id));
             //chuyển đơn vị, tk vè thư mục gốc
             $this->db->update('cores_department', array('depID' => 0), 'depID=?', array($id));
             $this->db->update('cores_user', array('depID' => 0), 'depID=?', array($id));
@@ -188,7 +188,7 @@ class DepartmentMapper extends Mapper {
         $this->db->StartTrans();
 
         foreach ($arrId as $id) {
-            $this->db->update('cores_department', array('depID' => $depID), 'pk=?', array($id));
+            $this->db->update('cores_department', array('depID' => $depID), 'id=?', array($id));
         }
         $this->rebuildDepPath();
         $this->db->CompleteTrans();

@@ -2,7 +2,7 @@
 
 namespace Lib\SQL;
 
-abstract class Entity {
+class Entity {
 
     //tránh lỗi notice khi gọi biến chưa khai báo
     function __get($name) {
